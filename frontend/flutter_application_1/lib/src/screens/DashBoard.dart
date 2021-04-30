@@ -17,7 +17,7 @@ class _DashBoardState extends State<DashBoard> {
           title: Text('Welcome to Flutter'),
         ),
         body: Center(
-          child: Text('Hello World'),
+          child: Text('DashBoard 작업 영역'),
         ),
       ),
     );

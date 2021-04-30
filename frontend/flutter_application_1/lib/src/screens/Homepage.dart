@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import '../shared/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import './SignInPage.dart';
+import './SignUpPage.dart';
 
 class HomePage extends StatefulWidget {
   final String pageTitle;
@@ -124,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          SignInPage(),
+                                          SignUpPage(),
                                     ));
                               },
                               child: Text(
