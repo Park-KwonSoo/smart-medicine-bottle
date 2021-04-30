@@ -26,6 +26,7 @@ dependencies:
     
   flutter_screenutil: ^0.7.0
   page_transition: '^1.1.5'
+  mailer: '^3.0.4'
 
 
 dev_dependencies:
