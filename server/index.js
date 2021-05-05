@@ -4,6 +4,7 @@ const bodyparser = require('koa-bodyparser');
 
 const Mongoose = require('mongoose');
 const api = require('./src/api');
+const updateMedicineInfo = require('./src/lib/UpdatingMedicineInfo');
 
 require('dotenv').config();
 const { SERVER_PORT, MONGO_URL } = process.env;
@@ -11,6 +12,8 @@ const { SERVER_PORT, MONGO_URL } = process.env;
 const app = new Koa();
 const router = new Router();
 
+
+updateMedicineInfo.updateMedicineInfo();
 
 Mongoose.connect(MONGO_URL, {
     useNewUrlParser : true,
