@@ -1,12 +1,11 @@
 const axios = require('axios');
+const Medicine = require('../models/medicine');
 
 exports.updateMedicineInfo = async() => {
-    console.log('starting')
-    
     const itemArray = await getItemsList(getQueryURL);
     await exportJsonData(itemArray);
 
-    console.log('data is saved');
+    console.log('All of data is updated!');
 }
 
 //queryUrl을 return하는 함수 : 한 페이지에 100개의 item씩 요청할 수 있다.
@@ -29,7 +28,7 @@ const getItemsList = async(queryUrl) => {
         getItem = await axios.get(queryUrl(i));
         items = getItem.data.body.items;
 
-        if(items === undefined) 
+        if(items === undefined)
             return result;
         
         result.push(...items);
@@ -38,9 +37,23 @@ const getItemsList = async(queryUrl) => {
     }
 }
 
-//itemArray에 있는 모든 data를 json으로 만들어서 json파일로 저장
+//itemArray에 있는 모든 data를 MongoDB의 SMB collections에 저장함
 const exportJsonData = async(itemList) => {
     itemList.forEach(item => {
-
+        const medicine = new Medicine({
+            medicineId : item.itemSeq,
+            name : item.itemName,
+            company : item.entpName,
+            target : item.efcyQesitm,
+            dosage : item.useMethodQesitm,
+            warn : item.atpnWarnQesitm + '\n\n' + item.atpnQesitm,
+            antiEffect : item.seQesitm
+        })
+        
+        Medicine.findOneAndUpdate({ 
+            medicineId : medicine.medicineId 
+        }, medicine, {
+            upsert : true
+        })
     })
 }
