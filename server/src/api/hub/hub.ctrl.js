@@ -1,5 +1,6 @@
-const mqtt = require('mqtt');
+//허브(Mqtt Broker)등록 및 삭제
+const Hub = require('../../models/hub');
 
-const MqttConnect = async (ctx) => {
-    const { host } = ctx.request.body;
+exports.hubRegister = async(ctx) => {
+    ctx.body = 'hubRegister'
 }
