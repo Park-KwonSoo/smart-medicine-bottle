@@ -5,25 +5,25 @@ const jwt = require('jsonwebtoken');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    userId : { type: String, require : true },
+    userId : { type: String, require : true, unique : true },
     hashedPassword : { type : String, default : null }
 })
 
-UserSchema.methods.setPassword = async(password) => {
+UserSchema.methods.setPassword = async function(password) {
     const hash = await bycrypt(password, 10);
     this.hashedPassword = hash;
 }
 
-UserSchema.methods.checkPassword = async(password) => {
+UserSchema.methods.checkPassword = async function(password) {
     const result = await bycrypt.compare(password, this.hashedPassword)
     return result;
 }
 
-UserSchema.statics.findByUserId = async(userId) => {
+UserSchema.statics.findByUserId = async function(userId) {
     return this.findOne({userId});
 }
 
-UserSchema.methods.generateToken = () => {
+UserSchema.methods.generateToken = function() {
     const token = jwt.sign (
         {
             _id : this._id,
