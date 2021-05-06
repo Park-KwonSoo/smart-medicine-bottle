@@ -9,7 +9,9 @@
 ## ToDo
 
 - [x]  MQTT Hosting
+
 → [test.mosquitto.org](http://test.mosquitto.org) 와 raspberry 3.0 model B - mosquitto 설치로 다중 broker 연결, publish & subscribe 확인
+
 - [ ]  Middle Ware
 - [ ]  인증 구현
 - [ ]  데이터테이블 수정 및 추가 기능 구현
