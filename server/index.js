@@ -13,14 +13,14 @@ const app = new Koa();
 const router = new Router();
 
 
-updateMedicineInfo.updateMedicineInfo();
-
 Mongoose.connect(MONGO_URL, {
+    useFindAndModify : false,
     useNewUrlParser : true,
     useUnifiedTopology: true,
     useCreateIndex : true
 }).then(() => {
     console.log('Mongo DB is connected : ', MONGO_URL);
+    updateMedicineInfo.updateMedicineInfo();
 }).catch(e => {
     console.log(e, error);
 })

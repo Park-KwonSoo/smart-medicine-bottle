@@ -15,5 +15,8 @@
     "IoT"
   ],
   "author": "박권수",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^4.2.6"
+  }
 }
