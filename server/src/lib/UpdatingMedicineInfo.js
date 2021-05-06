@@ -38,22 +38,22 @@ const getItemsList = async(queryUrl) => {
 }
 
 //itemArray에 있는 모든 data를 MongoDB의 SMB collections에 저장함
-const exportJsonData = async(itemList) => {
+const exportJsonData = (itemList) => {
     itemList.forEach(item => {
-        const medicine = new Medicine({
-            medicineId : item.itemSeq,
+        const medicineId = item.itemSeq;
+        const medicineInfo = {
             name : item.itemName,
             company : item.entpName,
             target : item.efcyQesitm,
             dosage : item.useMethodQesitm,
             warn : item.atpnWarnQesitm + '\n\n' + item.atpnQesitm,
             antiEffect : item.seQesitm
-        })
+        };
         
         Medicine.findOneAndUpdate({ 
-            medicineId : medicine.medicineId 
-        }, medicine, {
+            medicineId
+        }, medicineInfo, {
             upsert : true
-        })
+        }).exec();
     })
 }

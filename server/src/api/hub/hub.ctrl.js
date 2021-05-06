@@ -2,16 +2,16 @@
 const Hub = require('../../models/hub');
 const Mqtt = require('../../lib/MqttModule');
 
-exports.hubRegister = async (ctx) => {
+exports.hubConnect = async (ctx) => {
     const { host, port, hubId, topic } = ctx.request.body;
 
-    const hub = new Hub({
+    const hub = {
         hubId,
         hosting : {
             host,
             port
         }
-    });
+    };
 
     await Hub.findOneAndUpdate({ 
         hubId 
@@ -24,4 +24,8 @@ exports.hubRegister = async (ctx) => {
 
     ctx.body = 'host :' + host;
     ctx.status = 200;
+}
+
+exports.hubDisconnect = async(ctx) => {
+
 }
