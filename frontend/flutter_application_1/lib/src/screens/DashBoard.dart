@@ -9,17 +9,28 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
-        ),
-        body: Center(
-          child: Text('DashBoard 작업 영역'),
-        ),
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Color(0xffe5f4ff),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(65),
+        child:Container(
+          padding : const EdgeInsets.fromLTRB(0,10,0,0),
+          color: Colors.white,
+          child : AppBar(
+            backgroundColor: Colors.white,
+            actions: <Widget> [
+              Container (
+                width : size.width * 0.2
+              
+              )
+
+            ],
+
+          ))
       ),
-    );
+    )
   }
 }

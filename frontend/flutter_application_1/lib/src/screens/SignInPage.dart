@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import './DashBoard.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -29,16 +30,6 @@ class _SignInPageState extends State<SignInPage> {
         }
       },
       child: Scaffold(
-        // appBar: AppBar(
-        //     elevation: 0,
-        //     backgroundColor: white,
-        //     title: Padding(
-        //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        //       child: Text('',
-        //           textScaleFactor: 1.0,
-        //           style: TextStyle(
-        //               color: Colors.grey, fontFamily: 'Noto', fontSize: 16)),
-        //     )),
         body: Builder(
           builder: (BuildContext context) {
             return ListView(
@@ -171,6 +162,20 @@ class _SignInPageState extends State<SignInPage> {
                                               ],
                                             );
                                           });
+                                    } else {
+                                      emailController.text =
+                                          emailController.text.trim();
+                                      passwordController.text =
+                                          passwordController.text.trim();
+                                      saveMessage = "로그인 성공";
+                                      if (saveMessage == "로그인 성공") {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  DashBoard(),
+                                            ));
+                                      }
                                     }
                                   },
                                   shape: RoundedRectangleBorder(
