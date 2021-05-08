@@ -22,7 +22,7 @@ Mongoose.connect(MONGO_URL, {
     console.log('Mongo DB is connected : ', MONGO_URL);
     updateMedicineInfo.updateMedicineInfo();
 }).catch(e => {
-    console.log(e, error);
+    console.log(e);
 })
 
 app.use(bodyparser());
