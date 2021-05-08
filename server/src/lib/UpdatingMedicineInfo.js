@@ -5,7 +5,7 @@ exports.updateMedicineInfo = async() => {
     const itemArray = await getItemsList(getQueryURL);
     await exportJsonData(itemArray);
 
-    console.log('All of data is updated!');
+    console.log('\x1b[1;35mAll of data is updated!\x1b[0m');
 }
 
 //queryUrl을 return하는 함수 : 한 페이지에 100개의 item씩 요청할 수 있다.
@@ -32,7 +32,7 @@ const getItemsList = async(queryUrl) => {
             return result;
         
         result.push(...items);
-        console.log('medicine data getting processing... : page', i, 'done');
+        console.log('\x1b[100mmedicine data getting processing... : page', i, 'done\x1b[0m');
         i++;
     }
 }
