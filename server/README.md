@@ -6,7 +6,21 @@
 - Web Framework : **Koa**
 - DBMS : **Mongo DB**
 
-## ToDo
+# DataBase Table & Field
+
+- **유저 Table / 허브(가칭) Table**
+
+![https://github.com/Park-KwonSoo/Smart_Medicine_Bottle/blob/server/design/DataTable1.png?raw=true](https://github.com/Park-KwonSoo/Smart_Medicine_Bottle/blob/server/design/DataTable1.png?raw=true)
+
+- **약병 Table**
+
+![https://github.com/Park-KwonSoo/Smart_Medicine_Bottle/blob/server/design/DataTable2.png?raw=true](https://github.com/Park-KwonSoo/Smart_Medicine_Bottle/blob/server/design/DataTable2.png?raw=true)
+
+- **약 정보 Table**
+
+![https://github.com/Park-KwonSoo/Smart_Medicine_Bottle/blob/server/design/DataTable3.png?raw=true](https://github.com/Park-KwonSoo/Smart_Medicine_Bottle/blob/server/design/DataTable3.png?raw=true)
+
+# ToDo
 
 - [x]  MQTT Hosting
 
