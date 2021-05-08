@@ -9,7 +9,7 @@ const MedicineSchema = new Schema ({
     target : { type : String, required : true },
     dosage : { type : String, required : true },
     warn : { type : String, required : true },
-    antiEffect : String
+    antiEffect : { type : String, required : true }
 })
 
 MedicineSchema.statics.findByName = async function(name) {
