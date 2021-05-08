@@ -23,6 +23,17 @@ exports.lookupInfo = async(ctx) => {
     }
 }
 
+//약병의 ID를 찾아서 약의 정보를 등록 : Post
+exports.setMedicine = async(ctx) => {
+    const { medicineId, bottleId } = ctx.request.body;
+
+    await Bottle.findOneAndUpdate({
+        bottleId
+    }, { medicineId });
+
+    ctx.status = 200;
+}
+
 const dataRequest = () => {
     return 'dataRequest'
 }
