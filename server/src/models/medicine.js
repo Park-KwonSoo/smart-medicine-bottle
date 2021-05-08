@@ -39,9 +39,9 @@ MedicineSchema.statics.findByTarget = async function(target) {
     return result;
 };
 
-MedicineSchema.statics.findById = async function(medicineId) {
+MedicineSchema.statics.findByMedicineId = function(medicineId) {
     return this.findOne({ medicineId })
-}
+};
 
 
 module.exports = mongoose.model('Medicine', MedicineSchema);

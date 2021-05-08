@@ -10,22 +10,22 @@ const HubSchema = new Schema ({
 
 HubSchema.statics.findByHubId = function(hubId) {
     return this.findOne({ hubId })
-}
+};
 
 HubSchema.methods.setHubHost = function(hosting) {
     this.hosting = hosting;
-}
+};
 
 HubSchema.methods.getHubHost = function() {
     return this.hosting;
-}
+};
 
 HubSchema.methods.setHub_UserId = function(userId) {
     this.userId = userId;
-}
+};
 
 HubSchema.methods.getHub_UserId = function() {
     return this.userId;
-}
+};
 
 module.exports = mongoose.model('Hub', HubSchema);

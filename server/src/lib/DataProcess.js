@@ -3,7 +3,7 @@ const Bottle = require('../models/bottle');
 //Hub topic : bottle/bottleId
 //Hub로부터 받은 message : 개폐여부/온도/습도/초음파센서
 exports.factoring = (topic, message) => {
-    const bottleId = topic.split('/')[1];
+    const bottleId = parseInt(topic.split('/')[1]);
     const data = message.split('/');
     const [isOpen, temperature, humidity, balance] = data;
 
@@ -40,6 +40,22 @@ exports.bottleInfoUpdate = async(data) => {
 }
 
 //해당 MQTT Broker(client)에 bottleId의 정보에 관한 message를 발행한다.
-exports.dataPublishg = (client, bottleId) => {
+exports.dataPublishing = async(client, bottleId) => {
+    const topic = 'bottle/'.concat(bottleId);
     
+    const bottle = await Bottle.findByBottleId(bottleId);
+    const recentOpen = await bottle.getRecentOpenDate();
+
+    const message = await transDate(recentOpen);
+   
+    client.publish(topic, message, () => {
+        console.log('topic : ', topic, 'message : ', message);
+    })
+}
+
+//날짜를 yymmdd로 변환해주는 함수
+const transDate = (date) => {
+    return String(date.getFullYear()).substr(2, 2)
+    + (date.getMonth() + 1 < 10 ? '0' + String(date.getMonth() + 1) : String(date.getMonth() + 1))
+    + (date.getDate() < 10 ? '0' + String(date.getDate()) : String(date.getDate()));
 }
