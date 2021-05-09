@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const HubSchema = new Schema ({
     hubId : { type : Number, required : true, unique : true },
-    hosting : Object,
+    hosting : { type : Object, default : null },
     userId : { type : String, default : null },
 });
 
