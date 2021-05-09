@@ -22,7 +22,7 @@ const getQueryURL = (i) => {
 //모든 page의 item을 list에 push해서 return하는 함수
 const getItemsList = async(queryUrl) => {
     let i = 1, getItem = null, items = null;
-    const result = new Array();
+    const result = [];
     
     while(true) {
         getItem = await axios.get(queryUrl(i));
