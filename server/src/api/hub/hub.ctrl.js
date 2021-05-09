@@ -3,26 +3,20 @@ const Hub = require('../../models/hub');
 const Mqtt = require('../../lib/MqttModule');
 
 exports.hubConnect = async (ctx) => {
-    const { host, port, hubId, topic } = ctx.request.body;
+    const { host, port, hubId } = ctx.request.body;
 
-    const hub = {
-        hubId,
-        hosting : {
-            host,
-            port
-        }
+    const hosting = {
+        host,
+        port
     };
 
-    await Hub.findOneAndUpdate({ 
-        hubId 
-    }, hub, { 
+    Mqtt.mqttOn(hosting);
+    await Hub.findOneAndUpdate({
+        hubId
+    }, { hosting }, {
         upsert : true
     });
 
-    const client = Mqtt.mqttOn({ host, port });
-    Mqtt.mqttSubscribe(client, topic);
-
-    ctx.body = 'host :' + host;
     ctx.status = 200;
 }
 
