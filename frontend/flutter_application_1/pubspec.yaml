@@ -41,4 +41,5 @@ flutter:
   assets:
     - images/
     - images/main_logo.png
+    - images/setting.png
 
