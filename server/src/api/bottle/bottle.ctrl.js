@@ -5,9 +5,9 @@ const Medicine = require('../../models/medicine');
 const DataProcess = require('../../lib/DataProcess');
 const Mqtt = require('../../lib/MqttModule');
 
-exports.bottleRegister = async(ctx) => {
+exports.bottleConnect = async(ctx) => {
     const { bottleId, hubId } = ctx.request.body;
-    const topic = 'bottle/' + String(bottleId) + '/bts';
+    const topic = 'bottle/' + bottleId + '/bts';
 
     const newBottle = new Bottle({
         bottleId,
@@ -37,11 +37,16 @@ exports.bottleRegister = async(ctx) => {
         port : hosting.port,
         clientId : hosting.clientId
     });
+    
     Mqtt.mqttSubscribe(client, topic, DataProcess.dataPublish);
 
     await newBottle.save();
 
     ctx.status = 200;
+};
+
+exports.bottleDisconnect = async(ctx) => {
+    const { bottleId } = ctx.params;
 };
 
 exports.lookupInfo = async(ctx) => {
@@ -53,6 +58,7 @@ exports.lookupInfo = async(ctx) => {
         return;
     }
     
+    ctx.status = 200;
     ctx.body = bottle;
 }
 
