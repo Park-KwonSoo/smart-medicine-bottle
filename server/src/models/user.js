@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bycrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const Schema = mongoose.Schema;
@@ -10,12 +10,12 @@ const UserSchema = new Schema({
 });
 
 UserSchema.methods.setPassword = async function(password) {
-    const hash = await bycrypt(password, 10);
+    const hash = await bcrypt.hash(password, 10);
     this.hashedPassword = hash;
 };
 
 UserSchema.methods.checkPassword = async function(password) {
-    const result = await bycrypt.compare(password, this.hashedPassword)
+    const result = await bcrypt.compare(password, this.hashedPassword)
     return result;
 };
 

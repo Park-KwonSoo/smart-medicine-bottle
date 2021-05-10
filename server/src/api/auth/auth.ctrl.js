@@ -5,7 +5,7 @@ const Joi = require('joi');
 exports.register = async(ctx) => {
     const { userId, password, passwordCheck } = ctx.request.body;
 
-    const schema = Joi.object.keys({
+    const schema = Joi.object().keys({
         userId : Joi.string().min(8).max(15).required(),
         password : Joi.string().required(),
         passwordCheck : Joi.string().required(),
@@ -37,7 +37,7 @@ exports.register = async(ctx) => {
 exports.login = async(ctx) => {
     const { userId, password } = ctx.request.body;
 
-    const schema = Joi.object.keys({
+    const schema = Joi.object().keys({
         userId : Joi.string().min(8).max(15).required(),
         password : Joi.string().required()
     })
@@ -67,7 +67,9 @@ exports.login = async(ctx) => {
     });
 
     ctx.status = 201;
-    ctx.body = user;
+    ctx.body = {
+        userId
+    };
 
 };
 
@@ -76,6 +78,7 @@ exports.logout = async(ctx) => {
         httpOnly : true,
         maxAge : 0
     });
+
     ctx.status = 204;
     ctx.body = null;
 };
