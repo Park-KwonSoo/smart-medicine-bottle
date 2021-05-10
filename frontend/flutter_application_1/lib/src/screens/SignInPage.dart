@@ -173,7 +173,7 @@ class _SignInPageState extends State<SignInPage> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (BuildContext context) =>
-                                                  DashBoard(),
+                                                  DashBoard(pageNumber: 0),
                                             ));
                                       }
                                     }

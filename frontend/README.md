@@ -23,3 +23,7 @@
 ### 2021-05-09
 + Appbar 기능 구현
 appbar 관련 디자인은 추후 구현 예정 
+
+### 2021-05-10
++ Appbar 디자인 변경 및 Navgation Bar 구현
++ Setting은 별도의 페이지로 구성
