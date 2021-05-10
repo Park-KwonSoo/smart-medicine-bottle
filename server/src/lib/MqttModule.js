@@ -39,6 +39,9 @@ exports.mqttOff = (hosting) => {
             && client.options.host === hosting.host
             && client.options.port === hosting.port)
     });
-    clientList[filterIndex].end();
-    clientList.splice(filterIndex, 1);
+
+    if(filterIndex !== -1) {
+        clientList[filterIndex].end();
+        clientList.splice(filterIndex, 1);
+    }
 }

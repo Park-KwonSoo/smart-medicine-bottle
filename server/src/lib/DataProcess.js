@@ -39,9 +39,7 @@ const bottleInfoUpdate = async(data) => {
     if(isOpen === '1') {
         await Bottle.findOneAndUpdate({
             bottleId
-        }, { recentOpen : openDate }, {
-            new : true
-        });
+        }, { recentOpen : openDate });
     }
 
     await Bottle.findOneAndUpdate({
@@ -50,12 +48,12 @@ const bottleInfoUpdate = async(data) => {
         temperature,
         humidity,
         balance
-    }, { new : true });
+    });
 }
 
 //해당 MQTT Broker(client)에 bottleId의 정보에 관한 topic과 message를 리턴한다.
 const transPublishingTopicAndMessage = async(bottleId) => {
-    const topic = 'bottle/'.concat(bottleId) + '/stb';
+    const topic = 'bottle/' + bottleId + '/stb';
     
     const bottle = await Bottle.findByBottleId(bottleId);
     const recentOpen = await bottle.getRecentOpenDate();
@@ -65,7 +63,7 @@ const transPublishingTopicAndMessage = async(bottleId) => {
     return {
         topic,
         message
-    }
+    };
 }
 
 //날짜를 yymmdd로 변환해주는 함수
