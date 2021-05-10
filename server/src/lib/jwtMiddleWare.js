@@ -14,13 +14,13 @@ const jwtMiddleware = async (ctx, next) => {
             userId : decoded.userId
         };
         const now = Math.floor(Date.now() / 1000);
-        if (decoded.exp - now < 60 * 60 * 24 * 3.5) {
+        if (decoded.exp - now < 60 * 60 * 24 * 7) {
             const user = await User.findById(decoded._id);
             const token = user.generateToken();
 
             ctx.cookies.set('access_token', token, {
                 httpOnly : true,
-                maxAge : 1000 * 60 * 60 * 24 * 7
+                maxAge : 1000 * 60 * 60 * 24 * 30
             })
         }
 
