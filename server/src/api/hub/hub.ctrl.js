@@ -33,4 +33,6 @@ exports.hubDisconnect = async(ctx) => {
     Mqtt.mqttOff(hosting);
 
     await Hub.deleteOne({ hubId });
+
+    ctx.status = 200;
 }

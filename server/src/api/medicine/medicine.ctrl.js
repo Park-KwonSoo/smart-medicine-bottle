@@ -15,6 +15,7 @@ exports.medicineSearch = async(ctx) => {
     else if (target && target !== '' && target !== undefined) 
         result = await medicineSearch_ByTarget(target);
 
+    ctx.status = 200;
     ctx.body = {
         totalItem : result.length,
         result
