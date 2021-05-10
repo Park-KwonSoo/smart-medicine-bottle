@@ -3,7 +3,7 @@ const Hub = require('../../models/hub');
 const Mqtt = require('../../lib/MqttModule');
 
 exports.hubConnect = async (ctx) => {
-    const { host, port, hubId } = ctx.request.body;
+    const { hubId, host, port } = ctx.request.body;
 
     const hosting = {
         host,
@@ -21,5 +21,16 @@ exports.hubConnect = async (ctx) => {
 }
 
 exports.hubDisconnect = async(ctx) => {
+    const { hubId } = ctx.params;
 
+    const hub = await Hub.findByHubId(hubId);
+    if(!hub) {
+        ctx.status = 404;
+        return;
+    }
+
+    const hosting = await hub.getHubHost();
+    Mqtt.mqttOff(hosting);
+
+    await Hub.deleteOne({ hubId });
 }

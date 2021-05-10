@@ -4,6 +4,6 @@ const hubCtrl = require('./hub.ctrl');
 const hub = new Router();
 
 hub.post('/connect', hubCtrl.hubConnect);
-hub.post('/disconnect', hubCtrl.hubDisconnect);
+hub.post('/disconnect/:hubId', hubCtrl.hubDisconnect);
 
 module.exports = hub;
