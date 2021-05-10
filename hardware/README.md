@@ -8,3 +8,4 @@
 
 ## 일정
 + 2021.05.03: Init(개인 아두이노 코드 git에서 이전)
++ 2021.05.11: Arduino 개발 중단, RaspberryPi Pico로 플랫폼 이전, C++ -> MicroPython
