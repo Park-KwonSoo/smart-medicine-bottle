@@ -30,4 +30,10 @@ appbar 관련 디자인은 추후 구현 예정
 
 ### 2021-05-11
 + Inside Information 화면 구성 
+![Screenshot_1620749267](/uploads/b12b3b42f72b71f4883c53ad758b9061/Screenshot_1620749267.png)
 + Outside Information 화면 구성
+![Screenshot_1620749270](/uploads/0d30a1f80b41dc1563cc7930458ca8ba/Screenshot_1620749270.png)
++ Setting Page 화면 구성 
+![Screenshot_1620749274](/uploads/6fe43fa280007f97572a59f45e138b75/Screenshot_1620749274.png) 
+
+
