@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/src/screens/SettingPage.dart';
 import '../shared/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,7 +23,6 @@ class _DashBoardState extends State<DashBoard> {
       ineerInformationpage(context),
       mainpage(context),
       outerInformationpage(context),
-      setting(context),
     ];
 
     return Scaffold(
@@ -44,7 +44,13 @@ class _DashBoardState extends State<DashBoard> {
               Icons.settings,
               color: Colors.black,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => SettingPage(),
+                  ));
+            },
           )
         ],
       ),
@@ -658,12 +664,6 @@ Widget outerInformationpage(BuildContext context) {
         ],
       ),
     ),
-  );
-}
-
-Widget setting(BuildContext context) {
-  return Scaffold(
-    backgroundColor: Colors.green,
   );
 }
 

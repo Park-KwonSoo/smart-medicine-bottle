@@ -16,12 +16,6 @@ class HomePage extends StatefulWidget {
 
 /// first page class
 class _HomePageState extends State<HomePage> {
-  void increaseScreen() {
-    setState(() {
-      widget.screenCount++;
-    });
-  }
-
   @override
   void initState() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -101,14 +95,14 @@ class _HomePageState extends State<HomePage> {
                                     ));
                               },
                               child: Text(
-                                '로그인        sdf',
+                                '로그인',
                                 textScaleFactor: 1.0,
                                 style: TextStyle(
-                                    fontSize: 1,
+                                    color: Colors.white,
+                                    fontSize: 16,
                                     fontFamily: 'Noto',
                                     fontWeight: FontWeight.bold),
                               ),
-                              textColor: Colors.black,
                               color: Color(0xff1674f6),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50)),
@@ -116,30 +110,31 @@ class _HomePageState extends State<HomePage> {
                       ),
                       GestureDetector(
                         child: Container(
-                            width: size.width * 0.8,
-                            padding: EdgeInsets.all(0),
-                            child: OutlineButton(
-                              padding: EdgeInsets.fromLTRB(0, 25, 0, 15),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          SignUpLocal(),
-                                    ));
-                              },
-                              child: Text(
-                                '회원 가입',
-                                textScaleFactor: 1.0,
-                                style:
-                                    TextStyle(fontSize: 16, fontFamily: 'Noto'),
-                              ),
-                              textColor: Colors.black,
-                              highlightedBorderColor: highlightColor,
-                              borderSide: BorderSide.none,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                            )),
+                          width: size.width * 0.8,
+                          padding: EdgeInsets.all(0),
+                          child: OutlineButton(
+                            padding: EdgeInsets.fromLTRB(0, 25, 0, 15),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        SignUpLocal(),
+                                  ));
+                            },
+                            child: Text(
+                              '회원 가입',
+                              textScaleFactor: 1.0,
+                              style:
+                                  TextStyle(fontSize: 16, fontFamily: 'Noto'),
+                            ),
+                            textColor: Colors.black,
+                            highlightedBorderColor: highlightColor,
+                            borderSide: BorderSide.none,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                        ),
                       ),
                     ],
                   ),

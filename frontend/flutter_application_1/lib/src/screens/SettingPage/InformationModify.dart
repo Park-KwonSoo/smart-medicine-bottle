@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../shared/colors.dart';
+import '../../shared/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class InnerInformation extends StatefulWidget {
+class InformationModify extends StatefulWidget {
   @override
-  _InnerInformationState createState() => _InnerInformationState();
+  _InformationModifyState createState() => _InformationModifyState();
 }
 
-class _InnerInformationState extends State<InnerInformation> {
+class _InformationModifyState extends State<InformationModify> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome to Flutter',
@@ -17,7 +17,7 @@ class _InnerInformationState extends State<InnerInformation> {
           title: Text('Welcome to Flutter'),
         ),
         body: Center(
-          child: Text('약병 내부 페이지 작업 영역'),
+          child: Text('약병 정보 변경 작업 구역'),
         ),
       ),
     );

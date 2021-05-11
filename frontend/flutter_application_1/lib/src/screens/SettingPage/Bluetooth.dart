@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../shared/colors.dart';
+import '../../shared/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class OuterInformation extends StatefulWidget {
+class Bluetooth extends StatefulWidget {
   @override
-  _OuterInformationState createState() => _OuterInformationState();
+  _BluetoothState createState() => _BluetoothState();
 }
 
-class _OuterInformationState extends State<OuterInformation> {
+class _BluetoothState extends State<Bluetooth> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome to Flutter',
