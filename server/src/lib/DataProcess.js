@@ -58,7 +58,7 @@ const transPublishingTopicAndMessage = async(bottleId) => {
     const bottle = await Bottle.findByBottleId(bottleId);
     const recentOpen = await bottle.getRecentOpenDate();
 
-    const message = await transDate(recentOpen);
+    const message = 'res/' + await transDate(recentOpen);
    
     return {
         topic,
