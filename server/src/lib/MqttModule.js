@@ -1,7 +1,7 @@
 const mqtt = require('mqtt');
 const clientList = [];
 
-exports.mqttOn = async (hosting) => {
+exports.mqttOn = async (hosting, func) => {
     const filterIndex = clientList.findIndex(client => {
         return (client.options.clientId === hosting.clientId
             && client.options.host === hosting.host
@@ -11,26 +11,37 @@ exports.mqttOn = async (hosting) => {
     if(filterIndex === -1) {
         const client = mqtt.connect(hosting);
         clientList.push(client);
+
         client.on('connect', () => {
             console.log('Client connected: ', client.connected);
         }); 
+
+        client.on('message', async (topic, message, packet) => {
+            const result = await func(topic, message.toString());
+            this.mqttPublishMessage(client, result);
+            console.log('\x1b[1;32msubscribe : topic', topic, 'message : ', message.toString(), '\x1b[0m');
+        });
         
         return client;
-    } else  {
-        return clientList[filterIndex];
-    };
+    } 
+
+    return clientList[filterIndex];
 };
 
-exports.mqttSubscribe = (client, topic, func) => {
+exports.mqttSubscribe = (client, topic) => {
     client.subscribe(topic);
-    client.on('message', async (topic, message, packet) => {
-        const result = await func(topic, message.toString());
-        this.mqttPublishMessage(client, result);
-    });
 };
 
 exports.mqttPublishMessage = (client, { topic, message }) => {
-    client.publish(topic, message, () => {});
+    client.publish(topic, message, () => {
+        console.log('\x1b[1;33mpublish : topic', topic, 'message : ', message, '\x1b[0m');
+    });
+};
+
+exports.mqttUnsubscribe = (client, topic) => {
+    client.unsubscribe(topic, () => {
+        console.log('unsubscribe', topic);
+    });
 };
 
 exports.mqttOff = (hosting) => {

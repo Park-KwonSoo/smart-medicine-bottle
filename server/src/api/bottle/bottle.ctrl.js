@@ -2,12 +2,10 @@
 const Bottle = require('../../models/bottle');
 const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
-const DataProcess = require('../../lib/DataProcess');
 const Mqtt = require('../../lib/MqttModule');
 
 exports.bottleConnect = async(ctx) => {
     const { bottleId, hubId } = ctx.request.body;
-    const topic = 'bottle/' + bottleId + '/bts';
 
     const newBottle = new Bottle({
         bottleId,
@@ -32,13 +30,9 @@ exports.bottleConnect = async(ctx) => {
         return;
     }
 
-    const client = await Mqtt.mqttOn({
-        host : hosting.host,
-        port : hosting.port,
-        clientId : hosting.clientId
-    });
-    
-    Mqtt.mqttSubscribe(client, topic, DataProcess.dataPublish);
+    const client = await Mqtt.mqttOn(hosting);
+    const topic = 'bottle/' + bottleId + '/bts';
+    Mqtt.mqttSubscribe(client, topic);
 
     await newBottle.save();
 
@@ -46,7 +40,25 @@ exports.bottleConnect = async(ctx) => {
 };
 
 exports.bottleDisconnect = async(ctx) => {
-    const { bottleId } = ctx.params;
+    const { bottleId } = ctx.params; 
+
+    const bottle = await Bottle.findByBottleId(bottleId);
+    if(!bottle) {
+        ctx.status = 404;
+        return;
+    } 
+
+    const hub = await Hub.findByHubId(bottle.getHubId());
+    const hosting = await hub.getHubHost();
+
+    const client = await Mqtt.mqttOn(hosting);
+    const topic = 'bottle/' + bottleId + '/bts';
+    Mqtt.mqttUnsubscribe(client, topic);
+
+    await Bottle.deleteOne({ bottleId });
+
+    ctx.status = 200;
+
 };
 
 exports.lookupInfo = async(ctx) => {
