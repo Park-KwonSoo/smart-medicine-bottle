@@ -16,6 +16,10 @@ BottleSchema.statics.findByBottleId = function(bottleId) {
     return this.findOne({ bottleId });
 };
 
+BottleSchema.methods.getBottleId = function() {
+    return this.bottleId;
+};
+
 BottleSchema.methods.getRecentOpenDate = function() {
     return this.recentOpen;
 };
