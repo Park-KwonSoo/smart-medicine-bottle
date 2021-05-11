@@ -41,9 +41,17 @@
 
 - [x]  데이터 처리 로직 구현
 - [x]  Node.JS의 특정 유저의 MQTT client를 어떻게 모듈화 시킬까 ?
-- [ ]  API 유저 인증 추가
-- [ ]  Bottle API : 데이터 요청 message publishing 추가
+- [x]  API 유저 인증 추가
+
+→ 5 / 11 : 각 API에 Authorization 추가
+
+- [x]  Bottle API : 데이터 요청 message publishing 추가
+
+→ 5 / 11: Bottle Info 조회 시, Broker로 약병의 현재 상태 요청 메시지 전송
+
 - [ ]  Hub, Bottle, User unregister 추가 및 연관 데이터 처리
-- [ ]  logic return value 및 status
+- [x]  logic return value 및 status
+
+→ 5 / 11 : ctx.body, status 추가
 
 [Schedule](https://www.notion.so/cdcc6627a8344c8da56ffb3856bfc1b9)
