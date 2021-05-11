@@ -43,3 +43,16 @@ flutter:
     - images/main_logo.png
     - images/setting.png
 
+fonts:
+  # - family: Raleway
+  #   fonts:
+        #     - asset: fonts/Raleway-Regular.ttf
+        #     - asset: fonts/Raleway-Italic.ttf
+        #       style: italic
+- family: NotoSansKR
+  fonts:
+    - asset: assets/fonts/NotoSansKR-Regular.otf
+    - asset: assets/fonts/NotoSansKR-Bold.otf
+      weight: 500
+    - asset: assets/fonts/NotoSansKR-Black.otf
+      weight: 700

@@ -31,7 +31,7 @@ class _DashBoardState extends State<DashBoard> {
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.white,
         title: Text(
-          'Medicine Box',
+          'Smart Medicine Box',
           style: TextStyle(
               color: Colors.black,
               fontSize: 20,
@@ -87,10 +87,10 @@ class _DashBoardState extends State<DashBoard> {
           })
         },
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Inner'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'In'),
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-            label: 'Outer',
+            label: 'Out',
             icon: Icon(Icons.favorite),
           )
         ],
@@ -115,38 +115,78 @@ Widget mainpage(BuildContext context) {
     약 제조사
   */
   return Scaffold(
-    backgroundColor: Color(0xffe5f4ff),
+    backgroundColor: Colors.white,
     body: Container(
       height: size.height * 0.6,
       margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
       padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-      decoration: BoxDecoration(
-        border: Border.all(),
-        borderRadius: BorderRadius.all(
-            Radius.circular(4.0) //         <--- border radius here
-            ),
-      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
+            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-            height: size.height * 0.1,
+            height: size.height * 0.15,
+            width: size.width,
             decoration: BoxDecoration(
               border: Border.all(),
               borderRadius: BorderRadius.all(
                   Radius.circular(4.0) //         <--- border radius here
                   ),
             ),
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '약 이름:',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  '무슨 무슨 비타민 ',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 36,
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
           ),
           Container(
+            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
             margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-            height: size.height * 0.1,
+            height: size.height * 0.15,
+            width: size.width,
             decoration: BoxDecoration(
               border: Border.all(),
               borderRadius: BorderRadius.all(
                   Radius.circular(4.0) //         <--- border radius here
                   ),
+            ),
+            child: new Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '약 제조사:',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  'Test123',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 32,
+                      fontFamily: 'NotoSansKR',
+                      fontWeight: FontWeight.w700),
+                ),
+              ],
             ),
           ),
         ],
@@ -156,25 +196,468 @@ Widget mainpage(BuildContext context) {
 }
 
 Widget ineerInformationpage(BuildContext context) {
-  /* 
-    약병 내부 정보 화면
-    약병 내부 온도 약병 내부 습도 약병 내부 현황 최근 계폐 시간 을 표시
-    맨처음 Inside Information 출력
-
-    이거 고민이 그냥 저기에 있는 대로 할것인지 아니면 appbar를 저렇게 할 것인지
-
-    저거는 container을 잘 성정 하고 text를 설정 해야 할 듯 
-
-    
-  */
+  final Size size = MediaQuery.of(context).size;
   return Scaffold(
     backgroundColor: Colors.white,
+    body: Container(
+      height: size.height * 0.9,
+      margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            height: size.height * 0.08,
+            width: size.width,
+            child: Center(
+              child: Text(
+                'Inside Information',
+                textAlign: TextAlign.center,
+                textScaleFactor: 1.0,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 32,
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            height: size.height * 0.25,
+            width: size.width,
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: size.width * 0.43,
+                        height: size.width * 0.43,
+                        margin: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xff8E97FD),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.05,
+                              child: Center(
+                                child: Text(
+                                  '약병 내부 온도',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.14,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '14',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 80,
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    Text(
+                                      '℃',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 60,
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w800),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: size.width * 0.43,
+                        height: size.width * 0.43,
+                        margin: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xff8E97FD),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.05,
+                              child: Center(
+                                child: Text(
+                                  '약병 내부 습도',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.14,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '57',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 80,
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    Text(
+                                      '%',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 60,
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w800),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            height: size.height * 0.3,
+            width: size.width,
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        width: size.width * 0.43,
+                        height: size.width * 0.43,
+                        margin: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xff8E97FD),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.05,
+                              child: Center(
+                                child: Text(
+                                  '약병 내부 잔량',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.14,
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '57',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 80,
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    Text(
+                                      '%',
+                                      textAlign: TextAlign.center,
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 60,
+                                          fontFamily: 'NotoSansKR',
+                                          fontWeight: FontWeight.w800),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: size.width * 0.43,
+                        height: size.width * 0.43,
+                        margin: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                        decoration: BoxDecoration(
+                          color: Color(0xff8E97FD),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.05,
+                              child: Center(
+                                child: Text(
+                                  '최근 개폐 시간',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.14,
+                              child: Center(
+                                child: Text(
+                                  '15:57',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 60,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }
 
 Widget outerInformationpage(BuildContext context) {
+  final Size size = MediaQuery.of(context).size;
   return Scaffold(
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.white,
+    body: Container(
+      height: size.height * 0.9,
+      margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            height: size.height * 0.08,
+            width: size.width,
+            child: Center(
+              child: Text(
+                'Outside Information',
+                textAlign: TextAlign.center,
+                textScaleFactor: 1.0,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 32,
+                    fontFamily: 'NotoSansKR',
+                    fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            height: size.height * 0.20,
+            width: size.width,
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                        width: size.width * 0.9,
+                        height: size.height * 0.18,
+                        decoration: BoxDecoration(
+                          color: Color(0xff8E97FD),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.05,
+                              child: Center(
+                                child: Text(
+                                  '권장 약 복용량',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 28,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.12,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '2',
+                                    textAlign: TextAlign.center,
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 80,
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w800),
+                                  ),
+                                  Text(
+                                    ' 개',
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 64,
+                                        fontFamily: 'NotoSansKR',
+                                        fontWeight: FontWeight.w800),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            height: size.height * 0.20,
+            width: size.width,
+            child: Column(
+              children: <Widget>[
+                Flexible(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                        width: size.width * 0.9,
+                        height: size.height * 0.18,
+                        decoration: BoxDecoration(
+                          color: Color(0xff8E97FD),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.05,
+                              child: Center(
+                                child: Text(
+                                  '약 복용 시간',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 28,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              width: size.width,
+                              height: size.height * 0.12,
+                              child: Center(
+                                child: Text(
+                                  '15:57',
+                                  textAlign: TextAlign.center,
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 70,
+                                      fontFamily: 'NotoSansKR',
+                                      fontWeight: FontWeight.w800),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ),
   );
 }
 
