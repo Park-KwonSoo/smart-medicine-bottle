@@ -52,6 +52,7 @@ def _run():
                 # Refine BT data
                 input_data = input_data.strip()
                 display4.work_tm1637(input_data)
+                neopixel.work_led()
             
             # Update reed state
             reed_data = current_reed_data
