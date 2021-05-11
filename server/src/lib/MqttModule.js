@@ -18,8 +18,8 @@ exports.mqttOn = async (hosting, func) => {
 
         client.on('message', async (topic, message, packet) => {
             const result = await func(topic, message.toString());
-            this.mqttPublishMessage(client, result);
             console.log('\x1b[1;32msubscribe : topic', topic, 'message : ', message.toString(), '\x1b[0m');
+            this.mqttPublishMessage(client, result);
         });
         
         return client;
