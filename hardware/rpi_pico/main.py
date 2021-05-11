@@ -5,6 +5,7 @@ import rp2
 import neopixel
 import dht
 import bluetoooth as bto
+import ultrasonic
 
 # --------------------------------------------------- #
 # INIT
@@ -33,6 +34,9 @@ def _run():
                     send_string = str(dht_data[0]) + ',' + str(dht_data[1])
                     print(send_string)
                     bto.send_data_bt(send_string)
+            elif input_data == 'C':
+                ultasonic_data = ultrasonic.work_sr04()
+                bto.send_data_bt(str(ultasonic_data))
             else:
                 print('WRONG INPUT')
 
