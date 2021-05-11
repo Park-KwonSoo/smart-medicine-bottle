@@ -1,10 +1,16 @@
-//해당하는 약의 정보를 불러오거나, 약을 검색
+//약의 정보를 검색하는 API : 약명, 제조사, 효능
 const Medicine = require('../../models/medicine');
 
 exports.medicineSearch = async(ctx) => {
+    const token = ctx.cookies.get('access_token');
+    if(!token) {
+        ctx.status = 401;
+        return;
+    }
+
     const { name, company, target } = ctx.request.body;
 
-    let result = null;
+    let result = [];
     
     if (name && name !== '' && name !== undefined)
         result = await medicineSearch_ByName(name);
@@ -14,7 +20,7 @@ exports.medicineSearch = async(ctx) => {
 
     else if (target && target !== '' && target !== undefined) 
         result = await medicineSearch_ByTarget(target);
-
+    
     ctx.status = 200;
     ctx.body = {
         totalItem : result.length,

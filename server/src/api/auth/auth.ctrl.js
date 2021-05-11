@@ -30,7 +30,7 @@ exports.register = async(ctx) => {
     await user.setPassword(password);
     await user.save();
 
-    ctx.status = 200;
+    ctx.status = 201;
 
 };
 
@@ -66,7 +66,7 @@ exports.login = async(ctx) => {
         maxAge : 1000 * 60 * 60 * 24 * 30
     });
 
-    ctx.status = 201;
+    ctx.status = 200;
     ctx.body = {
         userId
     };
@@ -80,5 +80,4 @@ exports.logout = async(ctx) => {
     });
 
     ctx.status = 204;
-    ctx.body = null;
 };
