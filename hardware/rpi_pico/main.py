@@ -6,39 +6,57 @@ import neopixel
 import dht
 import bluetoooth as bto
 import ultrasonic
+import reed
+import display4
 
 # --------------------------------------------------- #
-# INIT
-# --------------------------------------------------- #
-
-
-# --------------------------------------------------- #
-# ENTRYPOINT
+# LOOP ENTRYPOINT
 # --------------------------------------------------- #
 def _run():
+    # INIT REED STATE
+    reed_data = -1
+    # LOOP
     while True:
+        # ------------------------------------------- #
+        # DEFAULT LOOP
+        # ------------------------------------------- #
+        # Get data using BT(Standby)
         input_data = bto.recv_data_bt()
-        if input_data != '':
+
+        # Get reed data from reed sensor
+        current_reed_data = reed.work_reed()
+
+        # ------------------------------------------- #
+        # IF CONDITION MET
+        # ------------------------------------------- #
+        if input_data != '' or reed_data != current_reed_data:
+            # Refine BT data
             input_data = input_data.strip()
+            # Test code
             print('INPUT FOUND ', input_data)
-            print(len(input_data))
-            if input_data == 'A':
-                neopixel.work_led(0.2)
-            elif input_data == 'B':
+            
+            # IF INPUT MEANS GET MESSAGE or MEDICINE LID STATUS CHANGED
+            if input_data == 'REQ' or reed_data != current_reed_data:
+                # Collect Humidity, Temperature
                 dht_data = dht.work_dht()
                 if dht_data == False:
-                    print("ERROR: DHT22 NOT WORKING")
-                else:
-                    print("INFO: HUMI ", dht_data[0])
-                    print("INFO: TEMP ", dht_data[1])
-                    send_string = str(dht_data[0]) + ',' + str(dht_data[1])
-                    print(send_string)
-                    bto.send_data_bt(send_string)
-            elif input_data == 'C':
-                ultasonic_data = ultrasonic.work_sr04()
-                bto.send_data_bt(str(ultasonic_data))
+                    dht_data = [0,0]
+                # Collect Ultrasonic distance
+                ultrasonic_data = ultrasonic.work_sr04()
+                # Make data string
+                send_data_str = str(reed_data) + '/' + str(dht_data[1]) + '/' + str(dht_data[0]) + '/' + str(ultrasonic_data)
+                # Send data using BT
+                bto.send_data_bt(send_data_str)
+            
             else:
-                print('WRONG INPUT')
+                # Refine BT data
+                input_data = input_data.strip()
+                display4.work_tm1637(input_data)
+            
+            # Update reed state
+            reed_data = current_reed_data
+
+
 
 if __name__ == '__main__':
     _run()
