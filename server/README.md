@@ -54,4 +54,13 @@
 
 → 5 / 11 : ctx.body, status 추가
 
+- [ ]  Private IP의 브로커를 웹서버와 연결
+- [ ]  Native Applicatio에 전달할 데이터 규칙 정하기
+- [ ]  WebServer AWS 배포
+- [ ]  안드로이드 <> 서버 <> 브로커 <> 약병 연결하기
+
+⇒ 안드로이드에서 블루투스로 약병 찾은 후, 해당 약병의 정보를 서버로 전송, 서버는 이 정보를 브로커에게 전송 후 블루투스 통신?
+
+- [ ]  bottleCtrl : lookUpInfo 함수에서 req 보낸 후 응답받은 새로운 bottle을 출력해야 한다.
+
 [Schedule](https://www.notion.so/cdcc6627a8344c8da56ffb3856bfc1b9)
