@@ -8,8 +8,9 @@ display4 = tm1637.TM1637(clk=Pin(12), dio=Pin(13))
 # --------------------------------------------------- #
 def work_tm1637(data:str):
     display4.show(data)
-    sleep(2)
-    mydisplay.show('    ')
+
+def off_tm1637():
+    display4.show('    ')
  
 # # Show a word
 # mydisplay.show("Pico")

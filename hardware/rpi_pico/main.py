@@ -10,6 +10,21 @@ import reed
 import display4
 
 # --------------------------------------------------- #
+# FUNCTIONS
+# --------------------------------------------------- #
+def _collect_sensor_datas(reed_data:int) -> str:
+    # Collect Humidity, Temperature
+    dht_data = dht.work_dht()
+    if dht_data == False:
+        dht_data = [0,0]
+    # Collect Ultrasonic distance
+    ultrasonic_data = ultrasonic.work_sr04()
+    # Make data string
+    send_data_str = str(reed_data) + '/' + str(dht_data[1]) + '/' + str(dht_data[0]) + '/' + str(ultrasonic_data)
+
+    return send_data_str
+
+# --------------------------------------------------- #
 # LOOP ENTRYPOINT
 # --------------------------------------------------- #
 def _run():
@@ -37,22 +52,16 @@ def _run():
             
             # IF INPUT MEANS GET MESSAGE or MEDICINE LID STATUS CHANGED
             if input_data == 'REQ' or reed_data != current_reed_data:
-                # Collect Humidity, Temperature
-                dht_data = dht.work_dht()
-                if dht_data == False:
-                    dht_data = [0,0]
-                # Collect Ultrasonic distance
-                ultrasonic_data = ultrasonic.work_sr04()
-                # Make data string
-                send_data_str = str(reed_data) + '/' + str(dht_data[1]) + '/' + str(dht_data[0]) + '/' + str(ultrasonic_data)
                 # Send data using BT
-                bto.send_data_bt(send_data_str)
-            
+                bto.send_data_bt(_collect_sensor_datas(reed_data))
             else:
                 # Refine BT data
                 input_data = input_data.strip()
                 display4.work_tm1637(input_data)
                 neopixel.work_led()
+                display4.off_tm1637()
+                # Send data using BT
+                bto.send_data_bt(_collect_sensor_datas(reed_data))
             
             # Update reed state
             reed_data = current_reed_data
