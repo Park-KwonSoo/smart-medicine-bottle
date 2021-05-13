@@ -11,3 +11,4 @@
 + 2021.05.11: Arduino 개발 중단, RaspberryPi Pico로 플랫폼 이전, C++ -> MicroPython
 + 2021.05.12: RaspberryPi Pico v0.1 code complete. Now working on rpi4 with MQTT.
 + 2021.05.13: RaspberryPi4 v0.1 code complete. with MQTT. + Pico code bug fix.
++ 2021.05.13: Fritzing design add.
