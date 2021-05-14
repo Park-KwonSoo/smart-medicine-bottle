@@ -28,6 +28,25 @@ exports.medicineSearch = async(ctx) => {
     }
 }
 
+exports.medicineGet = async(ctx) => {
+    const token = ctx.cookies.get('access_token');
+    if(!token) {
+        ctx.status = 401;
+        return;
+    }
+
+    const { medicineId } = ctx.params;
+    const medicine = await Medicine.findByMedicineId(medicineId);
+    if(!medicine) {
+        ctx.status = 404;
+        return;
+    }
+
+    ctx.status = 200;
+    ctx.body = medicine;
+    
+}
+
 //이름으로 약 검색
 const medicineSearch_ByName = async(name) => {
     const result = await Medicine.findByName(name);

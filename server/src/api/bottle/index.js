@@ -3,9 +3,9 @@ const bottleCtrl = require('./bottle.ctrl');
 
 const bottle = new Router();
 
-bottle.post('/connect', bottleCtrl.bottleConnect);
-bottle.post('/disconnect/:bottleId', bottleCtrl.bottleDisconnect);
-bottle.post('/lookupInfo/:bottleId', bottleCtrl.lookupInfo);
-bottle.post('/setmedicine/:bottleId', bottleCtrl.setMedicine);
+bottle.post('/', bottleCtrl.bottleConnect);
+bottle.delete('/:bottleId', bottleCtrl.bottleDisconnect);
+bottle.get('/:bottleId', bottleCtrl.lookupInfo);
+bottle.patch('/:bottleId', bottleCtrl.setMedicine);
 
 module.exports = bottle;
