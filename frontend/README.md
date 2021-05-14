@@ -30,11 +30,11 @@ appbar 관련 디자인은 추후 구현 예정
 
 ### 2021-05-11
 + Inside Information 화면 구성 
-![Screenshot_1620749267](/uploads/b12b3b42f72b71f4883c53ad758b9061/Screenshot_1620749267.png)
+<img src = "https://user-images.githubusercontent.com/56704722/117849827-aadc6400-b2bf-11eb-8cdb-2c7f37833d01.png" width="400">
 + Outside Information 화면 구성
-![Screenshot_1620749270](/uploads/0d30a1f80b41dc1563cc7930458ca8ba/Screenshot_1620749270.png)
+<img src ="https://user-images.githubusercontent.com/56704722/117849959-cd6e7d00-b2bf-11eb-86b7-bc97356c7665.png" width="400">
 + Setting Page 화면 구성 
-![Screenshot_1620749274](/uploads/6fe43fa280007f97572a59f45e138b75/Screenshot_1620749274.png) 
+<img src = "https://user-images.githubusercontent.com/56704722/117850038-e24b1080-b2bf-11eb-8dcd-5cb96a9056e0.png" width="400"> 
 
 
 ### 2021-05-13
