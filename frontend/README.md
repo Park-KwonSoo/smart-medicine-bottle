@@ -37,3 +37,8 @@ appbar 관련 디자인은 추후 구현 예정
 ![Screenshot_1620749274](/uploads/6fe43fa280007f97572a59f45e138b75/Screenshot_1620749274.png) 
 
 
+### 2021-05-13
++ flutter notification 추가 알람 설정 완료
++ datetime picker widget을 이용하여 시간 선택 구현 예정 
++ 알람 설정을 위한 Android Mainfest 설정 , 사용자 권한 요구 
+

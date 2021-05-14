@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/src/screens/SettingPage.dart';
-import '../shared/colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DashBoard extends StatefulWidget {
   int pageNumber = 1;
@@ -17,7 +15,6 @@ class _DashBoardState extends State<DashBoard> {
 
   Widget build(BuildContext context) {
     _selectedIndex = widget.pageNumber;
-    final Size size = MediaQuery.of(context).size;
 
     var _tabs = [
       ineerInformationpage(context),
