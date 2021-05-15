@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_application_1/src/screens/SettingPage.dart';
-import 'package:flutter_application_1/src/screens/SettingPage/customTimepicker.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/customTimepicker.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();

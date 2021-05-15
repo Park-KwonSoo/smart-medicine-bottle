@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_application_1/src/screens/DashBoard.dart';
-import '../shared/colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_application_1/src/screens/SettingPage/Alarm.dart';
-import 'package:flutter_application_1/src/screens/SettingPage/Bluetooth.dart';
-import 'package:flutter_application_1/src/screens/SettingPage/DEVInformation.dart';
-import 'package:flutter_application_1/src/screens/SettingPage/InformationModify.dart';
+import 'package:Smart_Medicine_Box/src/screens/DashBoard.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/Alarm.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/Bluetooth.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/DEVInformation.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/InformationModify.dart';
 
 class SettingPage extends StatefulWidget {
   @override

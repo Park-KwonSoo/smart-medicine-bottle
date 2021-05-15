@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_application_1/src/screens/SettingPage.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
 
 class DashBoard extends StatefulWidget {
   int pageNumber = 1;
