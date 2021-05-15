@@ -57,7 +57,7 @@ class _SignUpLocalState extends State<SignUpLocal> {
           MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
             child: Container(
-              height: size.height * 0.8,
+              height: size.height * 0.6,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 5, 20, 20),
                 child: new Column(
@@ -188,7 +188,7 @@ class _SignUpLocalState extends State<SignUpLocal> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(70, 0, 70, 0),
                 child: Text(
-                  '회원 가입시, 이용 야관 및 개인정보 처리 방침에 동의하는 것으로 간주합니다..',
+                  '회원 가입시, 이용 약관 및 개인정보 처리 방침에 동의하는 것으로 간주합니다..',
                   style: TextStyle(fontSize: 12, color: Color(0xff747474)),
                   textAlign: TextAlign.center,
                 ),
