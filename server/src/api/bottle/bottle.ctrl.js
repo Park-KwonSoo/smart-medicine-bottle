@@ -132,7 +132,7 @@ exports.setMedicine = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const { bottleId } = ctx.params;
-    const { medicineId } = ctx.request.body;
+    const { medicineId, dosage } = ctx.request.body;
 
     const bottle = await Bottle.findByBottleId(bottleId);
     if(!bottle) {
@@ -154,7 +154,10 @@ exports.setMedicine = async(ctx) => {
 
     await Bottle.findOneAndUpdate({
         bottleId
-    }, { medicineId });
+    }, { 
+        medicineId,
+        dosage
+     });
 
     ctx.status = 200;
 }
