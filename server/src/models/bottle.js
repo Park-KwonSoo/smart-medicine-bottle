@@ -8,8 +8,9 @@ const BottleSchema = new Schema ({
     humidity : { type : Number, default : 0 },
     balance : { type : Number, default : 0 },
     recentOpen : { type : Date, default : Date.now },
-    medicineId : Number,
-    hubId : Number
+    medicineId : { type : Number, default : null, },
+    hubId : Number,
+    dosage : { type : Number, default : 0 }
 })
 
 BottleSchema.statics.findByBottleId = function(bottleId) {
@@ -34,6 +35,10 @@ BottleSchema.methods.getHumidity = function() {
 
 BottleSchema.methods.getBalance = function() {
     return this.balance;
+};
+
+BottleSchema.methods.getDosage = function() {
+    return this.dosage;
 };
 
 BottleSchema.methods.getMedicineId = function() {
