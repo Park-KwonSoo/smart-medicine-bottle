@@ -12,14 +12,19 @@ exports.dataPublish = async (topic, message) => {
     const result = await transPublishingTopicAndMessage(bottleId);
 
     return result;
+
 };
 
 //Hub topic : bottle/bottleId
 //Hub로부터 받은 message : 개폐여부/온도/습도/초음파센서
-const factoring = (topic, message) => {
+const factoring = async (topic, message) => {
     const bottleId = parseInt(topic.split('/')[1]);
     const data = message.split('/');
-    const [isOpen, temperature, humidity, balance] = data;
+    let [isOpen, temperature, humidity, balance] = data;
+
+    if(isOpen === '0')
+        balance = await balanceFactoring(balance);
+    else    balance = '-1';
 
     const openDate = new Date();
     
@@ -31,23 +36,48 @@ const factoring = (topic, message) => {
         humidity,
         balance
     };
+
+}
+
+const balanceFactoring = (balance) => {
+    const max = 11;
+    const slicingBalance = max / 5;
+
+    if(parseInt(balance) < slicingBalance || parseInt(balance) > max * 2)
+        return '100';
+    else if(parseInt(balance) < slicingBalance * 2)
+        return '80';
+    else if(parseInt(balance) < slicingBalance * 3)
+        return '60';
+    else if(parseInt(balance) < slicingBalance * 4)
+        return '40';
+    else if(parseInt(balance) < slicingBalance * 5)
+        return '20';
+    else    return '0';
+    
 }
 
 //bottleId가 포함된 data를 받아서 해당 약병의 data를 업데이트한다.
 const bottleInfoUpdate = async(data) => {
     const { bottleId, isOpen, openDate, temperature, humidity, balance } = data;
+
     if(isOpen === '1') {
         await Bottle.findOneAndUpdate({
             bottleId
         }, { recentOpen : openDate });
     }
 
+    if(balance !== '-1') {
+        await Bottle.findOneAndUpdate({
+            bottleId
+        }, { balance })
+    }
+
     await Bottle.findOneAndUpdate({
         bottleId
     }, {
         temperature,
-        humidity,
-        balance
+        humidity
     });
 }
 
