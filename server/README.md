@@ -11,14 +11,14 @@
 
 1. **Node, Mongo DB Install**
 
-```jsx
+```html
 brew install node
 brew install mongodb-community@4.4
 ```
 
  2. **ServiceKey, Mongo DB URL Setting**
 
-```jsx
+```html
 // .env
 SERVER_PORT=
 MONGO_URL=
@@ -28,8 +28,7 @@ SERVICE_KEY=
 
  3. **Server On**
 
-```jsx
-// server
+```html
 npm start
 ```
 
