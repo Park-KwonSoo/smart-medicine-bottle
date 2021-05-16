@@ -162,16 +162,3 @@ exports.setMedicine = async(ctx) => {
     ctx.status = 200;
 }
 
-const dataRequest = () => {
-    return 'dataRequest'
-}
-
-const getData = async() => {
-    return 'getData'
-}
-
-const dataProcess = async() => {
-    return 'dataProcess..'
-}
-
-
