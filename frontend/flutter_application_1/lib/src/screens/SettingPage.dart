@@ -161,7 +161,7 @@ class _SettingPageState extends State<SettingPage> {
                               ));
                         },
                         child: Text(
-                          '약 정보 수정',
+                          '회원 정보 수정',
                           textScaleFactor: 1.0,
                           style: TextStyle(
                               color: Colors.white,

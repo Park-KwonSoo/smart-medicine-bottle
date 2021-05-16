@@ -238,7 +238,7 @@ Widget ineerInformationpage(BuildContext context) {
                     children: <Widget>[
                       Container(
                         width: size.width * 0.43,
-                        height: size.width * 0.43,
+                        height: size.width * 0.45,
                         margin: const EdgeInsets.all(5.0),
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                         decoration: BoxDecoration(
@@ -265,7 +265,7 @@ Widget ineerInformationpage(BuildContext context) {
                             ),
                             Container(
                               width: size.width,
-                              height: size.height * 0.14,
+                              height: size.height * 0.145,
                               child: Center(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -276,7 +276,7 @@ Widget ineerInformationpage(BuildContext context) {
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 80,
+                                          fontSize: 76,
                                           fontFamily: 'NotoSansKR',
                                           fontWeight: FontWeight.w800),
                                     ),
@@ -299,7 +299,7 @@ Widget ineerInformationpage(BuildContext context) {
                       ),
                       Container(
                         width: size.width * 0.43,
-                        height: size.width * 0.43,
+                        height: size.width * 0.45,
                         margin: const EdgeInsets.all(5.0),
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                         decoration: BoxDecoration(
@@ -377,7 +377,7 @@ Widget ineerInformationpage(BuildContext context) {
                     children: <Widget>[
                       Container(
                         width: size.width * 0.43,
-                        height: size.width * 0.43,
+                        height: size.width * 0.45,
                         margin: const EdgeInsets.all(5.0),
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                         decoration: BoxDecoration(
@@ -438,7 +438,7 @@ Widget ineerInformationpage(BuildContext context) {
                       ),
                       Container(
                         width: size.width * 0.43,
-                        height: size.width * 0.43,
+                        height: size.width * 0.45,
                         margin: const EdgeInsets.all(5.0),
                         padding: const EdgeInsets.fromLTRB(10, 5, 10, 10),
                         decoration: BoxDecoration(
