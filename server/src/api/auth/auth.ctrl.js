@@ -6,7 +6,7 @@ exports.register = async(ctx) => {
     const { userId, password, passwordCheck } = ctx.request.body;
 
     const schema = Joi.object().keys({
-        userId : Joi.string().min(8).max(15).required(),
+        userId : Joi.string().email().max(50).required(),
         password : Joi.string().required(),
         passwordCheck : Joi.string().required(),
     })
@@ -38,7 +38,7 @@ exports.login = async(ctx) => {
     const { userId, password } = ctx.request.body;
 
     const schema = Joi.object().keys({
-        userId : Joi.string().min(8).max(15).required(),
+        userId : Joi.string().email().max(50).required(),
         password : Joi.string().required()
     })
 
