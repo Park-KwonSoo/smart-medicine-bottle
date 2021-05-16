@@ -55,7 +55,7 @@
 → 5 / 11 : ctx.body, status 추가
 
 - [ ]  Private IP의 브로커를 웹서버와 연결
-- [ ]  Native Applicatio에 전달할 데이터 규칙 정하기
+- [ ]  Native Application에 전달할 데이터 규칙 정하기
 - [ ]  WebServer AWS 배포
 - [ ]  안드로이드 <> 서버 <> 브로커 <> 약병 연결하기
 
