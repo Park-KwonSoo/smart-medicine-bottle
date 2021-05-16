@@ -57,8 +57,9 @@ const transPublishingTopicAndMessage = async(bottleId) => {
     
     const bottle = await Bottle.findByBottleId(bottleId);
     const recentOpen = bottle.getRecentOpenDate();
+    const dosage = bottle.getDosage();
 
-    const message = 'res/' + await transDate(recentOpen);
+    const message = 'res/' + await transDate(recentOpen) + '/' + dosage;
    
     return {
         topic,
@@ -66,9 +67,8 @@ const transPublishingTopicAndMessage = async(bottleId) => {
     };
 }
 
-//날짜를 yymmdd로 변환해주는 함수
+//날짜를 mmdd로 변환해주는 함수
 const transDate = (date) => {
-    return String(date.getFullYear()).substr(2, 2)
-    + (date.getMonth() + 1 < 10 ? '0' + String(date.getMonth() + 1) : String(date.getMonth() + 1))
+    return (date.getMonth() + 1 < 10 ? '0' + String(date.getMonth() + 1) : String(date.getMonth() + 1))
     + (date.getDate() < 10 ? '0' + String(date.getDate()) : String(date.getDate()));
 }
