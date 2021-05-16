@@ -30,6 +30,7 @@ def _collect_sensor_datas(reed_data:int) -> str:
 def _run():
     # INIT REED STATE
     reed_data = -1
+    display4.off_tm1637()
     # LOOP
     while True:
         # ------------------------------------------- #
@@ -53,7 +54,7 @@ def _run():
             # IF INPUT MEANS GET MESSAGE or MEDICINE LID STATUS CHANGED
             if input_data == 'REQ' or reed_data != current_reed_data:
                 # Send data using BT
-                bto.send_data_bt(_collect_sensor_datas(current_reed_data))
+                bto.send_data_bt(_collect_sensor_datas(reed_data))
             else:
                 # Refine BT data
                 input_data = input_data.strip()
@@ -61,7 +62,7 @@ def _run():
                 neopixel.work_led()
                 display4.off_tm1637()
                 # Send data using BT
-                bto.send_data_bt(_collect_sensor_datas(current_reed_data))
+                bto.send_data_bt(_collect_sensor_datas(reed_data))
             
             # Update reed state
             reed_data = current_reed_data

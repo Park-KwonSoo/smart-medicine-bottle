@@ -60,10 +60,20 @@ def _work_mqtt(client, userdata, msg):
 
     # 만약 req메시지를 받았다면
     if received_msg == 'req':
+        # 데이터가 손실되어 왔을 경우 에러 처리
+        if len(data_list[0]) == 0:
+            data_list = []
+        elif len(data_list[3]) == 0:
+            data_list = []
         while len(data_list) != 4:
             _send_data('REQ')
             data = _recv_data()
             data_list = data.split('/')
+            # 데이터가 손실되어 왔을 경우 에러 처리
+            if len(data_list[0]) == 0:
+                data_list = []
+            elif len(data_list[3]) == 0:
+                data_list = []
         # 데이터를 Publish한다
         _pub_mqtt(f'bottle/{MED_BOTT_NO}/bts', data, 'localhost')
         
@@ -72,12 +82,23 @@ def _work_mqtt(client, userdata, msg):
         _send_data(received_msg.split('/')[1])
         data = _recv_data()
         data_list = data.split('/')
+        # 데이터가 손실되어 왔을 경우 에러 처리
+        if len(data_list[0]) == 0:
+            data_list = []
+        elif len(data_list[3]) == 0:
+            data_list = []
+
         while len(data_list) != 4:
             _send_data('REQ')
             data = _recv_data()
             data_list = data.split('/')
+            # 데이터가 손실되어 왔을 경우 에러 처리
+            if len(data_list[0]) == 0:
+                data_list = []
+            elif len(data_list[3]) == 0:
+                data_list = []
         # 데이터를 Publish한다
-        _pub_mqtt(f'bottle/{MED_BOTT_NO}/bts', data, 'localhost')
+        # _pub_mqtt(f'bottle/{MED_BOTT_NO}/bts', data, 'localhost')
 
     print("DEBUG")
     print(data)
@@ -118,11 +139,22 @@ def _run():
             if data != '':
                 print('DATA IN')
                 data_list = data.split('/')
+
+                # 데이터가 손실되어 왔을 경우 에러 처리
+                if len(data_list[0]) == 0:
+                    data_list = []
+                elif len(data_list[3]) == 0:
+                    data_list = []
                 
                 # 만약 데이터가 불량하게 왔을 경우, 제대로 올때까지 반복시도한다
                 while len(data_list) != 4:
                     data = _recv_data()
                     data_list = data.split('/')
+                    # 데이터가 손실되어 왔을 경우 에러 처리
+                    if len(data_list[0]) == 0:
+                        data_list = []
+                    elif len(data_list[3]) == 0:
+                        data_list = []
 
                 # 데이터를 Publish한다
                 _pub_mqtt(f'bottle/{MED_BOTT_NO}/bts', data, 'localhost')

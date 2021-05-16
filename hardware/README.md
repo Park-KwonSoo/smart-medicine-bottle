@@ -12,3 +12,4 @@
 + 2021.05.12: RaspberryPi Pico v0.1 code complete. Now working on rpi4 with MQTT.
 + 2021.05.13: RaspberryPi4 v0.1 code complete. with MQTT. + Pico code bug fix.
 + 2021.05.13: Fritzing design add.
++ 2021.05.16: RPI4 Code update
