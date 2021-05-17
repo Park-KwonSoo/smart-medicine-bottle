@@ -4,7 +4,6 @@ const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
 const Mqtt = require('../../lib/MqttModule');
 const jwt = require('jsonwebtoken');
-const hub = require('../../models/hub');
 
 //약병 등록
 exports.bottleConnect = async(ctx) => {
