@@ -4,6 +4,7 @@ const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
 const Mqtt = require('../../lib/MqttModule');
 const jwt = require('jsonwebtoken');
+const hub = require('../../models/hub');
 
 //약병 등록
 exports.bottleConnect = async(ctx) => {
@@ -172,13 +173,13 @@ exports.getBottleList = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const hubList = await Hub.find({ userId })
-    if(!hubList) {
+    if(!hubList || !hubList.length) {
         ctx.status = 404;
         return;
     }
 
     const bottleList = await getBottleListByHub(hubList);
-    if(!bottleList) {
+    if(!bottleList || !bottleList.length) {
         ctx.status = 404;
         return;
     }
