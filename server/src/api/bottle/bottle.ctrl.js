@@ -162,3 +162,40 @@ exports.setMedicine = async(ctx) => {
     ctx.status = 200;
 }
 
+//로그인한 유저의 약병 리스트 가져오기
+exports.getBottleList = async(ctx) => {
+    const token = ctx.cookies.get('access_token');
+    if(!token) {
+        ctx.status = 401;
+        return;
+    }
+
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const hubList = await Hub.find({ userId })
+    if(!hubList) {
+        ctx.status = 404;
+        return;
+    }
+
+    const bottleList = await getBottleListByHub(hubList);
+    if(!bottleList) {
+        ctx.status = 404;
+        return;
+    }
+
+    ctx.status = 200;
+    ctx.body = bottleList;
+}
+
+const getBottleListByHub = async (hubList) => {
+    const result = []
+
+    for (const hub of hubList) {
+        const bottle = await Bottle.find({
+            hubId : hub.hubId
+        });
+        result.push(...bottle)
+    }
+
+    return result;
+}

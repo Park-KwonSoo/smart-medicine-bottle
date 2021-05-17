@@ -35,4 +35,12 @@ bottle.get('/:bottleId', bottleCtrl.lookupInfo);
  */
 bottle.patch('/:bottleId', bottleCtrl.setMedicine);
 
+/**
+ * 현재 로그인한 유저의 약병 리스트를 가져옴
+ * request parameter : x
+ * url : http://localhost:4000/api/bottle
+ * return : bottle List(json type List)
+ */
+bottle.get('/', bottleCtrl.getBottleList)
+
 module.exports = bottle;
