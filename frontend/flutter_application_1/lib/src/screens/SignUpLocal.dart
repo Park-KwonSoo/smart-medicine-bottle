@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class SignUpLocal extends StatefulWidget {
   @override
@@ -19,6 +21,17 @@ class _SignUpLocalState extends State<SignUpLocal> {
   // Initially password is obscure
   bool passwordVisible = false;
   bool passwordValidationVisible = true;
+
+  Future<String> signup_Validate() async {
+    http.Response response = await http.post(
+        Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/register'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          'userId': emailController.text,
+          'password': passwordController.text,
+          'passwordCheck': passwordValidController.text
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +77,7 @@ class _SignUpLocalState extends State<SignUpLocal> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     TextFormField(
+                      controller: emailController,
                       keyboardType: TextInputType.text,
                       decoration: InputDecoration(
                         labelText: '이메일',
@@ -161,7 +175,14 @@ class _SignUpLocalState extends State<SignUpLocal> {
             height: 80,
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: RaisedButton(
-              onPressed: () async {},
+              onPressed: () async {
+                String saveMessage = await signup_Validate();
+                print('saveMessage');
+                print(saveMessage);
+                print(emailController.text);
+                print(passwordController.text);
+                print(passwordValidController.text);
+              },
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),
                   side: BorderSide(color: Colors.blue)),
