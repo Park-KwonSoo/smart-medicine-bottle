@@ -39,6 +39,25 @@ exports.hubConnect = async (ctx) => {
     ctx.body = hub;
 };
 
+exports.getHubList = async(ctx) => {
+    const token = ctx.cookies.get('access_token');
+    if(!token) {
+        ctx.status = 401;
+        return;
+    }
+
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const hubList = await Hub.find({ userId });
+    console.log(hubList)
+    if(!hubList || !hubList.length) {
+        ctx.status = 404;
+        return;
+    }
+
+    ctx.status = 200;
+    ctx.body = hubList;
+};
+
 exports.hubDisconnect = async(ctx) => {
     const token = ctx.cookies.get('access_token');
     if(!token) {
