@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'Homepage.dart';
+
 class SignUpLocal extends StatefulWidget {
   @override
   _SignUpLocalState createState() => _SignUpLocalState();
@@ -12,9 +14,6 @@ class _SignUpLocalState extends State<SignUpLocal> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordValidController = TextEditingController();
-  final medicineNameController = TextEditingController();
-  final medicineFactureController = TextEditingController();
-
   bool _validate = false;
   int userRole = 0;
 
@@ -31,6 +30,13 @@ class _SignUpLocalState extends State<SignUpLocal> {
           'password': passwordController.text,
           'passwordCheck': passwordValidController.text
         }));
+
+    print(response.statusCode);
+    if (response.statusCode == 201) {
+      return "정보 입력 완료";
+    } else {
+      return "오류";
+    }
   }
 
   @override
@@ -150,22 +156,6 @@ class _SignUpLocalState extends State<SignUpLocal> {
                         ),
                       ),
                     ),
-                    TextFormField(
-                      keyboardType: TextInputType.text,
-                      controller: medicineNameController,
-                      decoration: InputDecoration(
-                        labelText: '약 이름',
-                        helperText: '약의 이름을 읿력하세요',
-                      ),
-                    ),
-                    TextFormField(
-                      keyboardType: TextInputType.text,
-                      controller: medicineFactureController,
-                      decoration: InputDecoration(
-                        labelText: '약 제조사 이름',
-                        helperText: '약 제조사의 이름을 읿력하세요',
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -177,11 +167,43 @@ class _SignUpLocalState extends State<SignUpLocal> {
             child: RaisedButton(
               onPressed: () async {
                 String saveMessage = await signup_Validate();
-                print('saveMessage');
-                print(saveMessage);
-                print(emailController.text);
-                print(passwordController.text);
-                print(passwordValidController.text);
+                if (saveMessage == "정보 입력 완료") {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: new Text('회원 가입'),
+                          content: new Text('회원 가입이 완료 되었습니다.'),
+                          actions: <Widget>[
+                            new FlatButton(
+                                child: new Text('Close'),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              HomePage()));
+                                })
+                          ],
+                        );
+                      });
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: new Text('회원 가입 오류'),
+                          content: new Text('정확한 이메일, 비밀번호를 입력해 주세요.'),
+                          actions: <Widget>[
+                            new FlatButton(
+                                child: new Text('Close'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                })
+                          ],
+                        );
+                      });
+                }
               },
               shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(18.0),

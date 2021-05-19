@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DashBoard extends StatefulWidget {
   int pageNumber = 1;
@@ -108,6 +112,15 @@ class _DashBoardState extends State<DashBoard> {
 }
 
 Widget mainpage(BuildContext context) {
+  Future<String> getHubList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    http.Response response =
+        await http.get(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'));
+
+    print(response.statusCode);
+  }
+
   final Size size = MediaQuery.of(context).size;
   /* 
     Main 화면 
@@ -191,6 +204,27 @@ Widget mainpage(BuildContext context) {
               ],
             ),
           ),
+          Container(
+            height: 80,
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+            child: RaisedButton(
+              onPressed: () async {
+                String saveMessage = await getHubList();
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.blue)),
+              color: Color(0xff1674f6),
+              child: Text(
+                '회원 가입',
+                textScaleFactor: 1.0,
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          )
         ],
       ),
     ),

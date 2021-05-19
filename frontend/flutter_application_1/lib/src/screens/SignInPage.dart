@@ -1,6 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './DashBoard.dart';
+import 'RegsiterHub.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -14,6 +19,40 @@ class _SignInPageState extends State<SignInPage> {
   bool _validatePassword = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  //Login 함수
+  Future<String> login(String _email, String _password) async {
+    http.Response response = await http.post(
+        Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/login'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          'userId': _email,
+          'password': _password,
+        }));
+
+    if (response.statusCode == 200) {
+      return "로그인 성공";
+    } else if (response.statusCode == 400) {
+      return "올바르지 않은 아이디 및 패스워드";
+    } else {
+      return "존재하지 않는 아이디 이거나 비밀번호가 불일치 합니다.";
+    }
+  }
+
+  //Get Bottle List 함수
+  Future<String> getHubList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    http.Response response =
+        await http.get(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'));
+    if (response.statusCode == 200) {
+      return "get완료";
+    } else if (response.statusCode == 404) {
+      return "Not Found";
+    } else {
+      return "Error";
+    }
+  }
 
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -142,7 +181,9 @@ class _SignInPageState extends State<SignInPage> {
                                           fontFamily: 'Noto',
                                           fontWeight: FontWeight.bold)),
                                   onPressed: () async {
-                                    String saveMessage;
+                                    String saveMessage = await login(
+                                        emailController.text,
+                                        passwordController.text);
                                     if (emailController.text.isEmpty ||
                                         passwordController.text.isEmpty) {
                                       showDialog(
@@ -163,18 +204,27 @@ class _SignInPageState extends State<SignInPage> {
                                             );
                                           });
                                     } else {
-                                      emailController.text =
-                                          emailController.text.trim();
-                                      passwordController.text =
-                                          passwordController.text.trim();
                                       saveMessage = "로그인 성공";
                                       if (saveMessage == "로그인 성공") {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  DashBoard(pageNumber: 1),
-                                            ));
+                                        var result = await getHubList();
+                                        print(result);
+                                        if (result == "Not Found") {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        RegsiterHub(),
+                                              ));
+                                        } else if (result == "get완료") {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    DashBoard(pageNumber: 1),
+                                              ));
+                                        } else {}
                                       }
                                     }
                                   },
