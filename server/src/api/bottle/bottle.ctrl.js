@@ -7,8 +7,8 @@ const jwt = require('jsonwebtoken');
 
 //약병 등록
 exports.bottleConnect = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
@@ -55,8 +55,8 @@ exports.bottleConnect = async(ctx) => {
 
 //약병 등록 해제
 exports.bottleDisconnect = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
@@ -90,8 +90,8 @@ exports.bottleDisconnect = async(ctx) => {
 
 //약병 정보를 조회 -> 약병에 현재 데이터를 요청한다. message : req
 exports.lookupInfo = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
@@ -124,8 +124,8 @@ exports.lookupInfo = async(ctx) => {
 
 //약병의 ID를 찾아서 약의 정보를 등록 : Post
 exports.setMedicine = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
@@ -164,8 +164,8 @@ exports.setMedicine = async(ctx) => {
 
 //로그인한 유저의 약병 리스트 가져오기
 exports.getBottleList = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }

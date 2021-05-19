@@ -5,8 +5,8 @@ const DataProcess = require('../../lib/DataProcess');
 const jwt = require('jsonwebtoken');
 
 exports.hubConnect = async (ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
@@ -40,15 +40,14 @@ exports.hubConnect = async (ctx) => {
 };
 
 exports.getHubList = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const hubList = await Hub.find({ userId });
-    console.log(hubList)
     if(!hubList || !hubList.length) {
         ctx.status = 404;
         return;
@@ -59,8 +58,8 @@ exports.getHubList = async(ctx) => {
 };
 
 exports.hubDisconnect = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }

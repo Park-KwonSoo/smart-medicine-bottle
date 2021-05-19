@@ -68,7 +68,8 @@ exports.login = async(ctx) => {
 
     ctx.status = 200;
     ctx.body = {
-        userId
+        userId,
+        token
     };
 
 };

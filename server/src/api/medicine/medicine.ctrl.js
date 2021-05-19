@@ -2,8 +2,8 @@
 const Medicine = require('../../models/medicine');
 
 exports.medicineSearch = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
@@ -29,8 +29,8 @@ exports.medicineSearch = async(ctx) => {
 }
 
 exports.medicineGet = async(ctx) => {
-    const token = ctx.cookies.get('access_token');
-    if(!token) {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
         ctx.status = 401;
         return;
     }
