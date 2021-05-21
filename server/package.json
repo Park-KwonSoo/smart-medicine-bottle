@@ -4,7 +4,7 @@
   "description": "for Smart Medicine Bottle IoT Server",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
+    "start": "nodemon",
     "test": "node test"
   },
   "repository": {
