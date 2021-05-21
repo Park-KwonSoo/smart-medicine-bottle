@@ -36,11 +36,11 @@ bottle.get('/:bottleId', bottleCtrl.lookupInfo);
 bottle.patch('/:bottleId', bottleCtrl.setMedicine);
 
 /**
- * 현재 로그인한 유저의 약병 리스트를 가져옴
+ * 현재 로그인한 유저의 허브 중, 해당 허브에 등록된 약병 리스트를 가져옴
  * request parameter : x
- * url : http://localhost:4000/api/bottle
+ * url : http://localhost:4000/api/bottle/hub/:hubId
  * return : bottle List(json type List)
  */
-bottle.get('/', bottleCtrl.getBottleList)
+bottle.get('/hub/:hubId', bottleCtrl.getBottleList)
 
 module.exports = bottle;
