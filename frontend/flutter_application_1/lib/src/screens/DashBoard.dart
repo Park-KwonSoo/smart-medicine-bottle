@@ -6,8 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DashBoard extends StatefulWidget {
-  int pageNumber = 1;
-  DashBoard({Key key, this.pageNumber}) : super(key: key);
+  int pageNumber;
+  int bottleID;
+  DashBoard({Key key, this.pageNumber, this.bottleID}) : super(key: key);
 
   @override
   _DashBoardState createState() => _DashBoardState();

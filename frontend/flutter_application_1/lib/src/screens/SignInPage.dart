@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './DashBoard.dart';
+import 'HubList.dart';
 import 'RegsiterHub.dart';
 
 class SignInPage extends StatefulWidget {
@@ -19,6 +20,8 @@ class _SignInPageState extends State<SignInPage> {
   bool _validatePassword = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  List<int> _hublist = new List<int>(); //허브이름을 만들어야 할 것 같은데 임시로 허브 id만 고르게 함
 
   //Login 함수
   Future<String> login(String _email, String _password) async {
@@ -41,10 +44,17 @@ class _SignInPageState extends State<SignInPage> {
 
   //Get Bottle List 함수
   Future<String> getHubList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
     http.Response response =
         await http.get(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'));
+
+    List<dynamic> values = new List<dynamic>();
+    values = json.decode(response.body);
+    if (_hublist.length != 0) {
+      _hublist.clear();
+    }
+    for (int i = 0; i < values.length; i++) {
+      _hublist.add(values[i]['hubId']);
+    }
     if (response.statusCode == 200) {
       return "get완료";
     } else if (response.statusCode == 404) {
@@ -214,7 +224,7 @@ class _SignInPageState extends State<SignInPage> {
                                               MaterialPageRoute(
                                                 builder:
                                                     (BuildContext context) =>
-                                                        RegsiterHub(),
+                                                        RegisterHub(),
                                               ));
                                         } else if (result == "get완료") {
                                           Navigator.push(
@@ -222,7 +232,7 @@ class _SignInPageState extends State<SignInPage> {
                                               MaterialPageRoute(
                                                 builder: (BuildContext
                                                         context) =>
-                                                    DashBoard(pageNumber: 1),
+                                                    HubList(hublist: _hublist),
                                               ));
                                         } else {}
                                       }

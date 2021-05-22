@@ -3,7 +3,7 @@ class Bottle {
   final int temperature;
   final int humidity;
   final int balance;
-  final DateTime recentOpen;
+  final String recentOpen;
   final int medicineId;
   final int hubId;
   final int dosage;

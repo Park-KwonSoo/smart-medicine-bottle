@@ -6,12 +6,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'RegisterBottle.dart';
 
-class RegsiterHub extends StatefulWidget {
+class RegisterHub extends StatefulWidget {
   @override
-  _RegsiterHubState createState() => _RegsiterHubState();
+  _RegisterHubState createState() => _RegisterHubState();
 }
 
-class _RegsiterHubState extends State<RegsiterHub> {
+class _RegisterHubState extends State<RegisterHub> {
   final medicineBottleIDController = TextEditingController();
   final medicineHubIDController = TextEditingController();
   final medicineHubPortController = TextEditingController();
@@ -119,7 +119,7 @@ class _RegsiterHubState extends State<RegsiterHub> {
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            RegsiterBottle(hubid: medicineHubIDController.text),
+                            RegisterBottle(hubid: medicineHubIDController.text),
                       ));
                 }
               },

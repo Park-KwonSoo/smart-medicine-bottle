@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class RegsiterBottle extends StatefulWidget {
+class RegisterBottle extends StatefulWidget {
   final String hubid;
-  RegsiterBottle({Key key, this.hubid}) : super(key: key);
+  RegisterBottle({Key key, this.hubid}) : super(key: key);
   @override
-  _RegsiterBottleState createState() => _RegsiterBottleState();
+  _RegisterBottleState createState() => _RegisterBottleState();
 }
 
-class _RegsiterBottleState extends State<RegsiterBottle> {
+class _RegisterBottleState extends State<RegisterBottle> {
   final medicineBottleIDController = TextEditingController();
   final medicineHubIDController = TextEditingController();
   final medicineHubPortController = TextEditingController();
