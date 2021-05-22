@@ -50,7 +50,7 @@ class _RegisterHubState extends State<RegisterHub> {
             child: Row(
               children: <Widget>[
                 Text(
-                  '약병 등록',
+                  '허브 등록',
                   textScaleFactor: 1.0,
                   style: TextStyle(fontSize: 34),
                 )
@@ -62,7 +62,7 @@ class _RegisterHubState extends State<RegisterHub> {
             child: Row(
               children: <Widget>[
                 Text(
-                  'SmartMedicine 회원가입',
+                  'SmartMedicine 허브 등록',
                   textScaleFactor: 1.0,
                   style: TextStyle(fontSize: 16),
                 )

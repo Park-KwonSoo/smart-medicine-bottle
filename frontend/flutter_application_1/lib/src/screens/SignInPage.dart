@@ -48,14 +48,15 @@ class _SignInPageState extends State<SignInPage> {
         await http.get(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'));
 
     List<dynamic> values = new List<dynamic>();
-    values = json.decode(response.body);
+
     if (_hublist.length != 0) {
       _hublist.clear();
     }
-    for (int i = 0; i < values.length; i++) {
-      _hublist.add(values[i]['hubId']);
-    }
     if (response.statusCode == 200) {
+      values = json.decode(response.body);
+      for (int i = 0; i < values.length; i++) {
+        _hublist.add(values[i]['hubId']);
+      }
       return "get완료";
     } else if (response.statusCode == 404) {
       return "Not Found";

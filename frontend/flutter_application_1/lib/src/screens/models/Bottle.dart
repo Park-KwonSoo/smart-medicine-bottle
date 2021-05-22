@@ -19,8 +19,6 @@ class Bottle {
       this.dosage});
 
   factory Bottle.fromJson(Map<String, dynamic> parsedJson) {
-    var list = parsedJson['data'] as List;
-
     return Bottle(
       bottleId: parsedJson['bottleId'],
       temperature: parsedJson['temperature'],

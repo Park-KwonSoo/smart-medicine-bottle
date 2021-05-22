@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'SearchMedicine.dart';
+
 class RegisterBottle extends StatefulWidget {
   final String hubid;
   RegisterBottle({Key key, this.hubid}) : super(key: key);
@@ -117,9 +119,7 @@ class _RegisterBottleState extends State<RegisterBottle> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              DashBoard(
-                                                pageNumber: 1,
-                                              )));
+                                              SearchMedicine()));
                                 })
                           ],
                         );
@@ -129,19 +129,13 @@ class _RegisterBottleState extends State<RegisterBottle> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: new Text('약병 등록'),
+                          title: new Text('오류'),
                           content: new Text(saveMessage),
                           actions: <Widget>[
                             new FlatButton(
                                 child: new Text('Close'),
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              DashBoard(
-                                                pageNumber: 1,
-                                              )));
+                                  Navigator.of(context).pop();
                                 })
                           ],
                         );

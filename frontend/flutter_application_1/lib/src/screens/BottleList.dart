@@ -16,6 +16,7 @@ class BottleList extends StatefulWidget {
 
 class _BottleListState extends State<BottleList> {
   Widget build(BuildContext context) {
+    print(widget.bottlelist);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
