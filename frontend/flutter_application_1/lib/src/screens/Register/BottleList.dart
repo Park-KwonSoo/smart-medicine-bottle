@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'models/Bottle.dart';
-import 'DashBoard.dart';
+import '../models/Bottle.dart';
+import '../DashBoard.dart';
 
 class BottleList extends StatefulWidget {
   List<Bottle> bottlelist;
@@ -44,7 +44,9 @@ class _BottleListState extends State<BottleList> {
               Expanded(
                 child: ListView.separated(
                   padding: const EdgeInsets.all(30),
-                  itemCount: widget.bottlelist.length,
+                  itemCount: widget.bottlelist.length == null
+                      ? 0
+                      : widget.bottlelist.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       padding: EdgeInsets.all(8.0),

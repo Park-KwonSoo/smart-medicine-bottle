@@ -3,17 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'models/Bottle.dart';
-import 'DashBoard.dart';
+import '../models/Medicine.dart';
+import 'DetailMedicine.dart';
 
 class SearchMedicine extends StatefulWidget {
+  String bottleId;
+
+  SearchMedicine({Key key, this.bottleId}) : super(key: key);
   @override
   _SearchMedicineState createState() => _SearchMedicineState();
 }
 
 class _SearchMedicineState extends State<SearchMedicine> {
+  List<Medicine> _medicineList = new List<Medicine>();
   final medicineNameController = TextEditingController();
-  final medicineFactureController = TextEditingController();
+  final medicineCompanyController = TextEditingController();
+
+  Future<String> postMeicineList() async {
+    http.Response response =
+        await http.post(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'medicine'),
+            headers: {"Content-Type": "application/json"},
+            body: jsonEncode({
+              'name': medicineNameController.text,
+              'company': medicineCompanyController.text,
+            }));
+
+    if (_medicineList.length != 0) {
+      _medicineList.clear();
+    }
+    if (response.statusCode == 200) {
+      List<dynamic> values = new List<dynamic>();
+      values = json.decode(response.body);
+      for (int i = 0; i < values.length; i++) {
+        Map<String, dynamic> map = values[i];
+        _medicineList.add(Medicine.fromJson(map));
+      }
+      return "GET";
+    } else {
+      return "Not Found";
+    }
+  }
 
   Widget build(BuildContext context) {
     bool isForward = false;
@@ -125,7 +154,7 @@ class _SearchMedicineState extends State<SearchMedicine> {
                               width: size.width * 0.50,
                               child: TextFormField(
                                   keyboardType: TextInputType.text,
-                                  controller: medicineFactureController,
+                                  controller: medicineCompanyController,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     focusedBorder: InputBorder.none,
@@ -158,7 +187,11 @@ class _SearchMedicineState extends State<SearchMedicine> {
                     padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     child: IconButton(
                       icon: Icon(Icons.search, size: 40),
-                      onPressed: () {
+                      onPressed: () async {
+                        String saveMessage = await postMeicineList();
+                        if (saveMessage == "GET") {
+                          setState(() {});
+                        }
                         //검색 함수를 여기다가
                       },
                     ),
@@ -169,10 +202,38 @@ class _SearchMedicineState extends State<SearchMedicine> {
             SizedBox(height: 20),
             Expanded(
                 child: ListView.separated(
-                    itemBuilder: (BuildContext context, int index) {},
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(border: Border.all()),
+                        child: ListTile(
+                            title: Text(
+                              'Medicine: ' + _medicineList[index].name,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            trailing: Icon(Icons.arrow_forward),
+                            onTap: () async {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        DetailMedicine(
+                                      searchMedicine: _medicineList[index],
+                                      bottleId: widget.bottleId,
+                                    ),
+                                  ));
+                            }),
+                      );
+                    },
                     separatorBuilder: (BuildContext contetx, int index) =>
                         const Divider(),
-                    itemCount: 0))
+                    itemCount: _medicineList.length == null
+                        ? 0
+                        : _medicineList.length))
           ],
         ),
       ),

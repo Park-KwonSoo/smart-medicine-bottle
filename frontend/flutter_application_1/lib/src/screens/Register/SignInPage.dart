@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './DashBoard.dart';
+import '../DashBoard.dart';
 import 'HubList.dart';
 import 'RegsiterHub.dart';
 

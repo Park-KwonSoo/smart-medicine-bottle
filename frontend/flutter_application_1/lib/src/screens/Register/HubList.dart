@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Screen import
 import 'RegisterBottle.dart';
-import 'models/Bottle.dart';
+import '../models/Bottle.dart';
 import 'BottleList.dart';
 
 class HubList extends StatefulWidget {
@@ -89,8 +89,6 @@ class _HubListState extends State<HubList> {
                             var result =
                                 await getBottleList(widget.hublist[index]);
                             if (result == "GET") {
-                              print(0);
-                              print(_bottleList);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

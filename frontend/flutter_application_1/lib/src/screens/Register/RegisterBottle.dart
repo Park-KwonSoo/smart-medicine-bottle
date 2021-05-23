@@ -16,9 +16,6 @@ class RegisterBottle extends StatefulWidget {
 
 class _RegisterBottleState extends State<RegisterBottle> {
   final medicineBottleIDController = TextEditingController();
-  final medicineHubIDController = TextEditingController();
-  final medicineHubPortController = TextEditingController();
-  final medicineHubHostController = TextEditingController();
 
   Future<String> registerhub_Validate() async {
     http.Response bottleresponse = await http.post(
@@ -119,7 +116,11 @@ class _RegisterBottleState extends State<RegisterBottle> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              SearchMedicine()));
+                                              SearchMedicine(
+                                                bottleId:
+                                                    medicineBottleIDController
+                                                        .text,
+                                              )));
                                 })
                           ],
                         );

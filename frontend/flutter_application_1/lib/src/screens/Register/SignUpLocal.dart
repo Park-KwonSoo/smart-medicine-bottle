@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'Homepage.dart';
+import '../Homepage.dart';
 
 class SignUpLocal extends StatefulWidget {
   @override

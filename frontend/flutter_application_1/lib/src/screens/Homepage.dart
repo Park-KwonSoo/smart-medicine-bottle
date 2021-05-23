@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../shared/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import './SignInPage.dart';
-import './SignUpLocal.dart';
+import './Register/SignInPage.dart';
+import 'Register/SignUpLocal.dart';
 
 class HomePage extends StatefulWidget {
   final String pageTitle;
@@ -81,32 +81,33 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       GestureDetector(
                         child: Container(
-                            width: size.width * 0.8,
-                            height: 46,
-                            margin: EdgeInsets.only(bottom: 0),
-                            child: FlatButton(
-                              padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          SignInPage(),
-                                    ));
-                              },
-                              child: Text(
-                                '로그인',
-                                textScaleFactor: 1.0,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Noto',
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              color: Color(0xff1674f6),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50)),
-                            )),
+                          width: size.width * 0.8,
+                          height: 46,
+                          margin: EdgeInsets.only(bottom: 0),
+                          child: FlatButton(
+                            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        SignInPage(),
+                                  ));
+                            },
+                            child: Text(
+                              '로그인',
+                              textScaleFactor: 1.0,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: 'Noto',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            color: Color(0xff1674f6),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50)),
+                          ),
+                        ),
                       ),
                       GestureDetector(
                         child: Container(
