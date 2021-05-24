@@ -74,7 +74,7 @@ npm start
 
 → 5 / 11: Bottle Info 조회 시, Broker로 약병의 현재 상태 요청 메시지 전송
 
-- [ ]  Hub, Bottle, User unregister 추가 및 연관 데이터 처리
+- [x]  Hub, Bottle, User unregister 추가 및 연관 데이터 처리
 - [x]  logic return value 및 status
 
 → 5 / 11 : ctx.body, status 추가
@@ -86,7 +86,8 @@ npm start
 
 ⇒ 안드로이드에서 블루투스로 약병 찾은 후, 해당 약병의 정보를 서버로 전송, 서버는 이 정보를 브로커에게 전송 후 블루투스 통신?
 
-- [ ]  bottleCtrl : lookUpInfo 함수에서 req 보낸 후 응답받은 새로운 bottle을 출력해야 한다.
+- [x]  bottleCtrl : lookUpInfo 함수에서 req 보낸 후 응답받은 새로운 bottle을 출력해야 한다.
 - [ ]  Hub 이름 짓기
+- [ ]  약병 데이터 업데이트 시간 한국시간으로
 
 [Schedule](https://www.notion.so/cdcc6627a8344c8da56ffb3856bfc1b9)
