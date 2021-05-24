@@ -100,8 +100,8 @@ exports.lookupInfo = async(ctx) => {
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const { bottleId } = ctx.params;
 
-    const bottle = await Bottle.findByBottleId(bottleId);
-    if(!bottle) {
+    const isBottleExist = await Bottle.findByBottleId(bottleId);
+    if(!isBottleExist) {
         ctx.status = 404;
         return;
     }
@@ -117,7 +117,9 @@ exports.lookupInfo = async(ctx) => {
     const client = await Mqtt.mqttOn(hosting);
     const topic = 'bottle/' + bottleId + '/stb';
     const message = 'req';
-    Mqtt.mqttPublishMessage(client, { topic, message });
+    await Mqtt.mqttPublishMessage(client, { topic, message });
+
+    const bottle = await Bottle.findByBottleId(bottleId);
     
     ctx.status = 200;
     ctx.body = bottle;
