@@ -39,15 +39,17 @@ const getItemsList = async(queryUrl) => {
 
 //itemArray에 있는 모든 data를 MongoDB의 SMB collections에 저장함
 const exportJsonData = (itemList) => {
-    itemList.forEach(item => {
+    itemList.forEach(async item => {
         const medicineId = item.itemSeq;
         const medicineInfo = {
             name : item.itemName,
             company : item.entpName,
-            target : item.efcyQesitm,
-            dosage : item.useMethodQesitm,
-            warn : item.atpnWarnQesitm + '\n\n' + item.atpnQesitm,
-            antiEffect : item.seQesitm
+            target : await slicingInfo(item.efcyQesitm),
+            dosage : await slicingInfo(item.useMethodQesitm),
+            warn : await slicingInfo(item.atpnWarnQesitm ? 
+                item.atpnWarnQesitm + '\n' + item.atpnQesitm
+                : item.atpnQesitm),
+            antiEffect : await slicingInfo(item.seQesitm)
         };
         
         Medicine.findOneAndUpdate({ 
@@ -56,4 +58,19 @@ const exportJsonData = (itemList) => {
             upsert : true
         }).exec();
     })
+}
+
+//복용 정보에서 불필요한 태그를 제거하고 제거된 값을 반환한다.
+const slicingInfo = async (info) => {
+    let result = info;
+    
+    if(info) {
+        result = await info.split('<p>').join('')
+        .split('</p>').join('')
+        .split('<sup>').join('')
+        .split('</sup>').join('')
+        .split('null').join('');
+    }
+    
+    return result;
 }
