@@ -21,11 +21,13 @@ exports.medicineSearch = async(ctx) => {
     else if (target && target !== '' && target !== undefined) 
         result = await medicineSearch_ByTarget(target);
     
-    ctx.status = 200;
-    ctx.body = {
-        totalItem : result.length,
-        result
+    if(!result.length) {
+        ctx.status = 404;
+        return;
     }
+
+    ctx.status = 200;
+    ctx.body = result;
 }
 
 exports.medicineGet = async(ctx) => {
