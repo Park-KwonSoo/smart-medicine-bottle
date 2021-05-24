@@ -1,4 +1,5 @@
 import 'package:Smart_Medicine_Box/src/screens/DashBoard.dart';
+import 'package:Smart_Medicine_Box/src/screens/Homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
@@ -28,7 +29,6 @@ class _DetailMedicineState extends State<DetailMedicine> {
           'dosage': medicineDosageController.text
         }));
 
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return "Complete";
     } else if (response.statusCode == 404) {
@@ -207,14 +207,12 @@ class _DetailMedicineState extends State<DetailMedicine> {
                                     child: new Text('Close'),
                                     onPressed: () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                                  DashBoard(
-                                                    pageNumber: 1,
-                                                    bottleID: int.parse(
-                                                        widget.bottleId),
-                                                  )));
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              HomePage(),
+                                        ),
+                                      );
                                     })
                               ],
                             );

@@ -1,29 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'models/Bottle.dart';
+import 'models/Medicine.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
+
 class DashBoard extends StatefulWidget {
   int pageNumber;
-  int bottleID;
-  DashBoard({Key key, this.pageNumber, this.bottleID}) : super(key: key);
+  Bottle bottleInformation;
+  Medicine medicineInformation;
+
+  DashBoard(
+      {Key key,
+      this.pageNumber,
+      this.bottleInformation,
+      this.medicineInformation})
+      : super(key: key);
 
   @override
   _DashBoardState createState() => _DashBoardState();
 }
 
 class _DashBoardState extends State<DashBoard> {
+  Bottle _bottleinformation = new Bottle();
   int _selectedIndex = 0;
-
+  Medicine _medicineInformation = new Medicine();
   Widget build(BuildContext context) {
     _selectedIndex = widget.pageNumber;
-
+    _medicineInformation = widget.medicineInformation;
+    _bottleinformation = widget.bottleInformation;
     var _tabs = [
-      ineerInformationpage(context),
-      mainpage(context),
-      outerInformationpage(context),
+      ineerInformationpage(context, _bottleinformation),
+      mainpage(context, _medicineInformation),
+      outerInformationpage(context, _bottleinformation),
     ];
 
     return Scaffold(
@@ -112,7 +124,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 }
 
-Widget mainpage(BuildContext context) {
+Widget mainpage(BuildContext context, Medicine medicineInformation) {
   Future<String> getHubList() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -122,117 +134,165 @@ Widget mainpage(BuildContext context) {
     print(response.statusCode);
   }
 
+  //현재 접속 중인 허브 리스트 id와 약병 리스트 id 출력
+  //약 상세 정보 가져오기 --> 이건 Detail Medicine에서 가져 오면 됨
   final Size size = MediaQuery.of(context).size;
-  /* 
-    Main 화면 
-    약의 정보를 가져와서 출력을 하는 곳
-    유저 이메일
-    약 이름 
-    약 제조사
-  */
   return Scaffold(
     backgroundColor: Colors.white,
-    body: Container(
-      height: size.height * 0.6,
-      margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-      padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-            margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-            height: size.height * 0.15,
-            width: size.width,
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(4.0) //         <--- border radius here
+    body: SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
+        padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SizedBox(height: 20),
+            Container(
+              width: size.width,
+              padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
+              margin: EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.all(
+                    Radius.circular(25.0) //         <--- border radius here
+                    ),
+              ),
+              child: Column(
+                children: [
+                  SizedBox(height: 30),
+                  Container(
+                    child: Center(
+                      child: Text(
+                          medicineInformation.name == null
+                              ? '-'
+                              : medicineInformation.name,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 24,
+                              fontFamily: 'NotoSansKR',
+                              fontWeight: FontWeight.w700)),
+                    ),
                   ),
-            ),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '약 이름:',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontFamily: 'NotoSansKR',
-                      fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  '무슨 무슨 비타민 ',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 36,
-                      fontFamily: 'NotoSansKR',
-                      fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.fromLTRB(5, 0, 5, 5),
-            margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
-            height: size.height * 0.15,
-            width: size.width,
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: BorderRadius.all(
-                  Radius.circular(4.0) //         <--- border radius here
+                  SizedBox(height: 30),
+                  Container(
+                    width: size.width,
+                    alignment: Alignment(0.9, 0),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          '제조사: ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          medicineInformation.company == null
+                              ? '-'
+                              : medicineInformation.company,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-            ),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '약 제조사:',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontFamily: 'NotoSansKR',
-                      fontWeight: FontWeight.w700),
-                ),
-                Text(
-                  'Test123',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 32,
-                      fontFamily: 'NotoSansKR',
-                      fontWeight: FontWeight.w700),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: 80,
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: RaisedButton(
-              onPressed: () async {
-                String saveMessage = await getHubList();
-              },
-              shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.blue)),
-              color: Color(0xff1674f6),
-              child: Text(
-                '회원 가입',
-                textScaleFactor: 1.0,
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold),
+                  SizedBox(height: 30),
+                  Container(
+                    width: size.width,
+                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    alignment: Alignment(-1, 0),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          '타겟 층 : ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          medicineInformation.target == null
+                              ? '-'
+                              : medicineInformation.target,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    width: size.width,
+                    padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                    alignment: Alignment(-1, 0),
+                    child: Wrap(
+                      children: [
+                        Text(
+                          '복약 정보 : ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          medicineInformation.dosage == null
+                              ? '-'
+                              : medicineInformation.dosage,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Container(
+                    width: size.width,
+                    padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                    alignment: Alignment(-1, 0),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Container(
+                          width: size.width,
+                          child: Text(
+                            '경고',
+                            style: TextStyle(
+                                color: Colors.redAccent, fontSize: 14),
+                          ),
+                        ),
+                        SizedBox(height: 12),
+                        Container(
+                          width: size.width,
+                          child: Text(
+                            medicineInformation.warn == null
+                                ? '-'
+                                : medicineInformation.warn,
+                            style: TextStyle(
+                                color: Colors.redAccent, fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-          )
-        ],
+          ],
+        ),
       ),
     ),
   );
 }
 
-Widget ineerInformationpage(BuildContext context) {
+Widget ineerInformationpage(BuildContext context, Bottle bottleinformation) {
   final Size size = MediaQuery.of(context).size;
   return Scaffold(
     backgroundColor: Colors.white,
@@ -306,7 +366,12 @@ Widget ineerInformationpage(BuildContext context) {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '14',
+                                      bottleinformation.temperature
+                                                  .toString() ==
+                                              null
+                                          ? '-'
+                                          : bottleinformation.temperature
+                                              .toString(),
                                       textAlign: TextAlign.center,
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
@@ -367,7 +432,11 @@ Widget ineerInformationpage(BuildContext context) {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '57',
+                                      bottleinformation.humidity.toString() ==
+                                              null
+                                          ? '-'
+                                          : bottleinformation.humidity
+                                              .toString(),
                                       textAlign: TextAlign.center,
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
@@ -445,7 +514,11 @@ Widget ineerInformationpage(BuildContext context) {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '57',
+                                      bottleinformation.balance.toString() ==
+                                              null
+                                          ? '-'
+                                          : bottleinformation.balance
+                                              .toString(),
                                       textAlign: TextAlign.center,
                                       textScaleFactor: 1.0,
                                       style: TextStyle(
@@ -503,7 +576,9 @@ Widget ineerInformationpage(BuildContext context) {
                               height: size.height * 0.14,
                               child: Center(
                                 child: Text(
-                                  '15:57',
+                                  bottleinformation.recentOpen == null
+                                      ? '-'
+                                      : bottleinformation.recentOpen,
                                   textAlign: TextAlign.center,
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
@@ -529,7 +604,7 @@ Widget ineerInformationpage(BuildContext context) {
   );
 }
 
-Widget outerInformationpage(BuildContext context) {
+Widget outerInformationpage(BuildContext context, Bottle bottleinformation) {
   final Size size = MediaQuery.of(context).size;
   return Scaffold(
     backgroundColor: Colors.white,
@@ -601,7 +676,9 @@ Widget outerInformationpage(BuildContext context) {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    '2',
+                                    bottleinformation.toString() == null
+                                        ? '-'
+                                        : bottleinformation.toString(),
                                     textAlign: TextAlign.center,
                                     textScaleFactor: 1.0,
                                     style: TextStyle(

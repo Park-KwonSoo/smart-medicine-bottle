@@ -110,18 +110,19 @@ class _RegisterBottleState extends State<RegisterBottle> {
                           content: new Text('약병 등록이 완료 되었습니다.'),
                           actions: <Widget>[
                             new FlatButton(
-                                child: new Text('Close'),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              SearchMedicine(
-                                                bottleId:
-                                                    medicineBottleIDController
-                                                        .text,
-                                              )));
-                                })
+                              child: new Text('Close'),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        SearchMedicine(
+                                      bottleId: medicineBottleIDController.text,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                         );
                       });

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../Homepage.dart';
+import 'RegsiterHub.dart';
 
 class SignUpLocal extends StatefulWidget {
   @override
@@ -182,7 +182,7 @@ class _SignUpLocalState extends State<SignUpLocal> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              HomePage()));
+                                              RegisterHub()));
                                 })
                           ],
                         );

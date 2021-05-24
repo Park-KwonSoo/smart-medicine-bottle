@@ -94,8 +94,9 @@ class _HubListState extends State<HubList> {
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         BottleList(
-                                      bottlelist: _bottleList,
-                                    ),
+                                            bottlelist: _bottleList,
+                                            hubid: widget.hublist[index]
+                                                .toString()),
                                   ));
                             } else if (result == "Not Found") {
                               showDialog(

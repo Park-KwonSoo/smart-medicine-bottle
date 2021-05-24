@@ -5,18 +5,46 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/Bottle.dart';
 import '../DashBoard.dart';
+import '../models/Medicine.dart';
 
 class BottleList extends StatefulWidget {
   List<Bottle> bottlelist;
-  BottleList({Key key, this.bottlelist}) : super(key: key);
+  String hubid;
+  BottleList({Key key, this.bottlelist, this.hubid}) : super(key: key);
 
   @override
   _BottleListState createState() => _BottleListState();
 }
 
 class _BottleListState extends State<BottleList> {
+  Bottle _bottleinformation = new Bottle();
+  Medicine _medicineinformation = new Medicine();
+
+  Future<Bottle> getbottle(int index) async {
+    http.Response response = await http.get(Uri.encodeFull(
+        DotEnv().env['SERVER_URL'] +
+            'bottle/' +
+            widget.bottlelist[index].bottleId.toString()));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonData = jsonDecode(response.body);
+      print(jsonData);
+      _bottleinformation = Bottle.fromJson(jsonData);
+    }
+  }
+
+  Future<Bottle> getmedicine(int index) async {
+    http.Response medicineresponse = await http.get(Uri.encodeFull(
+        DotEnv().env['SERVER_URL'] +
+            'medicine/' +
+            widget.bottlelist[index].medicineId.toString()));
+    if (medicineresponse.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(medicineresponse.body);
+      _medicineinformation = Medicine.fromJson(data);
+    }
+  }
+
   Widget build(BuildContext context) {
-    print(widget.bottlelist);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
@@ -62,13 +90,19 @@ class _BottleListState extends State<BottleList> {
                                 fontWeight: FontWeight.bold),
                           ),
                           trailing: Icon(Icons.arrow_forward),
-                          onTap: () {
+                          onTap: () async {
+                            getbottle(index);
+                            getmedicine(index);
+                            print(_bottleinformation);
+                            print(_medicineinformation);
+
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (BuildContext context) => DashBoard(
                                     pageNumber: 1,
-                                    bottleID: widget.bottlelist[index].bottleId,
+                                    bottleInformation: _bottleinformation,
+                                    medicineInformation: _medicineinformation,
                                   ),
                                 ));
                           }),

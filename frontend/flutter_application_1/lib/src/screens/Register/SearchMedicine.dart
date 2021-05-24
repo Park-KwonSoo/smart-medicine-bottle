@@ -8,7 +8,6 @@ import 'DetailMedicine.dart';
 
 class SearchMedicine extends StatefulWidget {
   String bottleId;
-
   SearchMedicine({Key key, this.bottleId}) : super(key: key);
   @override
   _SearchMedicineState createState() => _SearchMedicineState();
