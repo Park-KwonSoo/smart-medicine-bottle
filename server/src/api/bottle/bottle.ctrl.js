@@ -4,7 +4,6 @@ const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
 const Mqtt = require('../../lib/MqttModule');
 const jwt = require('jsonwebtoken');
-const { createIndexes } = require('../../models/bottle');
 
 //약병 등록
 exports.bottleConnect = async(ctx) => {
@@ -106,7 +105,7 @@ exports.lookupInfo = async(ctx) => {
         return;
     }
 
-    const hub = await Hub.findByHubId(bottle.getHubId());
+    const hub = await Hub.findByHubId(isBottleExist.getHubId());
     if(hub.getHub_UserId() !== userId) {
         ctx.status = 403;
         return;
@@ -159,7 +158,7 @@ exports.setMedicine = async(ctx) => {
         bottleId
     }, { 
         medicineId,
-        dosage
+        dosage : parseInt(dosage)
      });
 
     ctx.status = 200;
