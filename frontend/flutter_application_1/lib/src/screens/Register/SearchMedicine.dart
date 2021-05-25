@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/Medicine.dart';
 import 'DetailMedicine.dart';
+import '../../utils/user_secure_stoarge.dart';
 
 class SearchMedicine extends StatefulWidget {
   String bottleId;
@@ -19,13 +20,17 @@ class _SearchMedicineState extends State<SearchMedicine> {
   final medicineCompanyController = TextEditingController();
 
   Future<String> postMeicineList() async {
-    http.Response response =
-        await http.post(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'medicine'),
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode({
-              'name': medicineNameController.text,
-              'company': medicineCompanyController.text,
-            }));
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response response = await http.post(
+        Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'medicine'),
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": usertoken
+        },
+        body: jsonEncode({
+          'name': medicineNameController.text,
+          'company': medicineCompanyController.text,
+        }));
 
     if (_medicineList.length != 0) {
       _medicineList.clear();

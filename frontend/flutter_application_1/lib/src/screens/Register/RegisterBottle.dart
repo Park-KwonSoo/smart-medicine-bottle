@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'SearchMedicine.dart';
+import '../../utils/user_secure_stoarge.dart';
 
 class RegisterBottle extends StatefulWidget {
   final String hubid;
@@ -18,9 +19,13 @@ class _RegisterBottleState extends State<RegisterBottle> {
   final medicineBottleIDController = TextEditingController();
 
   Future<String> registerhub_Validate() async {
+    String usertoken = await UserSecureStorage.getUserToken();
     http.Response bottleresponse = await http.post(
         Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'bottle'),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": usertoken
+        },
         body: jsonEncode({
           'bottleId': medicineBottleIDController.text,
           'hubId': widget.hubid

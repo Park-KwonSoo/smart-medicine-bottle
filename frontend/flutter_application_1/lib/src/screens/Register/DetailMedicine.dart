@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/Medicine.dart';
+import '../../utils/user_secure_stoarge.dart';
 
 class DetailMedicine extends StatefulWidget {
   Medicine searchMedicine;
@@ -20,10 +21,14 @@ class _DetailMedicineState extends State<DetailMedicine> {
   final medicineDosageController = TextEditingController();
   //약 등록
   Future<String> patchMedcine() async {
+    String usertoken = await UserSecureStorage.getUserToken();
     http.Response response = await http.patch(
         Uri.encodeFull(
             DotEnv().env['SERVER_URL'] + 'bottle/' + widget.bottleId),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": usertoken
+        },
         body: jsonEncode({
           'medicineId': widget.searchMedicine.medicineId,
           'dosage': medicineDosageController.text

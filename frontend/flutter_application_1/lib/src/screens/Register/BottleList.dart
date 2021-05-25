@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/Bottle.dart';
 import '../DashBoard.dart';
 import '../models/Medicine.dart';
+import '../../utils/user_secure_stoarge.dart';
 
 class BottleList extends StatefulWidget {
   List<Bottle> bottlelist;
@@ -21,10 +22,12 @@ class _BottleListState extends State<BottleList> {
   Medicine _medicineinformation = new Medicine();
 
   Future<Bottle> getbottle(int index) async {
-    http.Response response = await http.get(Uri.encodeFull(
-        DotEnv().env['SERVER_URL'] +
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response response = await http.get(
+        Uri.encodeFull(DotEnv().env['SERVER_URL'] +
             'bottle/' +
-            widget.bottlelist[index].bottleId.toString()));
+            widget.bottlelist[index].bottleId.toString()),
+        headers: {"authorization": usertoken});
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -34,10 +37,13 @@ class _BottleListState extends State<BottleList> {
   }
 
   Future<Bottle> getmedicine(int index) async {
-    http.Response medicineresponse = await http.get(Uri.encodeFull(
-        DotEnv().env['SERVER_URL'] +
-            'medicine/' +
-            widget.bottlelist[index].medicineId.toString()));
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response medicineresponse = await http.get(
+      Uri.encodeFull(DotEnv().env['SERVER_URL'] +
+          'medicine/' +
+          widget.bottlelist[index].medicineId.toString()),
+      headers: {"authorization": usertoken},
+    );
     if (medicineresponse.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(medicineresponse.body);
       _medicineinformation = Medicine.fromJson(data);
@@ -80,32 +86,31 @@ class _BottleListState extends State<BottleList> {
                       padding: EdgeInsets.all(8.0),
                       decoration: BoxDecoration(border: Border.all()),
                       child: ListTile(
-                          title: Text(
-                            'BOTTLE ID : ' +
-                                '${widget.bottlelist[index].bottleId}',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontFamily: 'Noto',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Icon(Icons.arrow_forward),
-                          onTap: () async {
-                            getbottle(index);
-                            getmedicine(index);
-                            print(_bottleinformation);
-                            print(_medicineinformation);
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) => DashBoard(
-                                    pageNumber: 1,
-                                    bottleInformation: _bottleinformation,
-                                    medicineInformation: _medicineinformation,
-                                  ),
-                                ));
-                          }),
+                        title: Text(
+                          'BOTTLE ID : ' +
+                              '${widget.bottlelist[index].bottleId}',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(Icons.arrow_forward),
+                        onTap: () async {
+                          await getbottle(index);
+                          await getmedicine(index);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => DashBoard(
+                                pageNumber: 1,
+                                bottleInformation: _bottleinformation,
+                                medicineInformation: _medicineinformation,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     );
                   },
                   separatorBuilder: (BuildContext contetx, int index) =>

@@ -3,7 +3,7 @@ class Bottle {
   final int temperature;
   final int humidity;
   final int balance;
-  final String recentOpen;
+  final DateTime recentOpen;
   final int medicineId;
   final int hubId;
   final int dosage;
@@ -24,7 +24,7 @@ class Bottle {
       temperature: parsedJson['temperature'],
       humidity: parsedJson['humidity'],
       balance: parsedJson['balance'],
-      recentOpen: parsedJson['recentOpen'],
+      recentOpen: DateTime.parse(parsedJson['recentOpen']),
       medicineId: parsedJson['medicineId'],
       hubId: parsedJson['hubId'],
       dosage: parsedJson['dosage'],

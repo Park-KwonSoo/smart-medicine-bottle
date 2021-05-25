@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../DashBoard.dart';
+
+import '../../utils/user_secure_stoarge.dart';
 import 'HubList.dart';
 import 'RegsiterHub.dart';
+import '../models/User.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -18,22 +19,30 @@ class _SignInPageState extends State<SignInPage> {
   bool passwordVisible = false;
   bool _validateEmail = false;
   bool _validatePassword = false;
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+  User user;
   List<int> _hublist = new List<int>(); //허브이름을 만들어야 할 것 같은데 임시로 허브 id만 고르게 함
 
   //Login 함수
   Future<String> login(String _email, String _password) async {
     http.Response response = await http.post(
-        Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/login'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
+      Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/login'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
           'userId': _email,
           'password': _password,
-        }));
+        },
+      ),
+    );
 
     if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      user = User.fromJson(data);
+      print(user);
       return "로그인 성공";
     } else if (response.statusCode == 400) {
       return "올바르지 않은 아이디 및 패스워드";
@@ -44,11 +53,14 @@ class _SignInPageState extends State<SignInPage> {
 
   //Get Bottle List 함수
   Future<String> getHubList() async {
-    http.Response response =
-        await http.get(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'));
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response response = await http.get(
+      Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'),
+      headers: {"authorization": usertoken},
+    );
 
     List<dynamic> values = new List<dynamic>();
-
+    print(values);
     if (_hublist.length != 0) {
       _hublist.clear();
     }
@@ -228,6 +240,8 @@ class _SignInPageState extends State<SignInPage> {
                                                         RegisterHub(),
                                               ));
                                         } else if (result == "get완료") {
+                                          UserSecureStorage.setUserToken(
+                                              user.token);
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(

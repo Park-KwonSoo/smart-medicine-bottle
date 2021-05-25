@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'RegisterBottle.dart';
+import '../../utils/user_secure_stoarge.dart';
 
 class RegisterHub extends StatefulWidget {
   @override
@@ -18,14 +19,18 @@ class _RegisterHubState extends State<RegisterHub> {
   final medicineHubHostController = TextEditingController();
 
   Future<String> registerhub_Validate() async {
-    http.Response hubresponse =
-        await http.post(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'),
-            headers: {"Content-Type": "application/json"},
-            body: jsonEncode({
-              'hubId': medicineHubIDController.text,
-              'host': medicineHubHostController.text,
-              'port': medicineHubPortController.text,
-            }));
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response hubresponse = await http.post(
+        Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'),
+        headers: {
+          "Content-Type": "application/json",
+          "authorization": usertoken
+        },
+        body: jsonEncode({
+          'hubId': medicineHubIDController.text,
+          'host': medicineHubHostController.text,
+          'port': medicineHubPortController.text,
+        }));
 
     if (hubresponse.statusCode == 201) {
       return "허브 등록 완료";

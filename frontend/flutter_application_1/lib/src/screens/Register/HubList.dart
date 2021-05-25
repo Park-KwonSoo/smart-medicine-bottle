@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'RegisterBottle.dart';
 import '../models/Bottle.dart';
 import 'BottleList.dart';
+import '../../utils/user_secure_stoarge.dart';
 
 class HubList extends StatefulWidget {
   List<int> hublist;
@@ -20,8 +21,13 @@ class _HubListState extends State<HubList> {
   List<Bottle> _bottleList = new List<Bottle>();
   //Get BottleList
   Future<String> getBottleList(int hubid) async {
-    http.Response response = await http.get(Uri.encodeFull(
-        DotEnv().env['SERVER_URL'] + 'bottle/hub/' + hubid.toString()));
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response response = await http.get(
+      Uri.encodeFull(
+          DotEnv().env['SERVER_URL'] + 'bottle/hub/' + hubid.toString()),
+      headers: {"authorization": usertoken},
+    );
+    print(response.body);
     if (_bottleList.length != 0) {
       _bottleList.clear();
     }

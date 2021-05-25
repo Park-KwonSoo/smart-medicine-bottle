@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 
 import 'models/Bottle.dart';
 import 'models/Medicine.dart';
@@ -28,6 +29,7 @@ class _DashBoardState extends State<DashBoard> {
   Bottle _bottleinformation = new Bottle();
   int _selectedIndex = 0;
   Medicine _medicineInformation = new Medicine();
+
   Widget build(BuildContext context) {
     _selectedIndex = widget.pageNumber;
     _medicineInformation = widget.medicineInformation;
@@ -125,17 +127,6 @@ class _DashBoardState extends State<DashBoard> {
 }
 
 Widget mainpage(BuildContext context, Medicine medicineInformation) {
-  Future<String> getHubList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    http.Response response =
-        await http.get(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'));
-
-    print(response.statusCode);
-  }
-
-  //현재 접속 중인 허브 리스트 id와 약병 리스트 id 출력
-  //약 상세 정보 가져오기 --> 이건 Detail Medicine에서 가져 오면 됨
   final Size size = MediaQuery.of(context).size;
   return Scaffold(
     backgroundColor: Colors.white,
@@ -578,7 +569,8 @@ Widget ineerInformationpage(BuildContext context, Bottle bottleinformation) {
                                 child: Text(
                                   bottleinformation.recentOpen == null
                                       ? '-'
-                                      : bottleinformation.recentOpen,
+                                      : DateFormat.Hm()
+                                          .format(bottleinformation.recentOpen),
                                   textAlign: TextAlign.center,
                                   textScaleFactor: 1.0,
                                   style: TextStyle(
@@ -676,9 +668,9 @@ Widget outerInformationpage(BuildContext context, Bottle bottleinformation) {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    bottleinformation.toString() == null
+                                    bottleinformation.dosage == null
                                         ? '-'
-                                        : bottleinformation.toString(),
+                                        : bottleinformation.dosage.toString(),
                                     textAlign: TextAlign.center,
                                     textScaleFactor: 1.0,
                                     style: TextStyle(
