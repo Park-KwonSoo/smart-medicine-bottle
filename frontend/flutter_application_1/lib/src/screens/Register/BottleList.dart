@@ -10,46 +10,13 @@ import '../../utils/user_secure_stoarge.dart';
 
 class BottleList extends StatefulWidget {
   List<Bottle> bottlelist;
-  String hubid;
-  BottleList({Key key, this.bottlelist, this.hubid}) : super(key: key);
+  BottleList({Key key, this.bottlelist}) : super(key: key);
 
   @override
   _BottleListState createState() => _BottleListState();
 }
 
 class _BottleListState extends State<BottleList> {
-  Bottle _bottleinformation = new Bottle();
-  Medicine _medicineinformation = new Medicine();
-
-  Future<Bottle> getbottle(int index) async {
-    String usertoken = await UserSecureStorage.getUserToken();
-    http.Response response = await http.get(
-        Uri.encodeFull(DotEnv().env['SERVER_URL'] +
-            'bottle/' +
-            widget.bottlelist[index].bottleId.toString()),
-        headers: {"authorization": usertoken});
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonData = jsonDecode(response.body);
-      print(jsonData);
-      _bottleinformation = Bottle.fromJson(jsonData);
-    }
-  }
-
-  Future<Bottle> getmedicine(int index) async {
-    String usertoken = await UserSecureStorage.getUserToken();
-    http.Response medicineresponse = await http.get(
-      Uri.encodeFull(DotEnv().env['SERVER_URL'] +
-          'medicine/' +
-          widget.bottlelist[index].medicineId.toString()),
-      headers: {"authorization": usertoken},
-    );
-    if (medicineresponse.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(medicineresponse.body);
-      _medicineinformation = Medicine.fromJson(data);
-    }
-  }
-
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -97,15 +64,15 @@ class _BottleListState extends State<BottleList> {
                         ),
                         trailing: Icon(Icons.arrow_forward),
                         onTap: () async {
-                          await getbottle(index);
-                          await getmedicine(index);
+                          UserSecureStorage.setBottleId(
+                              widget.bottlelist[index].bottleId.toString());
+                          UserSecureStorage.setMedicineId(
+                              widget.bottlelist[index].medicineId.toString());
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (BuildContext context) => DashBoard(
                                 pageNumber: 1,
-                                bottleInformation: _bottleinformation,
-                                medicineInformation: _medicineinformation,
                               ),
                             ),
                           );

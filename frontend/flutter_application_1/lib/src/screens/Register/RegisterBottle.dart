@@ -20,16 +20,16 @@ class _RegisterBottleState extends State<RegisterBottle> {
 
   Future<String> registerhub_Validate() async {
     String usertoken = await UserSecureStorage.getUserToken();
+    String hubid = await UserSecureStorage.getHubId();
+    print(hubid);
     http.Response bottleresponse = await http.post(
         Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'bottle'),
         headers: {
           "Content-Type": "application/json",
           "authorization": usertoken
         },
-        body: jsonEncode({
-          'bottleId': medicineBottleIDController.text,
-          'hubId': widget.hubid
-        }));
+        body: jsonEncode(
+            {'bottleId': medicineBottleIDController.text, 'hubId': hubid}));
 
     if (bottleresponse.statusCode == 201) {
       return "등록 완료";

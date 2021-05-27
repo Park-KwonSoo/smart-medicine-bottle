@@ -28,6 +28,7 @@ class _SignInPageState extends State<SignInPage> {
 
   //Login 함수
   Future<String> login(String _email, String _password) async {
+    print(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/login'));
     http.Response response = await http.post(
       Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/login'),
       headers: {"Content-Type": "application/json"},
@@ -38,6 +39,7 @@ class _SignInPageState extends State<SignInPage> {
         },
       ),
     );
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
@@ -51,7 +53,7 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-  //Get Bottle List 함수
+  //Get Hub List 함수
   Future<String> getHubList() async {
     String usertoken = await UserSecureStorage.getUserToken();
     http.Response response = await http.get(
@@ -207,6 +209,7 @@ class _SignInPageState extends State<SignInPage> {
                                     String saveMessage = await login(
                                         emailController.text,
                                         passwordController.text);
+                                    print(saveMessage);
                                     if (emailController.text.isEmpty ||
                                         passwordController.text.isEmpty) {
                                       showDialog(
@@ -227,7 +230,6 @@ class _SignInPageState extends State<SignInPage> {
                                             );
                                           });
                                     } else {
-                                      saveMessage = "로그인 성공";
                                       if (saveMessage == "로그인 성공") {
                                         var result = await getHubList();
                                         print(result);
@@ -242,6 +244,9 @@ class _SignInPageState extends State<SignInPage> {
                                         } else if (result == "get완료") {
                                           UserSecureStorage.setUserToken(
                                               user.token);
+                                          UserSecureStorage.setUserId(
+                                              user.userId);
+                                          print('asdg');
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -250,6 +255,8 @@ class _SignInPageState extends State<SignInPage> {
                                                     HubList(hublist: _hublist),
                                               ));
                                         } else {}
+                                      } else {
+                                        print('Error');
                                       }
                                     }
                                   },

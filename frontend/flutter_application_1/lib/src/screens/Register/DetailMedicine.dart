@@ -215,7 +215,9 @@ class _DetailMedicineState extends State<DetailMedicine> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              HomePage(),
+                                              DashBoard(
+                                            pageNumber: 1,
+                                          ),
                                         ),
                                       );
                                     })

@@ -120,6 +120,7 @@ class _RegisterHubState extends State<RegisterHub> {
                 String saveMessage = await registerhub_Validate();
                 print(saveMessage);
                 if (saveMessage == "허브 등록 완료") {
+                  UserSecureStorage.setHubId(medicineHubIDController.text);
                   Navigator.push(
                       context,
                       MaterialPageRoute(

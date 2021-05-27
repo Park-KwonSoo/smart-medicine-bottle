@@ -45,6 +45,7 @@ class _HubListState extends State<HubList> {
     } else {
       return "Error";
     }
+    return "Error";
   }
 
   Widget build(BuildContext context) {
@@ -95,14 +96,15 @@ class _HubListState extends State<HubList> {
                             var result =
                                 await getBottleList(widget.hublist[index]);
                             if (result == "GET") {
+                              UserSecureStorage.setHubId(
+                                  widget.hublist[index].toString());
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
                                         BottleList(
-                                            bottlelist: _bottleList,
-                                            hubid: widget.hublist[index]
-                                                .toString()),
+                                      bottlelist: _bottleList,
+                                    ),
                                   ));
                             } else if (result == "Not Found") {
                               showDialog(
@@ -115,15 +117,15 @@ class _HubListState extends State<HubList> {
                                         new FlatButton(
                                             child: new Text('등록'),
                                             onPressed: () {
+                                              UserSecureStorage.setHubId(widget
+                                                  .hublist[index]
+                                                  .toString());
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (BuildContext
                                                             context) =>
-                                                        RegisterBottle(
-                                                            hubid: widget
-                                                                .hublist[index]
-                                                                .toString()),
+                                                        RegisterBottle(),
                                                   ));
                                             })
                                       ],

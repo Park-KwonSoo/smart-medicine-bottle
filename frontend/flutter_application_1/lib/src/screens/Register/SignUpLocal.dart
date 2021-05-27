@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Smart_Medicine_Box/src/screens/Homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -182,7 +183,7 @@ class _SignUpLocalState extends State<SignUpLocal> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (BuildContext context) =>
-                                              RegisterHub()));
+                                              HomePage()));
                                 })
                           ],
                         );
