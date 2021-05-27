@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                             textScaleFactor: 1.0,
                             style: TextStyle(
                                 color: Color(0xff004ca2),
-                                fontSize: 20,
+                                fontSize: 30,
                                 fontFamily: 'Noto',
                                 fontWeight: FontWeight.bold),
                           ),

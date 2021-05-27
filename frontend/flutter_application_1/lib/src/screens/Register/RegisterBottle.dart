@@ -117,6 +117,8 @@ class _RegisterBottleState extends State<RegisterBottle> {
                             new FlatButton(
                               child: new Text('Close'),
                               onPressed: () {
+                                UserSecureStorage.setBottleId(
+                                    medicineBottleIDController.text);
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

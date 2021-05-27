@@ -121,6 +121,7 @@ class _RegisterHubState extends State<RegisterHub> {
                 print(saveMessage);
                 if (saveMessage == "허브 등록 완료") {
                   UserSecureStorage.setHubId(medicineHubIDController.text);
+                  print(UserSecureStorage.getHubId());
                   Navigator.push(
                       context,
                       MaterialPageRoute(

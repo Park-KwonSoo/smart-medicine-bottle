@@ -19,73 +19,78 @@ class BottleList extends StatefulWidget {
 class _BottleListState extends State<BottleList> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Container(
-          height: size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              SizedBox(height: 70),
-              Container(
-                height: size.height * 0.1,
-                width: size.width,
-                child: Center(
-                  child: Text(
-                    '등록된 약병 리스트',
-                    textScaleFactor: 1.0,
-                    style: TextStyle(
-                        fontSize: 28,
-                        fontFamily: 'Noto',
-                        fontWeight: FontWeight.bold),
+    return WillPopScope(
+      child: Scaffold(
+        body: Container(
+            height: size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 70),
+                Container(
+                  height: size.height * 0.1,
+                  width: size.width,
+                  child: Center(
+                    child: Text(
+                      '등록된 약병 리스트',
+                      textScaleFactor: 1.0,
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontFamily: 'Noto',
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
+                  decoration: BoxDecoration(border: Border.all()),
                 ),
-                decoration: BoxDecoration(border: Border.all()),
-              ),
-              SizedBox(height: 30),
-              Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(30),
-                  itemCount: widget.bottlelist.length == null
-                      ? 0
-                      : widget.bottlelist.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(border: Border.all()),
-                      child: ListTile(
-                        title: Text(
-                          'BOTTLE ID : ' +
-                              '${widget.bottlelist[index].bottleId}',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontFamily: 'Noto',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        trailing: Icon(Icons.arrow_forward),
-                        onTap: () async {
-                          UserSecureStorage.setBottleId(
-                              widget.bottlelist[index].bottleId.toString());
-                          UserSecureStorage.setMedicineId(
-                              widget.bottlelist[index].medicineId.toString());
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => DashBoard(
-                                pageNumber: 1,
+                SizedBox(height: 30),
+                Expanded(
+                  child: ListView.separated(
+                    padding: const EdgeInsets.all(30),
+                    itemCount: widget.bottlelist.length == null
+                        ? 0
+                        : widget.bottlelist.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(border: Border.all()),
+                        child: ListTile(
+                          title: Text(
+                            'BOTTLE ID : ' +
+                                '${widget.bottlelist[index].bottleId}',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20,
+                                fontFamily: 'Noto',
+                                fontWeight: FontWeight.bold),
+                          ),
+                          trailing: Icon(Icons.arrow_forward),
+                          onTap: () async {
+                            UserSecureStorage.setBottleId(
+                                widget.bottlelist[index].bottleId.toString());
+                            UserSecureStorage.setMedicineId(
+                                widget.bottlelist[index].medicineId.toString());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) => DashBoard(
+                                  pageNumber: 1,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (BuildContext contetx, int index) =>
-                      const Divider(),
-                ),
-              )
-            ],
-          )),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext contetx, int index) =>
+                        const Divider(),
+                  ),
+                )
+              ],
+            )),
+      ),
+      onWillPop: () {
+        SystemNavigator.pop();
+      },
     );
   }
 }

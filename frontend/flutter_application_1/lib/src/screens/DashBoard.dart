@@ -9,6 +9,7 @@ import '../utils/user_secure_stoarge.dart';
 import 'models/Bottle.dart';
 import 'models/Medicine.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
+import 'Register/BottleList.dart';
 
 class DashBoard extends StatefulWidget {
   int pageNumber;
@@ -24,6 +25,35 @@ class DashBoard extends StatefulWidget {
 
 class _DashBoardState extends State<DashBoard> {
   int _selectedIndex = 0;
+  List<Bottle> _bottleList = new List<Bottle>();
+  //Get BottleList
+  Future<String> getBottleList() async {
+    String usertoken = await UserSecureStorage.getUserToken();
+    String hubid = await UserSecureStorage.getHubId();
+    http.Response response = await http.get(
+      Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'bottle/hub/' + hubid),
+      headers: {"authorization": usertoken},
+    );
+    print(response.body);
+    if (_bottleList.length != 0) {
+      _bottleList.clear();
+    }
+    if (response.statusCode == 200) {
+      List<dynamic> values = new List<dynamic>();
+      values = json.decode(response.body);
+
+      for (int i = 0; i < values.length; i++) {
+        Map<String, dynamic> map = values[i];
+        _bottleList.add(Bottle.fromJson(map));
+        return "GET";
+      }
+    } else if (response.statusCode == 404) {
+      return "Not Found";
+    } else {
+      return "Error";
+    }
+    return "Error";
+  }
 
   Widget build(BuildContext context) {
     _selectedIndex = widget.pageNumber;
@@ -33,82 +63,93 @@ class _DashBoardState extends State<DashBoard> {
       outerInformationpage(context),
     ];
 
-    return Scaffold(
-      backgroundColor: Color(0xffe5f4ff),
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.white,
-        title: Text(
-          'Smart Medicine Box',
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontFamily: 'Noto',
-              fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.settings,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => SettingPage(),
-                  ));
-            },
-          )
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: [
-            DrawerHeader(
-              child: Text('Drawer Header'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
+    return WillPopScope(
+      child: Scaffold(
+        backgroundColor: Color(0xffe5f4ff),
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.black),
+          backgroundColor: Colors.white,
+          title: Text(
+            'Smart Medicine Box',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontFamily: 'Noto',
+                fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+                color: Colors.black,
               ),
-            ),
-            ListTile(
-              title: Text('Test 1'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('Test 2'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('Test 3'),
-              onTap: () {},
-            ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => SettingPage(),
+                    ));
+              },
+            )
+          ],
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                child: Text('Drawer Header'),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+              ),
+              ListTile(
+                title: Text('Test 1'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('Test 2'),
+                onTap: () {},
+              ),
+              ListTile(
+                title: Text('Test 3'),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ),
+        body: _tabs[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.grey,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.white.withOpacity(.60),
+          selectedFontSize: 14,
+          unselectedFontSize: 14,
+          currentIndex: _selectedIndex,
+          onTap: (int index) => {
+            setState(() {
+              _onItemTapped(index);
+            })
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'In'),
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(
+              label: 'Out',
+              icon: Icon(Icons.favorite),
+            )
           ],
         ),
       ),
-      body: _tabs[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.grey,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.white.withOpacity(.60),
-        selectedFontSize: 14,
-        unselectedFontSize: 14,
-        currentIndex: _selectedIndex,
-        onTap: (int index) => {
-          setState(() {
-            _onItemTapped(index);
-          })
-        },
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'In'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-            label: 'Out',
-            icon: Icon(Icons.favorite),
-          )
-        ],
-      ),
+      onWillPop: () async {
+        await getBottleList();
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  BottleList(bottlelist: _bottleList),
+            ));
+      },
     );
   }
 
@@ -314,7 +355,6 @@ Widget mainpage(BuildContext context) {
 }
 
 Widget ineerInformationpage(BuildContext context) {
-  Bottle _bottleinformation = new Bottle();
   //get bottle
   Future<Bottle> _getbottle() async {
     String usertoken = await UserSecureStorage.getUserToken();
