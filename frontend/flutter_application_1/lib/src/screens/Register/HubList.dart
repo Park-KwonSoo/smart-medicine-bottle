@@ -102,9 +102,7 @@ class _HubListState extends State<HubList> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        BottleList(
-                                      bottlelist: _bottleList,
-                                    ),
+                                        BottleList(),
                                   ));
                             } else if (result == "Not Found") {
                               showDialog(

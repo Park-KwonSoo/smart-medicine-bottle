@@ -5,88 +5,199 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/Bottle.dart';
 import '../DashBoard.dart';
-import '../models/Medicine.dart';
 import '../../utils/user_secure_stoarge.dart';
 
 class BottleList extends StatefulWidget {
-  List<Bottle> bottlelist;
-  BottleList({Key key, this.bottlelist}) : super(key: key);
+  BottleList({Key key}) : super(key: key);
 
   @override
   _BottleListState createState() => _BottleListState();
 }
 
 class _BottleListState extends State<BottleList> {
+  List<Bottle> _bottleList = new List<Bottle>();
+  Future<String> getBottleList() async {
+    String hubid = await UserSecureStorage.getHubId();
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response response = await http.get(
+      Uri.encodeFull(
+          DotEnv().env['SERVER_URL'] + 'bottle/hub/' + hubid.toString()),
+      headers: {"authorization": usertoken},
+    );
+    print(response.body);
+    print(1);
+    if (_bottleList.length != 0) {
+      _bottleList.clear();
+    }
+    if (response.statusCode == 200) {
+      List<dynamic> values = new List<dynamic>();
+      values = json.decode(response.body);
+
+      for (int i = 0; i < values.length; i++) {
+        Map<String, dynamic> map = values[i];
+        _bottleList.add(Bottle.fromJson(map));
+      }
+      return "GET";
+    } else if (response.statusCode == 404) {
+      return "Not Found";
+    } else {
+      return "Error";
+    }
+  }
+
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return WillPopScope(
       child: Scaffold(
-        body: Container(
-            height: size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 70),
-                Container(
-                  height: size.height * 0.1,
-                  width: size.width,
-                  child: Center(
-                    child: Text(
-                      '등록된 약병 리스트',
-                      textScaleFactor: 1.0,
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontFamily: 'Noto',
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  decoration: BoxDecoration(border: Border.all()),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leading: new Icon(Icons.medical_services_rounded,
+              color: Colors.black, size: 45.0),
+          title: Text(
+            'Smart Medicine Box',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 23,
+                fontFamily: 'Noto',
+                fontWeight: FontWeight.bold),
+          ),
+        ),
+        body: FutureBuilder(
+          future: getBottleList(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData == false) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Error: ${snapshot.error}',
+                  style: TextStyle(fontSize: 15),
                 ),
-                SizedBox(height: 30),
-                Expanded(
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(30),
-                    itemCount: widget.bottlelist.length == null
-                        ? 0
-                        : widget.bottlelist.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        padding: EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(border: Border.all()),
-                        child: ListTile(
-                          title: Text(
-                            'BOTTLE ID : ' +
-                                '${widget.bottlelist[index].bottleId}',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontFamily: 'Noto',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Icon(Icons.arrow_forward),
-                          onTap: () async {
-                            UserSecureStorage.setBottleId(
-                                widget.bottlelist[index].bottleId.toString());
-                            UserSecureStorage.setMedicineId(
-                                widget.bottlelist[index].medicineId.toString());
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) => DashBoard(
-                                  pageNumber: 1,
+              );
+            } else {
+              return Container(
+                height: size.height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 10),
+                    Container(
+                      height: size.height * 0.07,
+                      width: size.width,
+                      child: Center(
+                        child: Text(
+                          '등록된 약병 리스트',
+                          textScaleFactor: 1.0,
+                          style: TextStyle(
+                              fontSize: 28,
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: GridView.builder(
+                        padding: const EdgeInsets.all(30),
+                        itemCount:
+                            _bottleList.length == null ? 0 : _bottleList.length,
+                        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                          maxCrossAxisExtent: 200,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkResponse(
+                            splashColor: Colors.transparent,
+                            child: Container(
+                              height: 140,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(16.0),
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext contetx, int index) =>
-                        const Divider(),
-                  ),
-                )
-              ],
-            )),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            color: Colors.black,
+                                            width: 1,
+                                            style: BorderStyle.solid),
+                                      ),
+                                    ),
+                                    height: 40,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          child: Center(
+                                            child: Text(
+                                              '${_bottleList[index].bottleId}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 20,
+                                                  fontFamily: 'Noto',
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          child: IconButton(
+                                            alignment: Alignment(0.9, 0),
+                                            icon: Icon(
+                                              Icons.create_sharp,
+                                              color: Colors.black,
+                                            ),
+                                            onPressed: () {
+                                              print("asdfg");
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Container(
+                                    height: 90,
+                                    child: Icon(
+                                      Icons.medical_services_outlined,
+                                      size: 100,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              UserSecureStorage.setBottleId(
+                                  _bottleList[index].bottleId.toString());
+                              UserSecureStorage.setMedicineId(
+                                  _bottleList[index].medicineId.toString());
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => DashBoard(
+                                    pageNumber: 1,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
       onWillPop: () {
         SystemNavigator.pop();

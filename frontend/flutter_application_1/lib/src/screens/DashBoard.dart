@@ -118,6 +118,13 @@ class _DashBoardState extends State<DashBoard> {
           ),
         ),
         body: _tabs[_selectedIndex],
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            setState(() {});
+          },
+          child: const Icon(Icons.refresh_outlined),
+          backgroundColor: Colors.blue,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.grey,
@@ -132,11 +139,12 @@ class _DashBoardState extends State<DashBoard> {
             })
           },
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'In'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.device_thermostat), label: 'In'),
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
               label: 'Out',
-              icon: Icon(Icons.favorite),
+              icon: Icon(Icons.access_time),
             )
           ],
         ),
@@ -146,8 +154,7 @@ class _DashBoardState extends State<DashBoard> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  BottleList(bottlelist: _bottleList),
+              builder: (BuildContext context) => BottleList(),
             ));
       },
     );
