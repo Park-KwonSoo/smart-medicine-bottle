@@ -87,7 +87,10 @@ npm start
 ⇒ 안드로이드에서 블루투스로 약병 찾은 후, 해당 약병의 정보를 서버로 전송, 서버는 이 정보를 브로커에게 전송 후 블루투스 통신?
 
 - [x]  bottleCtrl : lookUpInfo 함수에서 req 보낸 후 응답받은 새로운 bottle을 출력해야 한다.
-- [ ]  Hub 이름 짓기
+- [x]  Hub 이름 짓기
+
+→ Care Bridge
+
 - [ ]  약병 데이터 업데이트 시간 한국시간으로
 
 [Schedule](https://www.notion.so/cdcc6627a8344c8da56ffb3856bfc1b9)
