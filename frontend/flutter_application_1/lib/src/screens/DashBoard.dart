@@ -10,6 +10,7 @@ import 'models/Bottle.dart';
 import 'models/Medicine.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
 import 'Register/BottleList.dart';
+import 'Register/SearchMedicine.dart';
 
 class DashBoard extends StatefulWidget {
   int pageNumber;
@@ -349,6 +350,40 @@ Widget mainpage(BuildContext context) {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  GestureDetector(
+                    child: Container(
+                      width: size.width * 0.8,
+                      height: 46,
+                      margin: EdgeInsets.only(bottom: 0),
+                      child: FlatButton(
+                        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                        onPressed: () async {
+                          String bottleid =
+                              await UserSecureStorage.getBottleId();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => SearchMedicine(
+                                bottleId: bottleid,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          '약 검색',
+                          textScaleFactor: 1.0,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.bold),
+                        ),
+                        color: Color(0xff1674f6),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50)),
+                      ),
                     ),
                   ),
                 ],
