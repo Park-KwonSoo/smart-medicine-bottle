@@ -6,6 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/Bottle.dart';
 import '../DashBoard.dart';
 import '../../utils/user_secure_stoarge.dart';
+import '../../utils/DBHelper.dart';
+import '../models/UserBottle.dart';
 
 class BottleList extends StatefulWidget {
   BottleList({Key key}) : super(key: key);
@@ -19,13 +21,14 @@ class _BottleListState extends State<BottleList> {
   Future<String> getBottleList() async {
     String hubid = await UserSecureStorage.getHubId();
     String usertoken = await UserSecureStorage.getUserToken();
+
+    var provider = DBHelper();
     http.Response response = await http.get(
       Uri.encodeFull(
           DotEnv().env['SERVER_URL'] + 'bottle/hub/' + hubid.toString()),
       headers: {"authorization": usertoken},
     );
-    print(response.body);
-    print(1);
+
     if (_bottleList.length != 0) {
       _bottleList.clear();
     }
@@ -37,6 +40,20 @@ class _BottleListState extends State<BottleList> {
         Map<String, dynamic> map = values[i];
         _bottleList.add(Bottle.fromJson(map));
       }
+      for (int i = 0; i < _bottleList.length; i++) {
+        UserBottle temp = new UserBottle();
+        temp.bottleId = _bottleList[i].bottleId;
+        temp.bottleName = _bottleList[i].bottleId.toString();
+        provider.createData(temp);
+      }
+      List<UserBottle> _userbottleList = new List<UserBottle>();
+      _userbottleList = await provider.getAllBottle();
+      for (int i = 0; i < _userbottleList.length; i++) {
+        print(_userbottleList[i].bottleId);
+        print(12345678);
+      }
+
+      print(provider.getAllBottle());
       return "GET";
     } else if (response.statusCode == 404) {
       return "Not Found";
