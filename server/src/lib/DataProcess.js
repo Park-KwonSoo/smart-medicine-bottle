@@ -44,30 +44,34 @@ const balanceFactoring = (balance) => {
     const slicingBalance = max / 5;
 
     if(parseInt(balance) < slicingBalance || parseInt(balance) > max * 2)
-        return '100';
-    else if(parseInt(balance) < slicingBalance * 2)
         return '80';
-    else if(parseInt(balance) < slicingBalance * 3)
+    else if(parseInt(balance) < slicingBalance * 2)
         return '60';
-    else if(parseInt(balance) < slicingBalance * 4)
+    else if(parseInt(balance) < slicingBalance * 3)
         return '40';
-    else if(parseInt(balance) < slicingBalance * 5)
+    else if(parseInt(balance) < slicingBalance * 4)
         return '20';
-    else    return '0';
-    
+    else return '0';
+
 }
 
 //bottleId가 포함된 data를 받아서 해당 약병의 data를 업데이트한다.
 const bottleInfoUpdate = async(data) => {
-    const { bottleId, isOpen, openDate, temperature, humidity, balance } = data;
+    let { bottleId, isOpen, openDate, temperature, humidity, balance } = data;
 
-    if(isOpen === '1') {
+    bottleId = parseInt(bottleId);
+    isOpen = parseInt(isOpen);
+    temperature = parseFloat(temperature);
+    humidity = parseFloat(humidity);
+    balance = parseInt(balance);
+
+    if(isOpen) {
         await Bottle.findOneAndUpdate({
             bottleId
         }, { recentOpen : openDate });
     }
 
-    if(balance !== '-1') {
+    if(balance !== -1) {
         await Bottle.findOneAndUpdate({
             bottleId
         }, { balance })
