@@ -13,7 +13,7 @@ exports.mqttOn = async (hosting, func) => {
         clientList.push(client);
 
         client.on('connect', () => {
-            console.log('Client connected: ', client.connected);
+            console.log(`Hub connected: `, client.connected);
         }); 
 
         client.on('message', async (topic, message, packet) => {

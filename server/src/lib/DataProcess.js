@@ -40,7 +40,7 @@ const factoring = async (topic, message) => {
 }
 
 const balanceFactoring = (balance) => {
-    const max = 11;
+    const max = 10; //Digital Lead Sensor Maximum Value
     const slicingBalance = max / 5;
 
     if(parseInt(balance) < slicingBalance || parseInt(balance) > max * 2)
