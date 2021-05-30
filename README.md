@@ -2,6 +2,8 @@
 
 ---
 
+![http://khuhub.khu.ac.kr/2021-1-capstone-design1/RIT_Project1/uploads/9b1f91d1e434746875438f6b8eb5dfab/메인_메뉴.png](http://khuhub.khu.ac.kr/2021-1-capstone-design1/RIT_Project1/uploads/9b1f91d1e434746875438f6b8eb5dfab/메인_메뉴.png)
+
 ## Info
 
 하루가 다르게 고령화가 진행되고 있는 대한민국. 2017년 기준, 나이가 65세를 넘은 ‘노인'이 전체 인구의 14%를 넘어섰습니다. 이 연구는 약 복용을 관리하고 지원하는 플랫폼으로, 사용자가 복용중인 약에 관한 정보를 포함하여 약을 규칙적으로 복용할 수 있게 해 줍니다.
