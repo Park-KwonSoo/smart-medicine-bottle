@@ -200,7 +200,7 @@ class _BottleListState extends State<BottleList> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (BuildContext context) => DashBoard(
-                                    pageNumber: 1,
+                                    pageNumber: 0,
                                   ),
                                 ),
                               );

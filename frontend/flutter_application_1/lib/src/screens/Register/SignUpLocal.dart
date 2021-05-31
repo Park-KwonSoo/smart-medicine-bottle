@@ -23,14 +23,18 @@ class _SignUpLocalState extends State<SignUpLocal> {
   bool passwordValidationVisible = true;
 
   Future<String> signup_Validate() async {
+    print(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/register'));
     http.Response response = await http.post(
-        Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/register'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
+      Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/register'),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(
+        {
           'userId': emailController.text,
           'password': passwordController.text,
           'passwordCheck': passwordValidController.text
-        }));
+        },
+      ),
+    );
 
     print(response.statusCode);
     if (response.statusCode == 201) {

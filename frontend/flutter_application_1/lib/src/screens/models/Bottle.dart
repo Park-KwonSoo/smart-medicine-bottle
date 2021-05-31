@@ -1,8 +1,8 @@
 class Bottle {
   final int bottleId;
-  final int temperature;
-  final int humidity;
-  final int balance;
+  final String temperature;
+  final String humidity;
+  final String balance;
   final DateTime recentOpen;
   final int medicineId;
   final int hubId;
@@ -19,11 +19,12 @@ class Bottle {
       this.dosage});
 
   factory Bottle.fromJson(Map<String, dynamic> parsedJson) {
+    print(parsedJson['temparture']);
     return Bottle(
       bottleId: parsedJson['bottleId'],
-      temperature: parsedJson['temperature'],
-      humidity: parsedJson['humidity'],
-      balance: parsedJson['balance'],
+      temperature: parsedJson['temperature'].toString(),
+      humidity: parsedJson['humidity'].toString(),
+      balance: parsedJson['balance'].toString(),
       recentOpen: DateTime.parse(parsedJson['recentOpen']),
       medicineId: parsedJson['medicineId'],
       hubId: parsedJson['hubId'],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
@@ -84,13 +83,7 @@ class _DashBoardState extends State<DashBoard> {
                 Icons.settings,
                 color: Colors.black,
               ),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => SettingPage(),
-                    ));
-              },
+              onPressed: () {},
             )
           ],
         ),
@@ -174,6 +167,8 @@ Widget mainpage(BuildContext context) {
   Future<Medicine> _getmedicine() async {
     String usertoken = await UserSecureStorage.getUserToken();
     String medicineid = await UserSecureStorage.getMedicineId();
+    print(medicineid);
+
     http.Response medicineresponse = await http.get(
       Uri.encodeFull(
           DotEnv().env['SERVER_URL'] + 'medicine/' + medicineid.toString()),
@@ -184,8 +179,6 @@ Widget mainpage(BuildContext context) {
       Map<String, dynamic> data = jsonDecode(medicineresponse.body);
       _medicineInformation = Medicine.fromJson(data);
     }
-    print(1);
-    print(_medicineInformation.company);
     return _medicineInformation;
   }
 
@@ -510,7 +503,7 @@ Widget ineerInformationpage(BuildContext context) {
                                             textScaleFactor: 1.0,
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 76,
+                                                fontSize: 50,
                                                 fontFamily: 'NotoSansKR',
                                                 fontWeight: FontWeight.w800),
                                           ),
@@ -520,7 +513,7 @@ Widget ineerInformationpage(BuildContext context) {
                                             textScaleFactor: 1.0,
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 60,
+                                                fontSize: 50,
                                                 fontFamily: 'NotoSansKR',
                                                 fontWeight: FontWeight.w800),
                                           )
@@ -576,7 +569,7 @@ Widget ineerInformationpage(BuildContext context) {
                                             textScaleFactor: 1.0,
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 80,
+                                                fontSize: 50,
                                                 fontFamily: 'NotoSansKR',
                                                 fontWeight: FontWeight.w800),
                                           ),
@@ -586,7 +579,7 @@ Widget ineerInformationpage(BuildContext context) {
                                             textScaleFactor: 1.0,
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 60,
+                                                fontSize: 50,
                                                 fontFamily: 'NotoSansKR',
                                                 fontWeight: FontWeight.w800),
                                           )
@@ -760,8 +753,6 @@ Widget outerInformationpage(BuildContext context) {
       print(jsonData);
       _bottleinformation = Bottle.fromJson(jsonData);
     }
-    print(1);
-    print(_bottleinformation.toJson());
     return _bottleinformation;
   }
 

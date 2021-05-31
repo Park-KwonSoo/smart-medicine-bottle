@@ -44,7 +44,7 @@ class _SignInPageState extends State<SignInPage> {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       user = User.fromJson(data);
-      print(user);
+      UserSecureStorage.setUserToken(user.token);
       return "로그인 성공";
     } else if (response.statusCode == 400) {
       return "올바르지 않은 아이디 및 패스워드";
@@ -56,12 +56,14 @@ class _SignInPageState extends State<SignInPage> {
   //Get Hub List 함수
   Future<String> getHubList() async {
     String usertoken = await UserSecureStorage.getUserToken();
+    print(usertoken);
     http.Response response = await http.get(
       Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'),
       headers: {"authorization": usertoken},
     );
-
+    print(response.statusCode);
     List<dynamic> values = new List<dynamic>();
+    print(1234125);
     print(values);
     if (_hublist.length != 0) {
       _hublist.clear();
@@ -231,7 +233,10 @@ class _SignInPageState extends State<SignInPage> {
                                           });
                                     } else {
                                       if (saveMessage == "로그인 성공") {
+                                        UserSecureStorage.setUserToken(
+                                            user.token);
                                         var result = await getHubList();
+                                        print("Result");
                                         print(result);
                                         if (result == "Not Found") {
                                           Navigator.push(
@@ -242,11 +247,9 @@ class _SignInPageState extends State<SignInPage> {
                                                         RegisterHub(),
                                               ));
                                         } else if (result == "get완료") {
-                                          UserSecureStorage.setUserToken(
-                                              user.token);
                                           UserSecureStorage.setUserId(
                                               user.userId);
-                                          print('asdg');
+                                          print('getgetget');
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
