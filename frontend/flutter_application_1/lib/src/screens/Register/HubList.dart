@@ -27,7 +27,7 @@ class _HubListState extends State<HubList> {
           DotEnv().env['SERVER_URL'] + 'bottle/hub/' + hubid.toString()),
       headers: {"authorization": usertoken},
     );
-    print(response.body);
+
     if (_bottleList.length != 0) {
       _bottleList.clear();
     }
@@ -51,12 +51,24 @@ class _HubListState extends State<HubList> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: new Icon(Icons.medical_services_rounded,
+            color: Colors.black, size: 45.0),
+        title: Text(
+          'Smart Medicine Box',
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 23,
+              fontFamily: 'Noto',
+              fontWeight: FontWeight.bold),
+        ),
+      ),
       body: Container(
           height: size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 70),
               Container(
                 height: size.height * 0.1,
                 width: size.width,
@@ -80,7 +92,10 @@ class _HubListState extends State<HubList> {
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                       padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(border: Border.all()),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                      ),
                       child: ListTile(
                           title: Text(
                             'HUB ID: ' + '${widget.hublist[index]}',

@@ -1,9 +1,10 @@
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/HubModifyList.dart';
 import 'package:flutter/material.dart';
 import 'package:Smart_Medicine_Box/src/screens/DashBoard.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage/Alarm.dart';
-import 'package:Smart_Medicine_Box/src/screens/SettingPage/Bluetooth.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage/DEVInformation.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage/InformationModify.dart';
+import '../screens/Register/HubList.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -112,7 +113,7 @@ class _SettingPageState extends State<SettingPage> {
                               fontFamily: 'Noto',
                               fontWeight: FontWeight.bold),
                         ),
-                        color: Color(0xff8E97FD),
+                        color: Color(0xff0B1E33),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),
                       ),
@@ -128,11 +129,12 @@ class _SettingPageState extends State<SettingPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (BuildContext context) => Bluetooth(),
+                                builder: (BuildContext context) =>
+                                    HubModifyList(),
                               ));
                         },
                         child: Text(
-                          '블루투스 설정',
+                          '허브 등록',
                           textScaleFactor: 1.0,
                           style: TextStyle(
                               color: Colors.white,
@@ -140,7 +142,7 @@ class _SettingPageState extends State<SettingPage> {
                               fontFamily: 'Noto',
                               fontWeight: FontWeight.bold),
                         ),
-                        color: Color(0xff8E97FD),
+                        color: Color(0xff0B1E33),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),
                       ),
@@ -169,7 +171,7 @@ class _SettingPageState extends State<SettingPage> {
                               fontFamily: 'Noto',
                               fontWeight: FontWeight.bold),
                         ),
-                        color: Color(0xff8E97FD),
+                        color: Color(0xff0B1E33),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),
                       ),
@@ -198,7 +200,7 @@ class _SettingPageState extends State<SettingPage> {
                               fontFamily: 'Noto',
                               fontWeight: FontWeight.bold),
                         ),
-                        color: Color(0xff8E97FD),
+                        color: Color(0xff0B1E33),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(50)),
                       ),
@@ -228,11 +230,12 @@ class _SettingPageState extends State<SettingPage> {
             })
           },
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'In'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.device_thermostat), label: 'In'),
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
               label: 'Out',
-              icon: Icon(Icons.favorite),
+              icon: Icon(Icons.access_time),
             )
           ],
         ),

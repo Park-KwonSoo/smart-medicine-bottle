@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../../shared/colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
 
 class DEVInformation extends StatefulWidget {
   @override
@@ -10,16 +9,36 @@ class DEVInformation extends StatefulWidget {
 
 class _DEVInformationState extends State<DEVInformation> {
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.white,
+        title: Text(
+          'Smart Medicine Box',
+          style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+              fontFamily: 'Noto',
+              fontWeight: FontWeight.bold),
         ),
-        body: Center(
-          child: Text('개발자 정보 작업 구역'),
-        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.settings,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => SettingPage(),
+                  ));
+            },
+          )
+        ],
       ),
+      body: Text('1234'),
     );
   }
 }

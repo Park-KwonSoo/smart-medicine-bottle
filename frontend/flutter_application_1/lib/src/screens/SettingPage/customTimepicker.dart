@@ -77,24 +77,18 @@ class CustomPicker extends CommonPickerModel {
   DateTime finalTime() {
     var leftindex;
 
-    print(indexs);
-
     if (indexs == 1) {
-      if(this.currentLeftIndex() == 12){
+      if (this.currentLeftIndex() == 12) {
         leftindex = 12;
       } else {
         leftindex = this.currentLeftIndex() + 12;
       }
-      
-      
     } else if (indexs == 0) {
-      if(this.currentLeftIndex() == 12){
-         leftindex = 0;
+      if (this.currentLeftIndex() == 12) {
+        leftindex = 0;
       } else {
-         leftindex = this.currentLeftIndex();
+        leftindex = this.currentLeftIndex();
       }
-
-     
     }
 
     return currentTime.isUtc

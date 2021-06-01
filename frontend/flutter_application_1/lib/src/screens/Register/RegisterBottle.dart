@@ -21,7 +21,7 @@ class _RegisterBottleState extends State<RegisterBottle> {
   Future<String> registerhub_Validate() async {
     String usertoken = await UserSecureStorage.getUserToken();
     String hubid = await UserSecureStorage.getHubId();
-    print(hubid);
+
     http.Response bottleresponse = await http.post(
         Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'bottle'),
         headers: {

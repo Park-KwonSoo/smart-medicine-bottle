@@ -118,10 +118,8 @@ class _RegisterHubState extends State<RegisterHub> {
             child: RaisedButton(
               onPressed: () async {
                 String saveMessage = await registerhub_Validate();
-                print(saveMessage);
                 if (saveMessage == "허브 등록 완료") {
                   UserSecureStorage.setHubId(medicineHubIDController.text);
-                  print(UserSecureStorage.getHubId());
                   Navigator.push(
                       context,
                       MaterialPageRoute(

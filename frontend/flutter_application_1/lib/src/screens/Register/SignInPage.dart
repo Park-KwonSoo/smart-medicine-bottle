@@ -28,7 +28,6 @@ class _SignInPageState extends State<SignInPage> {
 
   //Login 함수
   Future<String> login(String _email, String _password) async {
-    print(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/login'));
     http.Response response = await http.post(
       Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/login'),
       headers: {"Content-Type": "application/json"},
@@ -39,8 +38,6 @@ class _SignInPageState extends State<SignInPage> {
         },
       ),
     );
-    print(response.statusCode);
-
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       user = User.fromJson(data);
@@ -56,15 +53,11 @@ class _SignInPageState extends State<SignInPage> {
   //Get Hub List 함수
   Future<String> getHubList() async {
     String usertoken = await UserSecureStorage.getUserToken();
-    print(usertoken);
     http.Response response = await http.get(
       Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub'),
       headers: {"authorization": usertoken},
     );
-    print(response.statusCode);
     List<dynamic> values = new List<dynamic>();
-    print(1234125);
-    print(values);
     if (_hublist.length != 0) {
       _hublist.clear();
     }
@@ -116,6 +109,9 @@ class _SignInPageState extends State<SignInPage> {
                                     fontSize: 34,
                                     fontFamily: 'Noto',
                                     fontWeight: FontWeight.bold)),
+                          ),
+                          SizedBox(
+                            height: 40,
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -211,7 +207,6 @@ class _SignInPageState extends State<SignInPage> {
                                     String saveMessage = await login(
                                         emailController.text,
                                         passwordController.text);
-                                    print(saveMessage);
                                     if (emailController.text.isEmpty ||
                                         passwordController.text.isEmpty) {
                                       showDialog(
@@ -236,8 +231,6 @@ class _SignInPageState extends State<SignInPage> {
                                         UserSecureStorage.setUserToken(
                                             user.token);
                                         var result = await getHubList();
-                                        print("Result");
-                                        print(result);
                                         if (result == "Not Found") {
                                           Navigator.push(
                                               context,
@@ -249,7 +242,6 @@ class _SignInPageState extends State<SignInPage> {
                                         } else if (result == "get완료") {
                                           UserSecureStorage.setUserId(
                                               user.userId);
-                                          print('getgetget');
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(

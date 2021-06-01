@@ -50,7 +50,6 @@ class _BottleListState extends State<BottleList> {
       _userbottleList = await provider.getAllBottle();
       for (int i = 0; i < _userbottleList.length; i++) {
         print(_userbottleList[i].bottleId);
-        print(12345678);
       }
 
       print(provider.getAllBottle());
@@ -172,9 +171,7 @@ class _BottleListState extends State<BottleList> {
                                               Icons.create_sharp,
                                               color: Colors.black,
                                             ),
-                                            onPressed: () {
-                                              print("asdfg");
-                                            },
+                                            onPressed: () {},
                                           ),
                                         ),
                                       ],

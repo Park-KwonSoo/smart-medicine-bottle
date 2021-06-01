@@ -22,8 +22,7 @@ class _DetailMedicineState extends State<DetailMedicine> {
   //약 등록
   Future<String> patchMedcine() async {
     String usertoken = await UserSecureStorage.getUserToken();
-    print(widget.searchMedicine.medicineId);
-    print(widget.bottleId);
+
     http.Response response = await http.patch(
         Uri.encodeFull(
             DotEnv().env['SERVER_URL'] + 'bottle/' + widget.bottleId),
@@ -35,7 +34,7 @@ class _DetailMedicineState extends State<DetailMedicine> {
           'medicineId': widget.searchMedicine.medicineId,
           'dosage': medicineDosageController.text
         }));
-    print(response.body);
+
     if (response.statusCode == 200) {
       String usertoken = await UserSecureStorage.setMedicineId(
           widget.searchMedicine.medicineId.toString());

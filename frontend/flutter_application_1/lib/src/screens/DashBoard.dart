@@ -10,6 +10,7 @@ import 'models/Medicine.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage.dart';
 import 'Register/BottleList.dart';
 import 'Register/SearchMedicine.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class DashBoard extends StatefulWidget {
   int pageNumber;
@@ -34,7 +35,6 @@ class _DashBoardState extends State<DashBoard> {
       Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'bottle/hub/' + hubid),
       headers: {"authorization": usertoken},
     );
-    print(response.body);
     if (_bottleList.length != 0) {
       _bottleList.clear();
     }
@@ -83,7 +83,13 @@ class _DashBoardState extends State<DashBoard> {
                 Icons.settings,
                 color: Colors.black,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => SettingPage(),
+                    ));
+              },
             )
           ],
         ),
@@ -95,18 +101,6 @@ class _DashBoardState extends State<DashBoard> {
                 decoration: BoxDecoration(
                   color: Colors.blue,
                 ),
-              ),
-              ListTile(
-                title: Text('Test 1'),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text('Test 2'),
-                onTap: () {},
-              ),
-              ListTile(
-                title: Text('Test 3'),
-                onTap: () {},
               ),
             ],
           ),
@@ -167,7 +161,6 @@ Widget mainpage(BuildContext context) {
   Future<Medicine> _getmedicine() async {
     String usertoken = await UserSecureStorage.getUserToken();
     String medicineid = await UserSecureStorage.getMedicineId();
-    print(medicineid);
 
     http.Response medicineresponse = await http.get(
       Uri.encodeFull(
@@ -750,7 +743,7 @@ Widget outerInformationpage(BuildContext context) {
 
     if (response.statusCode == 200) {
       Map<String, dynamic> jsonData = jsonDecode(response.body);
-      print(jsonData);
+
       _bottleinformation = Bottle.fromJson(jsonData);
     }
     return _bottleinformation;
@@ -773,8 +766,6 @@ Widget outerInformationpage(BuildContext context) {
               ),
             );
           } else {
-            print(123412);
-            print(snapshot.data.dosage);
             return Container(
               height: size.height * 0.9,
               margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
@@ -866,67 +857,6 @@ Widget outerInformationpage(BuildContext context) {
                                                 fontWeight: FontWeight.w800),
                                           )
                                         ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    height: size.height * 0.20,
-                    width: size.width,
-                    child: Column(
-                      children: <Widget>[
-                        Flexible(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-                                width: size.width * 0.9,
-                                height: size.height * 0.18,
-                                decoration: BoxDecoration(
-                                  color: Color(0xff8E97FD),
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: size.width,
-                                      height: size.height * 0.05,
-                                      child: Center(
-                                        child: Text(
-                                          '약 복용 시간',
-                                          textAlign: TextAlign.center,
-                                          textScaleFactor: 1.0,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 28,
-                                              fontFamily: 'NotoSansKR',
-                                              fontWeight: FontWeight.w800),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: size.width,
-                                      height: size.height * 0.12,
-                                      child: Center(
-                                        child: Text(
-                                          '15:57',
-                                          textAlign: TextAlign.center,
-                                          textScaleFactor: 1.0,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 70,
-                                              fontFamily: 'NotoSansKR',
-                                              fontWeight: FontWeight.w800),
-                                        ),
                                       ),
                                     ),
                                   ],

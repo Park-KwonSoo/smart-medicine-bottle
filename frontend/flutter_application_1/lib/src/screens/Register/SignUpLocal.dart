@@ -23,7 +23,6 @@ class _SignUpLocalState extends State<SignUpLocal> {
   bool passwordValidationVisible = true;
 
   Future<String> signup_Validate() async {
-    print(Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/register'));
     http.Response response = await http.post(
       Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'auth/register'),
       headers: {"Content-Type": "application/json"},
@@ -35,8 +34,6 @@ class _SignUpLocalState extends State<SignUpLocal> {
         },
       ),
     );
-
-    print(response.statusCode);
     if (response.statusCode == 201) {
       return "정보 입력 완료";
     } else {
