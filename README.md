@@ -17,7 +17,7 @@
 각 개발자의 작업사항을 보시려면 개발자의 이름을 클릭하세요.
 
 - [고원빈 : 프론트엔드, Native Android Application 개발](http://khuhub.khu.ac.kr/2021-1-capstone-design1/RIT_Project1/tree/frontend/frontend)
-1. Framework : Flutter 1.6.2
+1. Framework : Flutter 1.22.6
 2. 언어 : Dart
 3. 주요 통신 : HTTP Request, Response(Server와 통신)
 
