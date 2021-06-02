@@ -1,3 +1,4 @@
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/HubModifyList.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -8,6 +9,9 @@ import 'RegisterBottle.dart';
 import '../../utils/user_secure_stoarge.dart';
 
 class RegisterHub extends StatefulWidget {
+  final int modify_hub;
+
+  RegisterHub({Key key, this.modify_hub}) : super(key: key);
   @override
   _RegisterHubState createState() => _RegisterHubState();
 }
@@ -31,7 +35,7 @@ class _RegisterHubState extends State<RegisterHub> {
           'host': medicineHubHostController.text,
           'port': medicineHubPortController.text,
         }));
-
+    print(hubresponse.statusCode);
     if (hubresponse.statusCode == 201) {
       return "허브 등록 완료";
     } else if (hubresponse.statusCode == 409) {
@@ -118,14 +122,40 @@ class _RegisterHubState extends State<RegisterHub> {
             child: RaisedButton(
               onPressed: () async {
                 String saveMessage = await registerhub_Validate();
-                if (saveMessage == "허브 등록 완료") {
+                print(saveMessage);
+                print(widget.modify_hub);
+                if (saveMessage == "허브 등록 완료" && widget.modify_hub == 0) {
                   UserSecureStorage.setHubId(medicineHubIDController.text);
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            RegisterBottle(hubid: medicineHubIDController.text),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => RegisterBottle(
+                        hubid: medicineHubIDController.text,
+                        modify_bottle: false,
+                      ),
+                    ),
+                  );
+                } else if (saveMessage == "허브 등록 완료" &&
+                    widget.modify_hub == 1) {
+                  Navigator.of(context).pop();
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text('오류'),
+                        content: new Text(saveMessage),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text('close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  );
                 }
               },
               shape: RoundedRectangleBorder(
@@ -133,7 +163,7 @@ class _RegisterHubState extends State<RegisterHub> {
                   side: BorderSide(color: Colors.blue)),
               color: Color(0xff1674f6),
               child: Text(
-                ' 허브 등록 ',
+                '허브 등록 ',
                 textScaleFactor: 1.0,
                 style: TextStyle(
                     fontSize: 16,
@@ -143,25 +173,6 @@ class _RegisterHubState extends State<RegisterHub> {
             ),
           )
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        child: Container(
-          height: 70,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(70, 0, 70, 0),
-                child: Text(
-                  '회원 가입시, 이용 약관 및 개인정보 처리 방침에 동의하는 것으로 간주합니다..',
-                  style: TextStyle(fontSize: 12, color: Color(0xff747474)),
-                  textAlign: TextAlign.center,
-                ),
-              )
-            ],
-          ),
-        ),
       ),
     );
   }

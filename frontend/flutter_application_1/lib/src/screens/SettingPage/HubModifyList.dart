@@ -1,10 +1,10 @@
+import 'package:Smart_Medicine_Box/src/screens/Register/RegsiterHub.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 // Screen import
-import '../models/Bottle.dart';
 import '../../utils/user_secure_stoarge.dart';
 
 class HubModifyList extends StatefulWidget {
@@ -37,6 +37,19 @@ class _HubModifyListState extends State<HubModifyList> {
       return "get완료";
     } else if (response.statusCode == 404) {
       return "Not Found";
+    } else {
+      return "Error";
+    }
+  }
+
+  Future<String> deleteHub(int index) async {
+    String usertoken = await UserSecureStorage.getUserToken();
+    http.Response response = await http.delete(
+      Uri.encodeFull(DotEnv().env['SERVER_URL'] + 'hub/' + index.toString()),
+      headers: {"authorization": usertoken},
+    );
+    if (response.statusCode == 204) {
+      return "Delete";
     } else {
       return "Error";
     }
@@ -107,18 +120,65 @@ class _HubModifyListState extends State<HubModifyList> {
                                   BorderRadius.all(Radius.circular(25.0)),
                             ),
                             child: ListTile(
-                                title: Text(
-                                  'HUB ID: ' + '${_hublist[index]}',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                      fontFamily: 'Noto',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                trailing: Icon(Icons.highlight_remove),
-                                onTap: () async {
-                                  print('삭제 할거임');
-                                }),
+                              title: Text(
+                                'HUB ID: ' + '${_hublist[index]}',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontFamily: 'Noto',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              trailing: Icon(Icons.highlight_remove),
+                              onTap: () async {
+                                if (_hublist.length == 1) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: new Text('허브 삭제'),
+                                        content: new Text(
+                                            '등록된 허브가 하나이므로 해제가 불가능 합니다.'),
+                                        actions: <Widget>[
+                                          new FlatButton(
+                                              child: new Text('Cloes'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              }),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                } else {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: new Text('허브 삭제'),
+                                        content: new Text(
+                                            _hublist[index].toString() +
+                                                '을 삭제 하시겠습니까?'),
+                                        actions: <Widget>[
+                                          new FlatButton(
+                                            child: new Text('삭제'),
+                                            onPressed: () async {
+                                              await deleteHub(_hublist[index]);
+                                              setState(() {});
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                          new FlatButton(
+                                            child: new Text('취소'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            ),
                           );
                         },
                         separatorBuilder: (BuildContext contetx, int index) =>
@@ -132,7 +192,16 @@ class _HubModifyListState extends State<HubModifyList> {
                       margin: EdgeInsets.only(bottom: 0),
                       child: FlatButton(
                         height: size.height * 0.07,
-                        onPressed: () {},
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  RegisterHub(modify_hub: 1),
+                            ),
+                          );
+                          setState(() {});
+                        },
                         child: Text(
                           '허브 추가',
                           textScaleFactor: 1.0,

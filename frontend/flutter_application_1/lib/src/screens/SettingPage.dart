@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:Smart_Medicine_Box/src/screens/DashBoard.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage/Alarm.dart';
 import 'package:Smart_Medicine_Box/src/screens/SettingPage/DEVInformation.dart';
-import 'package:Smart_Medicine_Box/src/screens/SettingPage/InformationModify.dart';
-import '../screens/Register/HubList.dart';
+import 'package:Smart_Medicine_Box/src/screens/SettingPage/BottleModifyList.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -134,7 +133,7 @@ class _SettingPageState extends State<SettingPage> {
                               ));
                         },
                         child: Text(
-                          '허브 등록',
+                          '허브 관리',
                           textScaleFactor: 1.0,
                           style: TextStyle(
                               color: Colors.white,
@@ -159,11 +158,11 @@ class _SettingPageState extends State<SettingPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    InformationModify(),
+                                    BottleModifyList(),
                               ));
                         },
                         child: Text(
-                          '회원 정보 수정',
+                          '약병 관리',
                           textScaleFactor: 1.0,
                           style: TextStyle(
                               color: Colors.white,

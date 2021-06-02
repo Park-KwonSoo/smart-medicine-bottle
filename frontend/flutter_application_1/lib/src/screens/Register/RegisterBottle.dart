@@ -1,4 +1,5 @@
 import 'package:Smart_Medicine_Box/src/screens/DashBoard.dart';
+import 'package:Smart_Medicine_Box/src/screens/Register/BottleList.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -10,7 +11,8 @@ import '../../utils/user_secure_stoarge.dart';
 
 class RegisterBottle extends StatefulWidget {
   final String hubid;
-  RegisterBottle({Key key, this.hubid}) : super(key: key);
+  final bool modify_bottle;
+  RegisterBottle({Key key, this.hubid, this.modify_bottle}) : super(key: key);
   @override
   _RegisterBottleState createState() => _RegisterBottleState();
 }
@@ -106,49 +108,74 @@ class _RegisterBottleState extends State<RegisterBottle> {
               onPressed: () async {
                 String saveMessage = await registerhub_Validate();
                 print(saveMessage);
-                if (saveMessage == "등록 완료") {
+                print(widget.modify_bottle);
+                if (saveMessage == "등록 완료" && widget.modify_bottle == false) {
                   showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: new Text('약병 등록'),
-                          content: new Text('약병 등록이 완료 되었습니다.'),
-                          actions: <Widget>[
-                            new FlatButton(
-                              child: new Text('Close'),
-                              onPressed: () {
-                                UserSecureStorage.setBottleId(
-                                    medicineBottleIDController.text);
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        SearchMedicine(
-                                      bottleId: medicineBottleIDController.text,
-                                    ),
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text('약병 등록'),
+                        content: new Text('약병 등록이 완료 되었습니다.'),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text('Close'),
+                            onPressed: () {
+                              UserSecureStorage.setBottleId(
+                                  medicineBottleIDController.text);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      SearchMedicine(
+                                    bottleId: medicineBottleIDController.text,
                                   ),
-                                );
-                              },
-                            ),
-                          ],
-                        );
-                      });
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                } else if (saveMessage == "등록 완료" &&
+                    widget.modify_bottle == true) {
+                  print('asdg');
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text('약병 등록'),
+                        content: new Text('약병 등록이 완료 되었습니다.'),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  Navigator.of(context).pop();
                 } else {
                   showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: new Text('오류'),
-                          content: new Text(saveMessage),
-                          actions: <Widget>[
-                            new FlatButton(
-                                child: new Text('Close'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                })
-                          ],
-                        );
-                      });
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: new Text('오류'),
+                        content: new Text(saveMessage),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      );
+                    },
+                  );
                 }
               },
               shape: RoundedRectangleBorder(
@@ -166,25 +193,6 @@ class _RegisterBottleState extends State<RegisterBottle> {
             ),
           )
         ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        child: Container(
-          height: 70,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(70, 0, 70, 0),
-                child: Text(
-                  '회원 가입시, 이용 약관 및 개인정보 처리 방침에 동의하는 것으로 간주합니다..',
-                  style: TextStyle(fontSize: 12, color: Color(0xff747474)),
-                  textAlign: TextAlign.center,
-                ),
-              )
-            ],
-          ),
-        ),
       ),
     );
   }

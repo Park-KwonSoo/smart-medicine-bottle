@@ -235,9 +235,9 @@ class _SignInPageState extends State<SignInPage> {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        RegisterHub(),
+                                                builder: (BuildContext
+                                                        context) =>
+                                                    RegisterHub(modify_hub: 0),
                                               ));
                                         } else if (result == "get완료") {
                                           UserSecureStorage.setUserId(
