@@ -97,55 +97,56 @@ class _HubListState extends State<HubList> {
                         borderRadius: BorderRadius.all(Radius.circular(25.0)),
                       ),
                       child: ListTile(
-                          title: Text(
-                            'HUB ID: ' + '${widget.hublist[index]}',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20,
-                                fontFamily: 'Noto',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Icon(Icons.arrow_forward),
-                          onTap: () async {
-                            //허브 id로 가져와서 있으면 바로 넘기기
-                            var result =
-                                await getBottleList(widget.hublist[index]);
-                            if (result == "GET") {
-                              UserSecureStorage.setHubId(
-                                  widget.hublist[index].toString());
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        BottleList(),
-                                  ));
-                            } else if (result == "Not Found") {
-                              showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: new Text('Error'),
-                                      content: new Text('등록된 약병이 없습니다.'),
-                                      actions: <Widget>[
-                                        new FlatButton(
-                                            child: new Text('등록'),
-                                            onPressed: () {
-                                              UserSecureStorage.setHubId(widget
-                                                  .hublist[index]
-                                                  .toString());
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (BuildContext
-                                                            context) =>
+                        title: Text(
+                          'HUB ID: ' + '${widget.hublist[index]}',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Noto',
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(Icons.arrow_forward),
+                        onTap: () async {
+                          //허브 id로 가져와서 있으면 바로 넘기기
+                          var result =
+                              await getBottleList(widget.hublist[index]);
+                          if (result == "GET") {
+                            UserSecureStorage.setHubId(
+                                widget.hublist[index].toString());
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      BottleList(),
+                                ));
+                          } else if (result == "Not Found") {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: new Text('Error'),
+                                  content: new Text('등록된 약병이 없습니다.'),
+                                  actions: <Widget>[
+                                    new FlatButton(
+                                        child: new Text('등록'),
+                                        onPressed: () {
+                                          UserSecureStorage.setHubId(
+                                              widget.hublist[index].toString());
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
                                                         RegisterBottle(),
-                                                  ));
-                                            })
-                                      ],
-                                    );
-                                  });
-                            }
-                          }),
+                                              ));
+                                        })
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
                     );
                   },
                   separatorBuilder: (BuildContext contetx, int index) =>
