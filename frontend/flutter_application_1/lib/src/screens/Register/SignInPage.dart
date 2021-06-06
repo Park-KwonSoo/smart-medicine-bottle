@@ -42,6 +42,7 @@ class _SignInPageState extends State<SignInPage> {
       Map<String, dynamic> data = jsonDecode(response.body);
       user = User.fromJson(data);
       UserSecureStorage.setUserToken(user.token);
+      UserSecureStorage.setUserId(user.userId);
       return "로그인 성공";
     } else if (response.statusCode == 400) {
       return "올바르지 않은 아이디 및 패스워드";
@@ -228,8 +229,6 @@ class _SignInPageState extends State<SignInPage> {
                                           });
                                     } else {
                                       if (saveMessage == "로그인 성공") {
-                                        UserSecureStorage.setUserToken(
-                                            user.token);
                                         var result = await getHubList();
                                         if (result == "Not Found") {
                                           Navigator.push(
@@ -240,15 +239,13 @@ class _SignInPageState extends State<SignInPage> {
                                                     RegisterHub(modify_hub: 0),
                                               ));
                                         } else if (result == "get완료") {
-                                          UserSecureStorage.setUserId(
-                                              user.userId);
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (BuildContext
-                                                        context) =>
-                                                    HubList(hublist: _hublist),
-                                              ));
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  HubList(hublist: _hublist),
+                                            ),
+                                          );
                                         } else {}
                                       } else {
                                         print('Error');

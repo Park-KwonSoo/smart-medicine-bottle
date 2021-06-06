@@ -175,35 +175,6 @@ class _SettingPageState extends State<SettingPage> {
                             borderRadius: BorderRadius.circular(50)),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                      width: size.width * 0.8,
-                      height: size.height * 0.13,
-                      margin: EdgeInsets.only(bottom: 0),
-                      child: FlatButton(
-                        height: size.height * 0.07,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    DEVInformation(),
-                              ));
-                        },
-                        child: Text(
-                          '개발자 정보',
-                          textScaleFactor: 1.0,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontFamily: 'Noto',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        color: Color(0xff0B1E33),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50)),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -219,14 +190,17 @@ class _SettingPageState extends State<SettingPage> {
           unselectedFontSize: 14,
           currentIndex: 0,
           onTap: (int index) => {
-            setState(() {
-              Navigator.push(
+            setState(
+              () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (BuildContext context) =>
                         DashBoard(pageNumber: index),
-                  ));
-            })
+                  ),
+                );
+              },
+            )
           },
           items: [
             BottomNavigationBarItem(

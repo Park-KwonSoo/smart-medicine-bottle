@@ -211,7 +211,7 @@ class _BottleModifyListState extends State<BottleModifyList> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: new Text('허브 삭제'),
+                                    title: new Text('약병 삭제'),
                                     content: new Text(
                                         _bottleList[index].bottleId.toString() +
                                             '을 삭제 하시겠습니까?'),

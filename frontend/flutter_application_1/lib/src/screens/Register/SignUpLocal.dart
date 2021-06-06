@@ -20,7 +20,7 @@ class _SignUpLocalState extends State<SignUpLocal> {
 
   // Initially password is obscure
   bool passwordVisible = false;
-  bool passwordValidationVisible = true;
+  bool passwordValidationVisible = false;
 
   Future<String> signup_Validate() async {
     http.Response response = await http.post(

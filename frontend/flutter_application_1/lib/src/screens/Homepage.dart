@@ -6,9 +6,7 @@ import './Register/SignInPage.dart';
 import 'Register/SignUpLocal.dart';
 
 class HomePage extends StatefulWidget {
-  final String pageTitle;
-  int screenCount = 0;
-  HomePage({Key key, this.pageTitle}) : super(key: key);
+  HomePage({Key key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -18,17 +16,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
-    ScreenUtil.instance = ScreenUtil(width: size.width, height: size.height)
-      ..init(context);
 
     return Scaffold(
       body: GestureDetector(
@@ -88,11 +81,12 @@ class _HomePageState extends State<HomePage> {
                             padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        SignInPage(),
-                                  ));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      SignInPage(),
+                                ),
+                              );
                             },
                             child: Text(
                               '로그인',
@@ -117,11 +111,12 @@ class _HomePageState extends State<HomePage> {
                             padding: EdgeInsets.fromLTRB(0, 25, 0, 15),
                             onPressed: () {
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        SignUpLocal(),
-                                  ));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      SignUpLocal(),
+                                ),
+                              );
                             },
                             child: Text(
                               '회원 가입',
