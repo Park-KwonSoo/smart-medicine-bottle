@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "for Smart Medicine Bottle IoT Server",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon",
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://khuhub.khu.ac.kr/2021-1-capstone-design1/RIT_Project1.git"
+  },
+  "keywords": [
+    "IoT"
+  ],
+  "author": "박권수",
+  "license": "ISC",
+  "dependencies": {
+    "mqtt": "^4.2.6"
+  }
+}
