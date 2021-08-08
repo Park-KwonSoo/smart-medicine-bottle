@@ -7,14 +7,17 @@ const BottleSchema = new Schema ({
     temperature : { type : Number, default : 0 },
     humidity : { type : Number, default : 0 },
     balance : { type : Number, default : 0 },
-    recentOpen : { type : Date, default : Date.now },
     medicineId : { type : Number, default : null, },
-    hubId : Number,
-    dosage : { type : Number, default : 0 }
+    dosage : { type : Number, default : 0 },
+    hubId : { type : Number, ref : 'Hub' },
 })
 
 BottleSchema.statics.findByBottleId = function(bottleId) {
     return this.findOne({ bottleId });
+};
+
+BottleSchema.statics.findAllByHubId = function(hubId) {
+    return this.find({ hubId });
 };
 
 BottleSchema.methods.getBottleId = function() {
@@ -47,6 +50,14 @@ BottleSchema.methods.getMedicineId = function() {
 
 BottleSchema.methods.getHubId = function() {
     return this.hubId;
+};
+
+BottleSchema.methods.setMedicineId = function(medicineId) {
+    this.medicineId = medicineId;
+};
+
+BottleSchema.statics.setDosage = function(dosage) {
+    this.dosage = dosage;
 };
 
 module.exports = mongoose.model('Bottle', BottleSchema);

@@ -2,6 +2,7 @@
 const User = require('../../models/user');
 const Joi = require('joi');
 
+
 exports.register = async(ctx) => {
     const { userId, password, passwordCheck } = ctx.request.body;
 
@@ -49,7 +50,7 @@ exports.login = async(ctx) => {
     }
 
     const user = await User.findByUserId(userId);
-    if(!user) {
+    if(!user || !user.userTypeCd) {
         ctx.stauts = 401;
         return;
     }

@@ -2,6 +2,7 @@
 const Bottle = require('../../models/bottle');
 const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
+const User = require('../../models/user');
 const Mqtt = require('../../lib/MqttModule');
 const jwt = require('jsonwebtoken');
 
@@ -14,6 +15,12 @@ exports.bottleConnect = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+
     const { bottleId, hubId } = ctx.request.body;
 
     const isExistBottle = await Bottle.findByBottleId(bottleId);
@@ -62,6 +69,12 @@ exports.bottleDisconnect = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+
     const { bottleId } = ctx.params; 
 
     const bottle = await Bottle.findByBottleId(bottleId);
@@ -97,6 +110,12 @@ exports.lookupInfo = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+
     const { bottleId } = ctx.params;
 
     const isBottleExist = await Bottle.findByBottleId(bottleId);
@@ -133,6 +152,12 @@ exports.setMedicine = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+
     const { bottleId } = ctx.params;
     const { medicineId, dosage } = ctx.request.body;
 
@@ -173,6 +198,12 @@ exports.getBottleList = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+    
     const { hubId } = ctx.params;
 
     const hub = await Hub.findByHubId(hubId);
