@@ -13,10 +13,10 @@ exports.myInfo = async ctx => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET)
-    const user = await User.findById(userId);
+    const user = await User.findById(userId)
     if(!user || !user.userTypeCd) {
-        ctx.status = 403;
-        return;
+        ctx.status = 403
+        return
     }
 
     let result = {
@@ -24,108 +24,108 @@ exports.myInfo = async ctx => {
         myDoctor : null,
         patientList : [],
         userList : [],
-    };
-
-    if (user.userTypeCd === 'NORMAL') {
-        const doctor = await User.findById(user.doctorId);
-        result.myDoctor = doctor;
-
-    } else if (user.userTypeCd === 'DOCTOR') {
-        const patientList = await User.findAllByDoctorId(user.userId);
-        result.patientList = patientList;
-
-    } else if (user.userTypeCd === 'MANAGER') {
-        const userList = await User.find();
-        result.userList = userList;
     }
 
-    ctx.status = 200;
-    ctx.body = result;
+    if (user.userTypeCd === 'NORMAL') {
+        const doctor = await User.findById(user.doctorId)
+        result.myDoctor = doctor
+
+    } else if (user.userTypeCd === 'DOCTOR') {
+        const patientList = await User.findAllByDoctorId(user.userId)
+        result.patientList = patientList
+
+    } else if (user.userTypeCd === 'MANAGER') {
+        const userList = await User.find()
+        result.userList = userList
+    }
+
+    ctx.status = 200
+    ctx.body = result
 }
 
 exports.getUserDetail = async ctx => {
-    const token = ctx.req.headers.authorization;
+    const token = ctx.req.headers.authorization
     if (!token || !token.length) {
-        ctx.status = 401;
-        return;
+        ctx.status = 401
+        return
     }
 
-    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findById(userId)
     if(!user) {
-        ctx.status = 403;
-        return;
+        ctx.status = 403
+        return
     } else if (user.userTypeCd === 'NORMAL') {
-        ctx.status = 403;
-        return;
+        ctx.status = 403
+        return
     }
 
     let result = {
         reqUser : user,
         reqUserBottleList : [],
-    };
+    }
 
     if (user.userTypeCd === 'DOCTOR') {
-        const { reqUserId } = ctx.params;
-        const reqUser = await User.findById(reqUserId);
+        const { reqUserId } = ctx.params
+        const reqUser = await User.findById(reqUserId)
         if (!reqUser) {
-            ctx.status = 404;
-            return;
+            ctx.status = 404
+            return
         }
         if(reqUser.doctorId !== user.userId) {
-            ctx.status = 403;
-            return;
+            ctx.status = 403
+            return
         }
 
-        const reqUserHubList = await Hub.findAllByUserId(reqUserId);
+        const reqUserHubList = await Hub.findAllByUserId(reqUserId)
         if(reqUserHubList && reqUserHubList.length) {
-            const reqUserBottleList = [];
+            const reqUserBottleList = []
 
             await Promise.all(reqUserHubList.forEach(async hub => {
-                const bottle = await Bottle.findAllByHubId(hub.hubId);
-                reqUserBottleList.push(...bottle);
-            }));
+                const bottle = await Bottle.findAllByHubId(hub.hubId)
+                reqUserBottleList.push(...bottle)
+            }))
 
-            result.reqUserBottleList = reqUserBottleList;
+            result.reqUserBottleList = reqUserBottleList
         }
 
     }
 
-    ctx.status = 200;
-    ctx.body = result;
+    ctx.status = 200
+    ctx.body = result
 
-};
+}
 
 exports.updateReqUser = async ctx => {
-    const token = ctx.req.headers.authorization;
+    const token = ctx.req.headers.authorization
     if (!token || !token.length) {
-        ctx.status = 401;
-        return;
+        ctx.status = 401
+        return
     }
 
-    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findById(userId)
     if(!user) {
-        ctx.status = 403;
-        return;
+        ctx.status = 403
+        return
     }
 
     if (user.userTypeCd === 'MANAGER') {
-        const { useYn } = ctx.request.body;
-        const { reqUserId } = ctx.params;
+        const { useYn } = ctx.request.body
+        const { reqUserId } = ctx.params
 
-        const reqUser = await User.findById(reqUserId);
+        const reqUser = await User.findById(reqUserId)
         if(!reqUser) {
-            ctx.status = 404;
-            return;
+            ctx.status = 404
+            return
         }
 
-        await reqUser.setUseYn(useYn);
-        await reqUser.save();
+        await reqUser.setUseYn(useYn)
+        await reqUser.save()
 
-        return;
+        return
     }
 
-    ctx.status = 200;
+    ctx.status = 200
 
 }
