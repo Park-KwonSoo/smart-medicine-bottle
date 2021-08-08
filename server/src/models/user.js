@@ -4,9 +4,12 @@ const jwt = require('jsonwebtoken');
 
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
-    userId : { type: String, require : true, unique : true, lowercase : true },
-    hashedPassword : { type : String, default : null }
+const UserSchema = new Schema ({
+    userId : { type: String, required : true, unique : true, lowercase : true },
+    hashedPassword : { type : String, required : true },
+    userTypeCd : { type : String, required : true, default : 'NORMAL' },
+    doctorId : { type : String, default : null },
+    useYn : { type : Boolean, default : true },
 });
 
 UserSchema.methods.setPassword = async function(password) {
@@ -19,8 +22,20 @@ UserSchema.methods.checkPassword = async function(password) {
     return result;
 };
 
+UserSchema.methods.setUseYn = async function(useYn) {
+    this.useYn = useYn;
+}
+
 UserSchema.statics.findByUserId = async function(userId) {
     return this.findOne({ userId });
+};
+
+UserSchema.statics.findAllByDoctorId = async function(doctorId) {
+    return this.find({ doctorId });
+};
+
+UserSchema.statics.findAllByUserTypeCd = async function(userTypeCd) {
+    return this.find({ userTypeCd });
 };
 
 UserSchema.methods.generateToken = function() {

@@ -1,5 +1,6 @@
 //허브(Mqtt Broker)등록 및 삭제
 const Hub = require('../../models/hub');
+const User = require('../../models/user');
 const Mqtt = require('../../lib/MqttModule');
 const DataProcess = require('../../lib/DataProcess');
 const jwt = require('jsonwebtoken');
@@ -12,6 +13,12 @@ exports.hubConnect = async (ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+
     const { hubId, host, port } = ctx.request.body;
 
     const isExistHub = await Hub.findByHubId(hubId);
@@ -47,6 +54,12 @@ exports.getHubList = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+    
     const hubList = await Hub.find({ userId });
     if(!hubList || !hubList.length) {
         ctx.status = 404;
@@ -65,6 +78,12 @@ exports.hubDisconnect = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(userId);
+    if(!user || !user.userTypeCd) {
+        ctx.status = 403;
+        return;
+    }
+
     const { hubId } = ctx.params;
 
     const hub = await Hub.findByHubId(hubId);

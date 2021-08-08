@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 const MedicineSchema = new Schema ({
     medicineId : { type : Number, required : true, unique : true },
     name : { type : String, required : true },
-    company : String,
+    company : { type : String, required : true },
     target : { type : String, required : true },
-    dosage : { type : String, required : true },
+    dosageInfo : { type : String, required : true },
     warn : { type : String, required : true },
     antiEffect : { type : String, required : true }
 })
