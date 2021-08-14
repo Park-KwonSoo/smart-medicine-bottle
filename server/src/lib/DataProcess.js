@@ -1,4 +1,5 @@
 const Bottle = require('../models/bottle');
+const History = require('../models/history');
 
 //message subscribe 후 message를 가공한 이후 해당 데이터를 보낼 topic과 message를 리턴하는 함수
 exports.dataPublish = async (topic, message) => {
@@ -65,24 +66,28 @@ const bottleInfoUpdate = async(data) => {
     humidity = parseFloat(humidity);
     balance = parseInt(balance);
 
-    if(isOpen) {
-        await Bottle.findOneAndUpdate({
-            bottleId
-        }, { recentOpen : openDate });
-    }
+    const bottle = await Bottle.findByBottleId(bottleId);
 
-    if(balance !== -1) {
-        await Bottle.findOneAndUpdate({
-            bottleId
-        }, { balance })
-    }
+    if(bottle) {
+        if(isOpen) {
+            const history  = new History({
+                takeDate : new Date(openDate),
+                bottleId,
+                medicineId : bottle.getMedicineId(),
+            });
+            history.save();
+        }
 
-    await Bottle.findOneAndUpdate({
-        bottleId
-    }, {
-        temperature,
-        humidity
-    });
+        if(balance !== -1) {
+            await Bottle.findOneAndUpdate({
+                bottleId
+            }, { balance })
+        }
+
+        bottle.updateTemperature(temperature);
+        bottle.updateHumidity(humidity);
+        bottle.save();
+    }
 }
 
 //해당 MQTT Broker(client)에 bottleId의 정보에 관한 topic과 message를 리턴한다.

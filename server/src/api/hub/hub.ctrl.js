@@ -14,7 +14,7 @@ exports.hubConnect = async (ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
@@ -55,7 +55,7 @@ exports.getHubList = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
@@ -79,7 +79,7 @@ exports.hubDisconnect = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }

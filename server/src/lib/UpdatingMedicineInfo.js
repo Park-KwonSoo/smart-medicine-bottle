@@ -10,7 +10,7 @@ exports.updateMedicineInfo = async() => {
 
 //queryUrl을 return하는 함수 : 한 페이지에 100개의 item씩 요청할 수 있다.
 const getQueryURL = (i) => {
-    const url = "http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList";
+    const url = 'http://apis.data.go.kr/1471000/DrbEasyDrugInfoService/getDrbEasyDrugList';
     const queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + process.env.SERVICE_KEY;
     const pageNum = '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(i);
     const numOfItem = '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(100);

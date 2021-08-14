@@ -25,7 +25,7 @@ bottle.delete('/:bottleId', bottleCtrl.bottleDisconnect);
  * url : http://localhost:4000/api/bottle/:bottleId
  * return : bottle(json type)
  */
-bottle.get('/:bottleId', bottleCtrl.lookupInfo);
+bottle.get('/:bottleId', bottleCtrl.getBottleInfo);
 
 /**
  * 약병에 약 등록 = 약 검색 후 약 ID(medicineId)와 복용 정보 보고 사용자가 약 복용량(dosage) 입력

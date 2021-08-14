@@ -17,6 +17,7 @@
   "author": "박권수",
   "license": "ISC",
   "dependencies": {
+    "moment": "^2.29.1",
     "mqtt": "^4.2.6"
   }
 }

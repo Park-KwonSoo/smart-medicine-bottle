@@ -3,6 +3,7 @@ const Bottle = require('../../models/bottle');
 const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
 const User = require('../../models/user');
+const History = require('../../models/history');
 const Mqtt = require('../../lib/MqttModule');
 const jwt = require('jsonwebtoken');
 
@@ -16,7 +17,7 @@ exports.bottleConnect = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
@@ -70,7 +71,7 @@ exports.bottleDisconnect = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
@@ -102,7 +103,7 @@ exports.bottleDisconnect = async(ctx) => {
 };
 
 //약병 정보를 조회 -> 약병에 현재 데이터를 요청한다. message : req
-exports.lookupInfo = async(ctx) => {
+exports.getBottleInfo = async(ctx) => {
     const token = ctx.req.headers.authorization;
     if(!token || !token.length) {
         ctx.status = 401;
@@ -111,36 +112,52 @@ exports.lookupInfo = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
 
     const { bottleId } = ctx.params;
 
-    const isBottleExist = await Bottle.findByBottleId(bottleId);
-    if(!isBottleExist) {
+    const bottle = await Bottle.findByBottleId(bottleId);
+    if(!bottle) {
         ctx.status = 404;
         return;
     }
 
-    const hub = await Hub.findByHubId(isBottleExist.getHubId());
-    if(hub.getHub_UserId() !== userId) {
+    const hub = await Hub.findByHubId(bottle.getHubId());
+    if(hub.getHub_UserId() !== userId || user.userTypeCd !== 'DOCTOR') {
         ctx.status = 403;
         return;
     }
 
-    const hosting = hub.getHubHost();
-    //서버에서 bottle로 데이터를 요청한다.
-    const client = await Mqtt.mqttOn(hosting);
-    const topic = 'bottle/' + bottleId + '/stb';
-    const message = 'req';
-    await Mqtt.mqttPublishMessage(client, { topic, message });
+    if(user.userTypeCd === 'NORMAL') {
+        const hosting = hub.getHubHost();
+        //서버에서 bottle로 데이터를 요청한다.
+        const client = await Mqtt.mqttOn(hosting);
+        const topic = 'bottle/' + bottleId + '/stb';
+        const message = 'req';
+        await Mqtt.mqttPublishMessage(client, { topic, message });
 
-    const bottle = await Bottle.findByBottleId(bottleId);
-    
-    ctx.status = 200;
-    ctx.body = bottle;
+        const bottle = await Bottle.findByBottleId(bottleId);
+        
+        ctx.status = 200;
+        ctx.body = bottle;
+
+        return;
+    } else if (user.userTypeCd === 'DOCTOR') {
+        let result = {
+            bottle,
+            history : [],
+        };
+
+        result.historyList = History.findByBottleId(bottle.bottleId);
+
+        ctx.status = 200;
+        ctx.body = result;
+
+        return;
+    }
 }
 
 //약병의 ID를 찾아서 약의 정보를 등록 : Post
@@ -153,7 +170,7 @@ exports.setMedicine = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
@@ -199,7 +216,7 @@ exports.getBottleList = async(ctx) => {
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }

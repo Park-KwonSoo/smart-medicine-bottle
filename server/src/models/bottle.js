@@ -7,10 +7,11 @@ const BottleSchema = new Schema ({
     temperature : { type : Number, default : 0 },
     humidity : { type : Number, default : 0 },
     balance : { type : Number, default : 0 },
-    medicineId : { type : Number, default : null, },
+    medicineId : { type : Number, },
     dosage : { type : Number, default : 0 },
-    hubId : { type : Number, ref : 'Hub' },
-})
+    hubId : { type : Number, required : true, },
+    doctorId : { type : String, default : null, },
+});
 
 BottleSchema.statics.findByBottleId = function(bottleId) {
     return this.findOne({ bottleId });
@@ -20,12 +21,12 @@ BottleSchema.statics.findAllByHubId = function(hubId) {
     return this.find({ hubId });
 };
 
+BottleSchema.statics.findAllByDoctorId = function(doctorId) {
+    return this.find({ doctorId });
+}
+
 BottleSchema.methods.getBottleId = function() {
     return this.bottleId;
-};
-
-BottleSchema.methods.getRecentOpenDate = function() {
-    return this.recentOpen;
 };
 
 BottleSchema.methods.getTemperature = function() {
@@ -52,12 +53,24 @@ BottleSchema.methods.getHubId = function() {
     return this.hubId;
 };
 
+BottleSchema.methods.getDoctorId = function() {
+    return this.doctorId;
+};
+
 BottleSchema.methods.setMedicineId = function(medicineId) {
     this.medicineId = medicineId;
 };
 
-BottleSchema.statics.setDosage = function(dosage) {
+BottleSchema.methods.setDosage = function(dosage) {
     this.dosage = dosage;
+};
+
+BottleSchema.methods.updateTemperature = function (temperature) {
+    this.temperature = temperature;
+};
+
+BottleSchema.methods.updateHumidity = function (humidity) {
+    this.humidity = humidity;
 };
 
 module.exports = mongoose.model('Bottle', BottleSchema);
