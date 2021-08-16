@@ -148,7 +148,7 @@ exports.login = async(ctx) => {
 
     ctx.status = 200;
     ctx.body = {
-        userId,
+        userTypeCd : user.userTypeCd,
         token
     };
 
