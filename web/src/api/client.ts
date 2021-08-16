@@ -1,10 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
-
-require('dotenv').config();
-const { BASE_URL } = process.env;
+import { baseURL } from '../config/config';
 
 export const client : AxiosInstance = axios.create({
-    baseURL : BASE_URL,
+    baseURL,
     headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -20,6 +18,7 @@ client.interceptors.response.use(
         return response;
     },
     function (error) {
+        console.log(error);
         return error;
     }
 );

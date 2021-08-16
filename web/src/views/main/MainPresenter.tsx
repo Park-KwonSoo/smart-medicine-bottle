@@ -4,13 +4,13 @@ import * as styled from './MainStyled';
 
 
 interface MainProps {
-    temp : string;
+    userType : string;
 }
 
 const MainPresenter = (props : MainProps) => {
     return (
         <styled.Container>
-            This is Main Page {props.temp}
+            This is Main Page {props.userType}
         </styled.Container>
     )
 };

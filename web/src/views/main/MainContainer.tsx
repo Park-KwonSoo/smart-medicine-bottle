@@ -6,25 +6,25 @@ import MainPresenter from './MainPresenter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import * as recoilUtil from '../../util/recoilUtil';
 
-import { doctorApi, managerApi, userApi, authApi } from 'api';
+import { doctorApi, managerApi, userApi, authApi } from '../../api';
 
 
 type MainProps = RouteComponentProps
 
 const MainContainer = (props : MainProps) => {
 
-    const [token, setToken] = useRecoilState(recoilUtil.token);
+    const token = useRecoilValue(recoilUtil.token);
     const userType = useRecoilValue(recoilUtil.userType);
 
     useEffect(() => {
-        if (!token) {
-            console.log('no Token');
+        if(!token || token.length) {
+            props.history.push('/login');
         }
     }, []);
 
     return (
         <MainPresenter
-            temp = {'hi'}
+            userType = {userType}
         />
     );
 };
