@@ -17,7 +17,7 @@ doctor.get('/patient', doctorCtrl.getPatientList);
  * url : http://localhost:4000/doctor/patient/:patientId
  * return : patient Detail
  */
-doctor.get('/patient/detail', doctorCtrl.getPatientDetail);
+doctor.get('/patient/:patientId', doctorCtrl.getPatientDetail);
 
 /**
  * 현재 로그인한 유저(의사)의 관리 약병 상세 정보를 가져옴

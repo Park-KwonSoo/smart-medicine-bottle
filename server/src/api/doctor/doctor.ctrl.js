@@ -63,7 +63,7 @@ exports.getPatientDetail = async ctx => {
         return;
     }
 
-    const { patientId } = ctx.request.body;
+    const { patientId } = ctx.params;
     const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
