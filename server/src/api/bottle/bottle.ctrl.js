@@ -1,9 +1,13 @@
+/* eslint-disable no-undef */
 //어플에서 약병 등록 및, 약병에 관한 정보 조회 = 여기서 mqtt통신으로 broker에 데이터를 요청한다.
 const Bottle = require('../../models/bottle');
 const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
 const User = require('../../models/user');
-const History = require('../../models/history');
+const PatientInfo = require('../../models/patientInfo');
+const TakeMedicineHist = require('../../models/takeMedicineHistory');
+const BottleMedicine = require('../../models/bottleMedicine');
+const Feedback = require('../../models/feedback');
 const Mqtt = require('../../lib/MqttModule');
 const jwt = require('jsonwebtoken');
 
@@ -16,7 +20,7 @@ exports.bottleConnect = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
@@ -70,7 +74,7 @@ exports.bottleDisconnect = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
@@ -102,7 +106,7 @@ exports.bottleDisconnect = async(ctx) => {
 
 };
 
-//약병 정보를 조회 -> 약병에 현재 데이터를 요청한다. message : req
+//약병 정보를 조회 -> 약병의 기록을 가져온다. message : req
 exports.getBottleInfo = async(ctx) => {
     const token = ctx.req.headers.authorization;
     if(!token || !token.length) {
@@ -111,7 +115,7 @@ exports.getBottleInfo = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
@@ -126,41 +130,101 @@ exports.getBottleInfo = async(ctx) => {
     }
 
     const hub = await Hub.findByHubId(bottle.getHubId());
-    if(hub.getHub_UserId() !== userId || user.userTypeCd !== 'DOCTOR') {
+    if(hub.userId !== userId) {
         ctx.status = 403;
         return;
     }
 
-    if(user.userTypeCd === 'NORMAL') {
-        const hosting = hub.getHubHost();
-        //서버에서 bottle로 데이터를 요청한다.
-        const client = await Mqtt.mqttOn(hosting);
-        const topic = 'bottle/' + bottleId + '/stb';
-        const message = 'req';
-        await Mqtt.mqttPublishMessage(client, { topic, message });
 
-        const bottle = await Bottle.findByBottleId(bottleId);
-        
-        ctx.status = 200;
-        ctx.body = bottle;
+    const hosting = hub.getHubHost();
+    //서버에서 bottle로 데이터를 요청한다.
+    const client = await Mqtt.mqttOn(hosting);
+    const topic = 'bottle/' + bottleId + '/stb';
+    const message = 'req';
+    await Mqtt.mqttPublishMessage(client, { topic, message });
 
-        return;
-    } else if (user.userTypeCd === 'DOCTOR') {
-        let result = {
-            bottle,
-            history : [],
-        };
+    const bottleMedicine = await BottleMedicine.find({ bottleId })
+            .sort({ regDtm : 'desc' })
+            .limit(1);
+    
+    if(bottleMedicine.length) {
 
-        result.historyList = History.findByBottleId(bottle.bottleId);
+        const takeMedicineHist = await TakeMedicineHist
+            .find({ bmId : bottleMedicine[0]._id })
+            .sort({ takeDate : 'desc' })
+            .populate('bmId');
 
         ctx.status = 200;
-        ctx.body = result;
+        ctx.body = takeMedicineHist;
 
-        return;
+    } else {
+        ctx.status = 404;
+        ctx.body = {
+            error : '정보가 등록되지 않은 약병'
+        }
     }
+
 }
 
-//약병의 ID를 찾아서 약의 정보를 등록 : Post
+//약병에 대한 피드백의 정보를 가져옴
+exports.getBottleFeedback = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
+        ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 사용자'
+        }
+        return;
+    }
+
+    const { bottleId } = ctx.params;
+
+    const bottle = await Bottle.findByBottleId(bottleId);
+    if(!bottle) {
+        ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 약병'
+        }
+        return;
+    }
+
+    const hub = await Hub.findByHubId(bottle.getHubId());
+    if(hub.userId !== userId) {
+        ctx.status = 403;
+        ctx.body = {
+            error : '약병에 대한 권한 없음'
+        }
+        return;
+    }
+
+    const bottleMedicine = await BottleMedicine.find({ bottleId })
+        .sort({ regDtm : 'desc' })
+        .limit(1);
+
+    if(bottleMedicine.length) {
+        const feedbackList = await Feedback.find({ bmId : bottleMedicine[0]._id })
+            .sort({ fdbDtm : 'desc' })
+            .populate('bmId');
+
+        ctx.status = 200;
+        ctx.body = feedbackList;
+    } else {
+        ctx.status = 404;
+        ctx.body = {
+            error : '정보가 등록되지 않은 약병',
+        };
+    }
+
+};
+
+//약병의 ID를 찾아서 약의 정보와 처방의를 등록 : Post
 exports.setMedicine = async(ctx) => {
     const token = ctx.req.headers.authorization;
     if(!token || !token.length) {
@@ -169,42 +233,103 @@ exports.setMedicine = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
 
     const { bottleId } = ctx.params;
-    const { medicineId, dosage } = ctx.request.body;
+    const { medicineId, dosage, doctorId } = ctx.request.body;
 
     const bottle = await Bottle.findByBottleId(bottleId);
     if(!bottle) {
         ctx.status = 404;
+        ctx.body = {
+            error : '약병 찾을 수 없음.',
+        }
         return;
     }
 
     const hub = await Hub.findByHubId(bottle.getHubId());
     if(hub.getHub_UserId() !== userId) {
         ctx.status = 403;
+        ctx.body = {
+            error : '해당 허브 권한 없음',
+        }
         return;
     }
 
     const medicine = await Medicine.findByMedicineId(medicineId);
     if(!medicine) {
         ctx.status = 404;
+        ctx.body = {
+            error : '해당 약 존재하지 않음',
+        }
         return;
     }
 
-    await Bottle.findOneAndUpdate({
-        bottleId
-    }, { 
+    if(doctorId !== undefined && doctorId !== null && doctorId !== '') {
+        const patientInfo = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(userId, doctorId, 'Y');
+        if(!patientInfo) {
+            ctx.status = 403;
+            ctx.body = {
+                error : '담당의가 아님',
+            };
+            return;
+        }
+    }
+
+    const bottleMedicine = new BottleMedicine({
+        bottleId,
         medicineId,
-        dosage : parseInt(dosage)
-     });
+        doctorId,
+        dosage,
+    });
+    bottleMedicine.save();
 
     ctx.status = 200;
-}
+};
+
+// //비어있는 약병에 의사를 등록한다.
+// exports.registerDoctorToBottle = async ctx => {
+//     const token = ctx.req.headers.authorization;
+//     if(!token || !token.length) {
+//         ctx.status = 401;
+//         return;
+//     }
+
+//     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+//     const user = await User.findByUserId(userId);
+//     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
+//         ctx.status = 403;
+//         return;
+//     }
+
+//     const { bottleId } = ctx.params;
+//     const { doctorId } = ctx.request.body;
+//     const bottle = await Bottle.findByBottleId(bottleId);
+//     if(!bottle) {
+//         ctx.status = 404;
+//         return;
+//     }
+//     if(bottle.getDoctorId()) {
+//         ctx.status = 403;
+//         return;
+//     }
+
+//     const patinetInfo = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(userId, doctorId, 'Y');
+//     if(!patinetInfo) {
+//         ctx.status = 404;
+//         return;
+//     }
+
+//     bottle.setDoctorId(doctorId);
+//     bottle.save();
+
+//     ctx.status = 200;
+
+// };
 
 //로그인한 유저의 약병 리스트 가져오기
 exports.getBottleList = async(ctx) => {
@@ -215,7 +340,7 @@ exports.getBottleList = async(ctx) => {
     }
 
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
@@ -243,4 +368,4 @@ exports.getBottleList = async(ctx) => {
     ctx.status = 200;
     ctx.body = bottleList;
     
-}
+};

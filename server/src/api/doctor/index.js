@@ -17,7 +17,7 @@ doctor.get('/patient', doctorCtrl.getPatientList);
  * url : http://localhost:4000/doctor/patient/:patientId
  * return : patient Detail
  */
-doctor.get('/patient/:patientId', doctorCtrl.getPatientDetail);
+doctor.get('/patient/detail', doctorCtrl.getPatientDetail);
 
 /**
  * 현재 로그인한 유저(의사)의 관리 약병 상세 정보를 가져옴
@@ -37,7 +37,7 @@ doctor.get('/bottle/:bottleId', doctorCtrl.getBottleDetail);
 doctor.patch('/patient', doctorCtrl.writeReqPatientReport);
 
 /**
- * 현재 로그인한 유저(의사)의 특정 관리 환자의 약병의 피드백을 기록함
+ * 현재 로그인한 유저(의사)의 특정 관리 환자의 약병의 피드백을 등록함.
  * request parameter : bottleId, fdbType, feedback
  * url : http://localhost:4000/doctor/bottle
  * return : null

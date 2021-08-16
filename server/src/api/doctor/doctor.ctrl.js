@@ -3,7 +3,8 @@ const User = require('../../models/user');
 const Profile = require('../../models/profile');
 const Bottle = require('../../models/bottle');
 const Medicine = require('../../models/medicine');
-const History = require('../../models/history');
+const BottleMedicine = require('../../models/bottleMedicine');
+const TakeMedicineHist = require('../../models/takeMedicineHistory');
 const Feedback = require('../../models/feedback');
 const Hub = require('../../models/hub');
 const PatientInfo = require('../../models/patientInfo');
@@ -21,19 +22,21 @@ exports.getPatientList = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
 
-    const managePatientIdList = await PatientInfo.findAllByDoctorId(userId);
+    const managePatientIdList = await PatientInfo.findAllByDoctorIdAndUseYn(userId, 'Y');
 
-    const result = managePatientIdList.map(async patientId => {
-        const patient = await User.findByUserId(patientId);
-        return patient;
-    });
+    const result = [];
+    await Promise.all(managePatientIdList.map(async patient => {
+        const patientProfile = await Profile.findByUserId(patient.patientId);
+        result.push(patientProfile);
+    }));
 
     ctx.status = 200;
     ctx.body = result;
@@ -52,21 +55,22 @@ exports.getPatientDetail = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
 
-    const { patientId } = ctx.params;
+    const { patientId } = ctx.request.body;
     const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
         return;
     }
 
-    const isDoctorsPatient = await PatientInfo.findByPatientIdAndDoctorId(patientId, userId);
+    const isDoctorsPatient = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(patientId, userId, 'Y');
     if(!isDoctorsPatient) {
         ctx.status = 403;
         return;
@@ -78,12 +82,12 @@ exports.getPatientDetail = async ctx => {
     const reqUserHubList = await Hub.findAllByUserId(patientId);
     const reqUserBottleList = [];
     await Promise.all(reqUserHubList.map(async hub => {
-        const bottleList = await Bottle.findAllByHubId(hub.hubId);
+        const bottleList = await Bottle.findAllByHubId(hub.hubId, userId);
         reqUserBottleList.push(...bottleList);
     }));
 
     const result = {
-        ...profile,
+        profile,
         info : isDoctorsPatient.getInfo(),
         bottleList : reqUserBottleList,
     };
@@ -105,10 +109,14 @@ exports.getBottleDetail = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 사용자',
+        }
         return;
     }
 
@@ -116,29 +124,29 @@ exports.getBottleDetail = async ctx => {
     const bottle = await Bottle.findByBottleId(bottleId);
     if(!bottle) {
         ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 약병',
+        }
         return;
     }
-    if(bottle.getDoctorId() !== userId) {
+
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, doctorId : userId });
+    if(!bottleMedicine) {
         ctx.status = 403;
+        ctx.body = {
+            error : '약병에 대한 권한 없음',
+        }
         return;
     }
 
-
-    //약병에 들어있는 약 정보와 복용 내역을 가져온다.
-    const bottleInfo = {
-        temperature : bottle.temperature,
-        humidity : bottle.humidity,
-        dosage : bottle.dosage,
-        balance : bottle.balance,
-    };
-
-    const medicine  = await Medicine.findByMedicineId(bottle.getMedicineId());
-    const takeHistory = await History.findByBottleIdAndMedicineId(bottleId, bottle.getMedicineId());
+    const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
+    const takeMedicineHist = await TakeMedicineHist.find({ 
+        bmId : bottleMedicine._id,
+    }).sort({ takeDate : 'desc' });
 
     const result = {
-        bottleInfo,
         medicine,
-        takeHistory,
+        takeMedicineHist,
     };
 
     ctx.status = 200;
@@ -158,21 +166,22 @@ exports.writeReqPatientReport = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
     }
 
-    const { reqUserId, info } = ctx.request.body;
-    const patient = await User.findByUserId(reqUserId);
+    const { patientId, info } = ctx.request.body;
+    const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
         return;
     }
 
-    const patientInfo = await PatientInfo.findByPatientIdAndDoctorId(reqUserId, userId);
+    const patientInfo = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(patientId, userId, 'Y');
     if(!patientInfo) {
         ctx.status = 404;
         return;
@@ -197,10 +206,14 @@ exports.writeReqBottleFeedback = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 사용자',
+        }
         return;
     }
 
@@ -208,17 +221,27 @@ exports.writeReqBottleFeedback = async ctx => {
     const bottle = await Bottle.findByBottleId(bottleId);
     if(!bottle) {
         ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 약병'
+        }
         return;
     }
-    if(bottle.getDoctorId() !== userId) {
+
+    const bottleMedicine = await BottleMedicine.find({ bottleId, doctorId : userId })
+        .sort({ regDtm : 'desc' })
+        .limit(1);
+
+    if(!bottleMedicine.length) {
         ctx.status = 403;
+        ctx.body = {
+            error : '약병에 대한 권한 없음'
+        }
         return;
     }
 
     const newFeedback = new Feedback({
-        fdbDtm : new Date(),
         fdbType,
-        bottleId,
+        bmId : bottleMedicine[0]._id,
         doctorId : userId,
         feedback,
     });
@@ -240,27 +263,35 @@ exports.registerNewPatient = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR') {
         ctx.status = 403;
         return;
     }
 
-    const { reqUserId } = ctx.request.body;
-    const patient = await User.findByUserId(reqUserId);
+    const { patientId } = ctx.request.body;
+    const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
         return;
     }
 
+    const isExistPatientInfo = await PatientInfo.findByPatientIdAndDoctorId(patientId, userId);
+    if(isExistPatientInfo) {
+        ctx.status = 403;
+        return;
+    }
+
     const patientInfo = new PatientInfo({
-        patientId : reqUserId,
+        patientId,
         doctorId : userId,
         info : '',
+        useYn : 'W',
     });
 
-    patientInfo.updateInfo('환자 등록');
+    patientInfo.updateInfo('환자 등록 요청');
     patientInfo.save();
 
     ctx.status = 200;
@@ -279,8 +310,9 @@ exports.removeReqPatient = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR') {
         ctx.status = 403;
         return;
@@ -293,16 +325,14 @@ exports.removeReqPatient = async ctx => {
         return;
     }
 
-    const patientInfo = await PatientInfo.findByPatientIdAndDoctorId(patientId, userId);
+    const patientInfo = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(patientId, userId, 'Y');
     if(!patientInfo) {
         ctx.status = 404;
         return;
     }
 
-    await PatientInfo.deleteOne({
-        patientId,
-        doctorId : userId,
-    });
+    await patientInfo.setUseYn('N')
+    patientInfo.save();
 
     ctx.status = 200;
 

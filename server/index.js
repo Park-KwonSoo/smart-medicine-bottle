@@ -8,6 +8,7 @@ const updateMedicineInfo = require('./src/lib/UpdatingMedicineInfo');
 const MqttServer = require('./src/util/MqttServer');
 
 require('dotenv').config();
+// eslint-disable-next-line no-undef
 const { SERVER_PORT, MONGO_URL } = process.env;
 
 const app = new Koa();
@@ -21,7 +22,7 @@ Mongoose.connect(MONGO_URL, {
     useCreateIndex : true
 }).then(() => {
     console.log('\x1b[1;32mMongo DB is connected : ', MONGO_URL, '\x1b[0m');
-    updateMedicineInfo.updateMedicineInfo();
+    // updateMedicineInfo.updateMedicineInfo();
 }).catch(e => {
     console.log(e);
 })

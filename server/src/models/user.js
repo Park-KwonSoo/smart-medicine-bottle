@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema ({
-    userId : { type: String, required : true, unique : true, lowercase : true },
+    userId : { type: String, required : true, unique : true, lowercase : true, },
     hashedPassword : { type : String, required : true },
     userTypeCd : { type : String, required : true, default : 'NORMAL' },
     useYn : { type : String, default : 'W', required : true, },
@@ -39,6 +39,7 @@ UserSchema.methods.generateToken = function() {
             _id : this._id,
             userId : this.userId
         },
+        // eslint-disable-next-line no-undef
         process.env.JWT_SECRET,
         { expiresIn : '30d' }
     );

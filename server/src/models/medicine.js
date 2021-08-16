@@ -12,31 +12,14 @@ const MedicineSchema = new Schema ({
     antiEffect : { type : String, required : true }
 })
 
-MedicineSchema.statics.findByName = async function(name) {
-    const all = await this.find().exec();
-    const result = all.filter(item => {
-        return item.name.includes(name)
-    });
-
-    return result;
-};
-
-MedicineSchema.statics.findByCompany = async function(company) {
-    const all = await this.find().exec();
-    const result = all.filter(item => {
-        return item.company.includes(company)
-    });
-
-    return result;
-};
-
-MedicineSchema.statics.findByTarget = async function(target) {
-    const all = await this.find().exec();
-    const result = all.filter(item => {
-        return item.target.includes(target)
-    });
-
-    return result;
+MedicineSchema.statics.findByKeyword = function(keyword) {
+    return this.find({
+        $or : [
+            { name : { $regex : keyword }},
+            { company : { $regex : keyword }},
+            { target : { $regex : keyword }},
+        ]
+    })
 };
 
 MedicineSchema.statics.findByMedicineId = function(medicineId) {

@@ -1,16 +1,15 @@
 const Bottle = require('../models/bottle');
-const History = require('../models/history');
+const BottleMedicine = require('../models/bottleMedicine');
+const TakeMedicineHist = require('../models/takeMedicineHistory');
 
 //message subscribe 후 message를 가공한 이후 해당 데이터를 보낼 topic과 message를 리턴하는 함수
 exports.dataPublish = async (topic, message) => {
     //client가 subscribe를 하면 메시지를 보낸 약병의 topic과 message를 가공 및 보낸 약병의 bottleId를 가져옴
     const data = await factoring(topic, message);
-    const { bottleId } = data;
-
     //가공된 데이터를 bottleId의 약병에 업데이트
     await bottleInfoUpdate(data);
     //가공된 데이터를 메시지로 만들어 topic과 message 리턴
-    const result = await transPublishingTopicAndMessage(bottleId);
+    const result = await transPublishingTopicAndMessage(data.bottleId);
 
     return result;
 
@@ -26,13 +25,11 @@ const factoring = async (topic, message) => {
     if(isOpen === '0')
         balance = await balanceFactoring(balance);
     else    balance = '-1';
-
-    const openDate = new Date();
     
     return {
         bottleId,
         isOpen,
-        openDate,
+        openDate : new Date(),
         temperature,
         humidity,
         balance
@@ -66,39 +63,32 @@ const bottleInfoUpdate = async(data) => {
     humidity = parseFloat(humidity);
     balance = parseInt(balance);
 
-    const bottle = await Bottle.findByBottleId(bottleId);
+    const bottleMedicine = await BottleMedicine.find({ bottleId }).sort((a, b) => a.regDtm < b.regDtm)[0];
 
-    if(bottle) {
+    if(bottleMedicine) {
         if(isOpen) {
-            const history  = new History({
-                takeDate : new Date(openDate),
-                bottleId,
-                medicineId : bottle.getMedicineId(),
+            const takeMedicineHist  = new TakeMedicineHist({
+                takeDate : openDate,
+                bmId : bottleMedicine._id,
+                temperature,
+                humidity,
+                balance,
             });
-            history.save();
+            takeMedicineHist.save();
         }
-
-        if(balance !== -1) {
-            await Bottle.findOneAndUpdate({
-                bottleId
-            }, { balance })
-        }
-
-        bottle.updateTemperature(temperature);
-        bottle.updateHumidity(humidity);
-        bottle.save();
     }
 }
 
 //해당 MQTT Broker(client)에 bottleId의 정보에 관한 topic과 message를 리턴한다.
 const transPublishingTopicAndMessage = async(bottleId) => {
     const topic = 'bottle/' + bottleId + '/stb';
-    
-    const bottle = await Bottle.findByBottleId(bottleId);
-    const recentOpen = bottle.getRecentOpenDate();
-    const dosage = bottle.getDosage();
 
-    const message = 'res/' + await transDate(recentOpen) + '/' + dosage;
+    const bottleMedicine = await BottleMedicine.find({ bottleId }).sort((a, b) => a.regDtm < b.regDtm)[0];
+    const takeMedicineHist = await TakeMedicineHist.find({ 
+        bmId : bottleMedicine._id 
+    }).sort((a, b) => a.takeDate < b.takeDate)[0];
+
+    const message = 'res/' + await transDate(takeMedicineHist.takeDate) + '/' + bottleMedicine.dosage;
    
     return {
         topic,

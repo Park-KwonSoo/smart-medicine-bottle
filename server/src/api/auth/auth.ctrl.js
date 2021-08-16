@@ -20,7 +20,10 @@ exports.register = async(ctx) => {
         userId : Joi.string().email().max(50).required(),
         password : Joi.string().required(),
         passwordCheck : Joi.string().required(),
-    })
+        userNm : Joi.string().required(),
+        userAge : Joi.number().required(),
+        contact : Joi.string().required(),
+    });
     
     const result = schema.validate(ctx.request.body);
     if(result.error || password !== passwordCheck) {
@@ -41,7 +44,6 @@ exports.register = async(ctx) => {
     });
 
     await user.setPassword(password);
-    await user.save();
 
     const profile = new Profile({
         userId,
@@ -50,6 +52,7 @@ exports.register = async(ctx) => {
         contact,        
     });
 
+    await user.save();
     await profile.save();
 
     ctx.status = 201;
@@ -68,6 +71,7 @@ exports.doctorRegister = async ctx => {
         userId : Joi.string().email().max(50).required(),
         password : Joi.string().required(),
         passwordCheck : Joi.string().required(),
+        info : Joi.object().required(),
     })
     
     const result = schema.validate(ctx.request.body);
@@ -90,7 +94,6 @@ exports.doctorRegister = async ctx => {
     });
 
     await doctor.setPassword(password);
-    doctor.save();
 
     const doctorInfo = new DoctorInfo({
         doctorId : userId,
@@ -98,6 +101,8 @@ exports.doctorRegister = async ctx => {
         useYn : 'W',
     });
 
+
+    doctor.save();
     doctorInfo.save();
     
     ctx.status = 201;

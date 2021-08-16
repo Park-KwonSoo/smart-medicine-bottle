@@ -7,7 +7,7 @@ const DoctorInfoSchema = new Schema({
     info : {
         doctorLicense : { type : String, required : true, },
         hospitalNm : { type : String, default : null, },
-        hosptialAddr : { type : String, default : null, },
+        hospitalAddr : { type : String, default : null, },
         contact : { type : String, required : true, },
     },
     useYn : { type : String, default : 'W', required : true, },

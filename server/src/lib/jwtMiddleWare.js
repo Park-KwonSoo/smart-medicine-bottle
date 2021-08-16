@@ -15,7 +15,7 @@ const jwtMiddleware = async (ctx, next) => {
         };
         const now = Math.floor(Date.now() / 1000);
         if (decoded.exp - now < 60 * 60 * 24 * 7) {
-            const user = await User.findById(decoded._id);
+            const user = await User.findByUserId(decoded._id);
             const token = user.generateToken();
 
             ctx.cookies.set('access_token', token, {

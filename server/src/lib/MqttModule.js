@@ -1,7 +1,7 @@
 const mqtt = require('mqtt')
 const clientList = []
 
-exports.mqttOn = async (hosting, func) => {
+exports.mqttOn = async (hosting, foo) => {
     const filterIndex = clientList.findIndex(client => {
         return (client.options.clientId === hosting.clientId
             && client.options.host === hosting.host
@@ -17,7 +17,7 @@ exports.mqttOn = async (hosting, func) => {
         }) 
 
         client.on('message', async (topic, message) => {
-            const result = await func(topic, message.toString())
+            const result = await foo(topic, message.toString())
             console.log('\x1b[1;32msubscribe : topic', topic, 'message : ', message.toString(), '\x1b[0m')
             this.mqttPublishMessage(client, result)
         })

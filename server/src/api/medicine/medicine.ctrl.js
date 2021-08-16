@@ -8,23 +8,9 @@ exports.medicineSearch = async(ctx) => {
         return;
     }
 
-    const { name, company, target } = ctx.request.body;
+    const { keyword } = ctx.request.body;
 
-    let result = [];
-    
-    if (name && name !== '' && name !== undefined)
-        result = await medicineSearch_ByName(name);
-    
-    else if (company && company !== '' && company !== undefined)
-        result = await medicineSearch_ByCompany(company);
-
-    else if (target && target !== '' && target !== undefined) 
-        result = await medicineSearch_ByTarget(target);
-    
-    if(!result.length) {
-        ctx.status = 404;
-        return;
-    }
+    const result = await Medicine.findByKeyword(keyword);
 
     ctx.status = 200;
     ctx.body = result;
@@ -47,22 +33,4 @@ exports.medicineGet = async(ctx) => {
     ctx.status = 200;
     ctx.body = medicine;
     
-}
-
-//이름으로 약 검색
-const medicineSearch_ByName = async(name) => {
-    const result = await Medicine.findByName(name);
-    return result;
-}
-
-//제조사명으로 약 검색
-const medicineSearch_ByCompany = async(company) => {
-    const result = await Medicine.findByCompany(company);
-    return result;
-}
-
-//타겟 병명으로 약 검색
-const medicineSearch_ByTarget = async(target) => {
-    const result = await Medicine.findByTarget(target);
-    return result;
 }

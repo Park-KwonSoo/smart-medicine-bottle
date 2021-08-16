@@ -28,12 +28,28 @@ bottle.delete('/:bottleId', bottleCtrl.bottleDisconnect);
 bottle.get('/:bottleId', bottleCtrl.getBottleInfo);
 
 /**
+ * 약병에 대한 피드백 확인
+ * request parameter : bottleId
+ * url : http://localhost:4000/api/bottle/feedback/:bottleId
+ * return : feedback List
+ */
+bottle.get('/feedback/:bottleId', bottleCtrl.getBottleFeedback);
+
+/**
  * 약병에 약 등록 = 약 검색 후 약 ID(medicineId)와 복용 정보 보고 사용자가 약 복용량(dosage) 입력
  * request parameter : medicineId, dosage
  * url : http://localhost:4000/api/bottle/:bottleId
  * return : bottle(json type)
  */
 bottle.patch('/:bottleId', bottleCtrl.setMedicine);
+
+/**
+ * 비어있는 약병에 전담의 등록
+ * request parameter : bottleId, doctorId
+ * url : http://localhost:4000/api/bottle/doctor/:bottleId
+ * return null;
+ */
+// bottle.patch('/doctor/:bottleId', bottleCtrl.registerDoctorToBottle);
 
 /**
  * 현재 로그인한 유저의 허브 중, 해당 허브에 등록된 약병 리스트를 가져옴

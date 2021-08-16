@@ -5,8 +5,12 @@ const Schema = mongoose.Schema;
 const FeedbackSchema = new Schema({
     fdbDtm : { type : Date, default : Date.now, required : true, },
     fdbType : { type : String, required : true, },
-    bottleId : { type : Number, required : true, }, 
-    doctorId : { type : String, required : true, },
+    bmId : { 
+        type : Schema.Types.ObjectId, 
+        required : true, 
+        ref : 'BottleMedicine', 
+    }, 
+    doctorId : { type : String, required : true, ref : 'User', },
     feedback : { type : String, required : true, },
 });
 

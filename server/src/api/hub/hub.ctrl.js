@@ -12,8 +12,9 @@ exports.hubConnect = async (ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
@@ -53,8 +54,9 @@ exports.getHubList = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
@@ -77,8 +79,9 @@ exports.hubDisconnect = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findById(userId);
+    const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
         ctx.status = 403;
         return;
