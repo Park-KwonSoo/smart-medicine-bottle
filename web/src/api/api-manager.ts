@@ -16,14 +16,14 @@ export default {
             },
         });
     },
-    acceotDoctorRegReq : (token : RecoilState<any>, Data : FormData) => {
+    acceotDoctorRegReq : (token : RecoilState<any>, Data : any) => {
         return client.post('/manage/doctor/accept', Data, {
             headers : {
                 Authorization : token,
             },
         });
     },
-    rejectDoctorRegReq : (token : RecoilState<any>, Data : FormData) => {
+    rejectDoctorRegReq : (token : RecoilState<any>, Data : any) => {
         return client.post('/manage/doctor/reject', Data, {
             headers : {
                 Authorization : token,

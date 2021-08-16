@@ -16,7 +16,7 @@ export default {
             },
         });
     },
-    acceptDoctorRegister : (token : RecoilState<any>, Data : FormData) => {
+    acceptDoctorRegister : (token : RecoilState<any>, Data : any) => {
         return client.post('/user/doctorrequest/', Data, {
             headers : {
                 Authorization : token,

@@ -1,15 +1,15 @@
 import { client } from "./client";
 
 export default {
-    register : (Data : FormData) => {
+    register : (Data : any) => {
         return client.post('/auth/register', Data);
     },
 
-    registerDoctor : (Data : FormData) => {
+    registerDoctor : (Data : any) => {
         return client.post('/auth/register/doctor', Data);
     },
 
-    login : (Data : FormData) => {
+    login : (Data : any) => {
         return client.post('/auth/login', Data);
     },
 

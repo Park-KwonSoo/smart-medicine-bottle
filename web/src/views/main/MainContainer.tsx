@@ -17,7 +17,7 @@ const MainContainer = (props : MainProps) => {
     const userType = useRecoilValue(recoilUtil.userType);
 
     useEffect(() => {
-        if(!token || token.length) {
+        if(!token || !token.length) {
             props.history.push('/login');
         }
     }, []);

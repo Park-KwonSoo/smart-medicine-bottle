@@ -23,21 +23,21 @@ export default {
             },
         });
     },
-    writePatientInfo : (token : RecoilState<any>, Data : FormData) => {
+    writePatientInfo : (token : RecoilState<any>, Data : any) => {
         return client.patch('/doctor/patient', Data, {
             headers : {
                 Authorization : token,
             },
         });
     },
-    writeBottleFeedback : (token : RecoilState<any>, Data : FormData) => {
+    writeBottleFeedback : (token : RecoilState<any>, Data : any) => {
         return client.post('/doctor/bottle', Data, {
             headers : {
                 Authorization : token,
             },
         });
     },
-    registerPatient : (token : RecoilState<any>, Data : FormData) => {
+    registerPatient : (token : RecoilState<any>, Data : any) => {
         return client.post('/doctor/patient', Data, {
             headers : {
                 Authorization : token,
