@@ -26,7 +26,7 @@ user.get('/doctorrequest', userCtrl.viewAllDoctorRegister);
  * url : http://localhost:4000/api/user/doctorrequest/:doctorId
  * return : null
  */
-user.post('/doctorrequest/accept', userCtrl.acceptDoctorRegister);
+user.post('/doctorrequest', userCtrl.acceptDoctorRegister);
 
 
 module.exports = user;
