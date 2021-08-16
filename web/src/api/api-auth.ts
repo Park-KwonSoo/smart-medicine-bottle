@@ -1,11 +1,15 @@
 import { client } from "./client";
 
 export const authApi = {
-    register : (Data : Object) => {
+    register : (Data : FormData) => {
         return client.post('/auth/register', Data);
     },
 
-    login : (Data : Object) => {
+    registerDoctor : (Data : FormData) => {
+        return client.post('/auth/register/doctor', Data);
+    },
+
+    login : (Data : FormData) => {
         return client.post('/auth/login', Data);
     },
 
