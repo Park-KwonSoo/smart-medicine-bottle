@@ -1,11 +1,16 @@
 import React from 'react';
 
+import Router from 'views/Router';
+import { RecoilRoot } from 'recoil';
+
 function App() {
   return (
-     <div>
-       For Manager Web
-     </div>
+     <RecoilRoot>
+       <Router />
+     </RecoilRoot>
   );
 }
+
+App.defaultProps = {};
 
 export default App;

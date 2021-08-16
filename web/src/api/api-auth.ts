@@ -1,6 +1,6 @@
 import { client } from "./client";
 
-export const authApi = {
+export default {
     register : (Data : FormData) => {
         return client.post('/auth/register', Data);
     },

@@ -1,7 +1,7 @@
 import { client } from "./client";
 import { RecoilState } from "recoil";
 
-export const doctorApi = {
+export default {
     getPatientList : (token : RecoilState<any>) => {
         return client.get('/doctor/patient', {
             headers : {

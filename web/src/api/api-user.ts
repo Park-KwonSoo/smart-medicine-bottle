@@ -1,7 +1,7 @@
 import { client } from './client';
 import { RecoilState } from 'recoil';
 
-export const userApi = {
+export default {
     getMyInfo : (token : RecoilState<any>) => {
         return client.get('/user', {
             headers : {
