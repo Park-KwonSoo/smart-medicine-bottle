@@ -9,8 +9,8 @@ export const token = atom({
     effects_UNSTABLE : [persistAtom],
 });
 
-export const userType = atom({
-    key : 'userType',
+export const userTypeCd = atom({
+    key : 'userTypeCd',
     default : 'NORMAL',
     effects_UNSTABLE : [persistAtom],
 });

@@ -18,7 +18,7 @@ const LoginContainer = (props : LoginProps) => {
         password : '',
     });
     const [token, setToken] = useRecoilState(recoilUtil.token);
-    const [userType, setUserType] = useRecoilState(recoilUtil.userType);
+    const [userTypeCd, setUserTypeCd] = useRecoilState(recoilUtil.userTypeCd);
 
     const onSetUserId = (e : React.ChangeEvent<HTMLInputElement>) => {
         setLoginForm({
@@ -39,6 +39,7 @@ const LoginContainer = (props : LoginProps) => {
             const result : any = await authApi.login(loginForm);
             if(result.statusText === 'OK') {
                 setToken(result.data.token);
+                setUserTypeCd(result.data.userTypeCd);
                 props.history.push('/');
             }
         } catch(e) {

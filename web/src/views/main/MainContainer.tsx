@@ -14,7 +14,7 @@ type MainProps = RouteComponentProps
 const MainContainer = (props : MainProps) => {
 
     const token = useRecoilValue(recoilUtil.token);
-    const userType = useRecoilValue(recoilUtil.userType);
+    const userTypeCd = useRecoilValue(recoilUtil.userTypeCd);
 
     useEffect(() => {
         if(!token || !token.length) {
@@ -24,7 +24,7 @@ const MainContainer = (props : MainProps) => {
 
     return (
         <MainPresenter
-            userType = {userType}
+            userTypeCd = {userTypeCd}
         />
     );
 };
