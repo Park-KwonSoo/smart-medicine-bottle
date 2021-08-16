@@ -1,4 +1,5 @@
 const Koa = require('koa');
+const cors = require('@koa/cors');
 const Router = require('koa-router');
 const bodyparser = require('koa-bodyparser');
 
@@ -29,6 +30,7 @@ Mongoose.connect(MONGO_URL, {
 
 app.use(bodyparser());
 router.use('/api', api.routes());
+app.use(cors());
 app.use(router.routes()).use(router.allowedMethods());
 
 app.listen(SERVER_PORT, () => {
