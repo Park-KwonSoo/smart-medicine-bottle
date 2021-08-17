@@ -143,10 +143,14 @@ exports.getBottleDetail = async ctx => {
     const takeMedicineHist = await TakeMedicineHist.find({ 
         bmId : bottleMedicine._id,
     }).sort({ takeDate : 'desc' });
+    const feedbackList = await Feedback.find({
+        bmId : bottleMedicine._id,
+    }).sort({ fdbDtm : 'desc' });
 
     const result = {
         medicine,
         takeMedicineHist,
+        feedbackList,
     };
 
     ctx.status = 200;
