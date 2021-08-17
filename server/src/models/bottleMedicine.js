@@ -30,5 +30,9 @@ const BottleMedicineSchema = new Schema({
     }
 });
 
+BottleMedicineSchema.methods.setDoctorId = function(doctorId) {
+    this.doctorId = doctorId;
+};
+
 
 module.exports = mongoose.model('BottleMedicine', BottleMedicineSchema);
