@@ -57,6 +57,15 @@ bottle.patch('/:bottleId', bottleCtrl.setMedicine);
  * url : http://localhost:4000/api/bottle/hub/:hubId
  * return : bottle List(json type List)
  */
-bottle.get('/hub/:hubId', bottleCtrl.getBottleList)
+bottle.get('/hub/:hubId', bottleCtrl.getHubsBottleList);
+
+/**
+ * 현재 로그인한 유저의 모든 약병을 조회함
+ * request parameter : x
+ * url : http://localhost:4000/api/bottle/
+ * return : bottle List
+ */
+bottle.get('/', bottleCtrl.getAllBottleList);
+
 
 module.exports = bottle;
