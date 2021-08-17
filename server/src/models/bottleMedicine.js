@@ -27,7 +27,7 @@ const BottleMedicineSchema = new Schema({
         type : Date,
         required : true,
         default : Date.now,
-    }
+    },
 });
 
 BottleMedicineSchema.methods.setDoctorId = function(doctorId) {

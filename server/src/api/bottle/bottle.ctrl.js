@@ -337,7 +337,7 @@ exports.setMedicine = async(ctx) => {
 // };
 
 //로그인한 유저의 약병 리스트 가져오기
-exports.getBottleList = async(ctx) => {
+exports.getHubsBottleList = async(ctx) => {
     const token = ctx.req.headers.authorization;
     if(!token || !token.length) {
         ctx.status = 401;
@@ -373,4 +373,32 @@ exports.getBottleList = async(ctx) => {
     ctx.status = 200;
     ctx.body = bottleList;
     
+};
+
+//현재 로그인한 유저의 모든 약병을 가져옴
+exports.getAllBottleList = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+    const hubList = await Hub.find({ userId });
+
+    const bottleList = [];
+    await Promise.all(hubList.map(async hub => {
+        const _bottleList = await Bottle.find({ hubId : hub.hubId });
+        bottleList.push(..._bottleList);
+    }));
+
+    ctx.status = 200;
+    ctx.body = bottleList;
+
 };
