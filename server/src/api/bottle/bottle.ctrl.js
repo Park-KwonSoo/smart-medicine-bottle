@@ -269,6 +269,14 @@ exports.setMedicine = async(ctx) => {
         return;
     }
 
+
+    //new bottleMedicine
+    let bottleMedicine = new BottleMedicine({
+        bottleId,
+        medicineId,
+        dosage,
+    });
+
     if(doctorId !== undefined && doctorId !== null && doctorId !== '') {
         const patientInfo = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(userId, doctorId, 'Y');
         if(!patientInfo) {
@@ -278,14 +286,11 @@ exports.setMedicine = async(ctx) => {
             };
             return;
         }
+
+        bottleMedicine.setDoctorId(doctorId);
     }
 
-    const bottleMedicine = new BottleMedicine({
-        bottleId,
-        medicineId,
-        doctorId,
-        dosage,
-    });
+    
     bottleMedicine.save();
 
     ctx.status = 200;
