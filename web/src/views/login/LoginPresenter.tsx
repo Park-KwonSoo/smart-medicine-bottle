@@ -18,15 +18,14 @@ const LoginPresenter = (props : LoginProps) => {
             <styled.LoginWrapper>
                 <styled.LoginInputWrapper>
                     <styled.LoginEachInputWrapper>
-                        <styled.LoginInputText
-                        >
-                            로그인 이메일
+                        <styled.LoginInputText>
+                            이메일
                         </styled.LoginInputText>
                         <styled.LoginInput 
                             type = 'text'
                             value = {props.loginForm.userId}
                             onChange = {props.onSetUserId}
-
+                            placeholder = 'Email'
                         />
                     </styled.LoginEachInputWrapper>
                     <styled.LoginEachInputWrapper>
@@ -37,6 +36,7 @@ const LoginPresenter = (props : LoginProps) => {
                             type = 'password'
                             value = {props.loginForm.password}
                             onChange = {props.onSetPassword}
+                            placeholder = 'password'
                         />
                     </styled.LoginEachInputWrapper>
                 </styled.LoginInputWrapper>

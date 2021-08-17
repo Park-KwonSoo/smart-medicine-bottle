@@ -10,7 +10,7 @@ interface MainProps {
 const MainPresenter = (props : MainProps) => {
     return (
         <styled.Container>
-            This is Main Page {props.userTypeCd}
+            This is Main Page for {props.userTypeCd}
         </styled.Container>
     )
 };
