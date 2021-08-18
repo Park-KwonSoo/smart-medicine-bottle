@@ -3,6 +3,15 @@ const doctorCtrl = require('./doctor.ctrl');
 
 const doctor = new Router();
 
+
+/**
+ * 현재 로그인한 유저(의사)의 정보를 가져옴.
+ * request parameter : token
+ * url : http://localhost:4000/doctor/
+ * return : doctor's Info
+ */
+doctor.get('/', doctorCtrl.getDoctorsInfo);
+
 /**
  * 현재 로그인한 유저(의사)의 관리 환자 목록을 가져옴
  * request parameter

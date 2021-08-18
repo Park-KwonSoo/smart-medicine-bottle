@@ -18,6 +18,7 @@ exports.getMyDetail = async ctx => {
         return
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET)
     const user = await User.findByUserId(userId)
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -54,6 +55,7 @@ exports.getMyDoctorList = async ctx => {
         return
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET)
     const user = await User.findByUserId(userId)
     if(!user || user.userTypeCd !== 'NORMAL' || user.useYn !== 'Y') {
@@ -92,6 +94,7 @@ exports.viewAllDoctorRegisterReq = async ctx => {
         return
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET)
     const user = await User.findByUserId(userId)
     if(!user || !user.userTypeCd || user.userTypeCd !== 'NORMAL' || user.useYn !== 'Y') {
@@ -118,6 +121,7 @@ exports.acceptDoctorRegister = async ctx => {
         return
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET)
     const user = await User.findByUserId(userId)
     if(!user || !user.userTypeCd || user.userTypeCd !== 'NORMAL' || user.useYn !== 'Y') {

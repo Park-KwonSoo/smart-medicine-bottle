@@ -8,7 +8,48 @@ const TakeMedicineHist = require('../../models/takeMedicineHistory');
 const Feedback = require('../../models/feedback');
 const Hub = require('../../models/hub');
 const PatientInfo = require('../../models/patientInfo');
+const DoctorInfo = require('../../models/doctorInfo');
 const jwt = require('jsonwebtoken');
+
+
+/**
+ * 현재 로그인한 유저의 의사 정보를 가져온다
+ * http methods : get
+ * @param {*} ctx 
+ * @returns 
+ */
+exports.getDoctorsInfo = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+    
+    const doctorInfo = await DoctorInfo.find({
+        doctorId : userId,
+        useYn : 'Y'
+    });
+
+    if(!doctorInfo) {
+        ctx.status = 401;
+        ctx.body = {
+            error : '인증되지 않은 회원'
+        }
+        return;
+    }
+
+    ctx.status = 200;
+    ctx.body = doctorInfo;
+
+};
 
 /**
  * 관리하는 환자 목록을 모두 가져옴
