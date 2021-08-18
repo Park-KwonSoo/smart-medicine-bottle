@@ -2,6 +2,7 @@
 const User = require('../../models/user');
 const Profile = require('../../models/profile');
 const PatientInfo = require('../../models/patientInfo');
+const DoctorInfo = require('../../models/doctorInfo');
 const jwt = require('jsonwebtoken');
 
 
@@ -41,11 +42,50 @@ exports.updateMyInfo = async ctx => {
 };
 
 /**
+ * 현재 로그인한 유저(환자)를 관리하는 의사 목록을 가져온다.
+ * http methods : get
+ * @param {*} ctx 
+ * @returns 
+ */
+exports.getMyDoctorList = async ctx => {
+    const token = ctx.req.headers.authorization
+    if (!token || !token.length) {
+        ctx.status = 401
+        return
+    }
+
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findByUserId(userId)
+    if(!user || user.userTypeCd !== 'NORMAL' || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+    const patientInfoList = await PatientInfo.find({ 
+        patientId : userId, 
+        useYn : 'Y',
+    });
+
+    const doctorList = await Promise.all(patientInfoList.map(async patientInfo => {
+        const doctorInfo = await DoctorInfo.findOne({ 
+            doctorId : patientInfo.doctorId,
+            useYn : 'Y',
+        });
+
+        return doctorInfo.info;
+    }));
+
+    ctx.status = 200;
+    ctx.body = doctorList;
+
+};
+
+/**
  * 의사가 요청한 환자 등록을 확인한다.
  * @param {*} ctx 
  * http methods : get
  */
-exports.viewAllDoctorRegister = async ctx => {
+exports.viewAllDoctorRegisterReq = async ctx => {
     const token = ctx.req.headers.authorization
     if (!token || !token.length) {
         ctx.status = 401
@@ -99,3 +139,4 @@ exports.acceptDoctorRegister = async ctx => {
     ctx.status = 200;
 
 };
+
