@@ -14,3 +14,9 @@ export const userTypeCd = atom({
     default : 'NORMAL',
     effects_UNSTABLE : [persistAtom],
 });
+
+export const error = atom({
+    key : 'error',
+    default : null,
+    effects_UNSTABLE : [persistAtom],
+})

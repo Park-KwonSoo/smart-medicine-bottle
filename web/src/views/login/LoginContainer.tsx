@@ -19,6 +19,7 @@ const LoginContainer = (props : LoginProps) => {
     });
     const [token, setToken] = useRecoilState(recoilUtil.token);
     const [userTypeCd, setUserTypeCd] = useRecoilState(recoilUtil.userTypeCd);
+    const [error, setError] = useRecoilState(recoilUtil.error);
 
     const onSetUserId = (e : React.ChangeEvent<HTMLInputElement>) => {
         setLoginForm({
@@ -43,6 +44,7 @@ const LoginContainer = (props : LoginProps) => {
                 props.history.push('/');
             }
         } catch(e) {
+            setError('로그인에 실패했습니다.');
             console.log(e);
         }
 

@@ -36,7 +36,7 @@ const LoginPresenter = (props : LoginProps) => {
                             type = 'password'
                             value = {props.loginForm.password}
                             onChange = {props.onSetPassword}
-                            placeholder = 'password'
+                            placeholder = 'Password'
                         />
                     </styled.LoginEachInputWrapper>
                 </styled.LoginInputWrapper>
