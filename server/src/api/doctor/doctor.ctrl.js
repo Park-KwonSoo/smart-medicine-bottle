@@ -33,7 +33,7 @@ exports.getDoctorsInfo = async ctx => {
         return;
     }
     
-    const doctorInfo = await DoctorInfo.find({
+    const doctorInfo = await DoctorInfo.findOne({
         doctorId : userId,
         useYn : 'Y'
     });
@@ -47,7 +47,7 @@ exports.getDoctorsInfo = async ctx => {
     }
 
     ctx.status = 200;
-    ctx.body = doctorInfo;
+    ctx.body = doctorInfo.info;
 
 };
 
