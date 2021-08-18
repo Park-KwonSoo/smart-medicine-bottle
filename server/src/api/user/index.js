@@ -12,12 +12,20 @@ const user = new Router();
 user.get('/', userCtrl.getMyDetail);
 
 /**
+ * 현재 로그인한 유저에 등록된 의사 목록 가져옴
+ * request parameter : token
+ * url : http://localhost:4000/api/user/doctor
+ * return : Doctor List
+ */
+user.get('/doctor', userCtrl.getMyDoctorList);
+
+/**
  * 유저를 등록하려는 의사의 요청을 전부 보여준다
  * request parameter : token,
  * url : http://localhost:4000/api/user/doctorrequest
  * return : List
  */
-user.get('/doctorrequest', userCtrl.viewAllDoctorRegister);
+user.get('/doctorrequest', userCtrl.viewAllDoctorRegisterReq);
 
 
 /**
@@ -30,3 +38,4 @@ user.post('/doctorrequest', userCtrl.acceptDoctorRegister);
 
 
 module.exports = user;
+
