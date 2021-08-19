@@ -127,10 +127,29 @@ exports.getPatientDetail = async ctx => {
         reqUserBottleList.push(...bottleList);
     }));
 
+    const reqUserBmList = [];
+    await Promise.all(reqUserBottleList.map(async bottle => {
+        const bmList = await BottleMedicine.find({
+            doctorId : userId,
+            bottleId : bottle.bottleId,
+        }).sort({ regDtm : 'desc '}).limit(1);
+        reqUserBmList.push(...bmList);
+    }));
+
+    const bottleList = await Promise.all(reqUserBmList.map(async bottleMedicine => {
+        const { dosage, regDtm, medicineId } = bottleMedicine;
+        const medicine = await Medicine.findOne({ medicineId });
+        return {
+            dosage,
+            regDtm,
+            medicine,
+        };
+    }));
+
     const result = {
         profile,
         info : isDoctorsPatient.getInfo(),
-        bottleList : reqUserBottleList,
+        bottleList,
     };
 
     ctx.status = 200;
@@ -294,6 +313,37 @@ exports.writeReqBottleFeedback = async ctx => {
 
     ctx.status = 200;
 
+};
+
+exports.searchPatientById = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if (!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || user.userTypeCd !== 'DOCTOR') {
+        ctx.status = 403;
+        return;
+    }
+
+    const { patientId } = ctx.params;
+    const patient = await User.findByUserId(patientId);
+    if(!patient || patient.useYn !== 'Y') {
+        ctx.status = 404;
+        return;
+    }
+
+    const patientProfile = await Profile.findOne({ userId : patientId });
+
+    ctx.status = 200;
+    ctx.body = {
+        patientNm : patientProfile.userNm,
+        patientId,
+    };
 };
 
 /**

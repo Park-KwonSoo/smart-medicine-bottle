@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 //회원가입, 로그인 및 로그아웃에 관한 api
 const User = require('../../models/user');
 const Profile = require('../../models/profile');
@@ -175,8 +176,8 @@ exports.verifyToken = async(ctx) => {
         return;
     }
 
-    await jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-        if(err) {
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
             ctx.status = 400;
             ctx.body = err;
             return;
