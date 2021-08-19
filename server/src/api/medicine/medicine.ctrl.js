@@ -10,10 +10,12 @@ exports.medicineSearch = async(ctx) => {
 
     const { keyword } = ctx.request.body;
 
-    const result = await Medicine.findByKeyword(keyword);
+    const medicineList = await Medicine.findByKeyword(keyword);
 
     ctx.status = 200;
-    ctx.body = result;
+    ctx.body = {
+        medicineList,
+    };
 }
 
 exports.medicineGet = async(ctx) => {
@@ -31,6 +33,8 @@ exports.medicineGet = async(ctx) => {
     }
 
     ctx.status = 200;
-    ctx.body = medicine;
+    ctx.body = {
+        medicine,
+    };
     
 }

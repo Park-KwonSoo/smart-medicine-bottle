@@ -30,7 +30,9 @@ exports.getDoctorRegReqList = async ctx => {
         });
 
         ctx.status = 200;
-        ctx.body = doctorRegReqList;
+        ctx.body = {
+            doctorRegReqList
+        };
 
     } catch(e) {
         ctx.status = 500;
@@ -107,7 +109,9 @@ exports.getDoctorRegReqDetail = async ctx => {
         }
 
         ctx.status = 200;
-        ctx.body = doctorInfo;
+        ctx.body = {
+            doctorInfo,
+        };
 
     } catch (e) {
         ctx.status = 500;

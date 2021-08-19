@@ -47,7 +47,9 @@ exports.getDoctorsInfo = async ctx => {
     }
 
     ctx.status = 200;
-    ctx.body = doctorInfo.info;
+    ctx.body = {
+        doctorInfo : doctorInfo.info
+    };
 
 };
 
@@ -68,19 +70,24 @@ exports.getPatientList = async ctx => {
     const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 유저',
+        };
         return;
     }
 
     const managePatientIdList = await PatientInfo.findAllByDoctorIdAndUseYn(userId, 'Y');
 
-    const result = [];
+    const patientList = [];
     await Promise.all(managePatientIdList.map(async patient => {
         const patientProfile = await Profile.findByUserId(patient.patientId);
-        result.push(patientProfile);
+        patientList.push(patientProfile);
     }));
 
     ctx.status = 200;
-    ctx.body = result;
+    ctx.body = {
+        patientList,
+    };
 
 };
 
@@ -101,6 +108,9 @@ exports.getPatientDetail = async ctx => {
     const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 사용자',
+        };
         return;
     }
 
@@ -108,12 +118,18 @@ exports.getPatientDetail = async ctx => {
     const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 유저',
+        };
         return;
     }
 
     const isDoctorsPatient = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(patientId, userId, 'Y');
     if(!isDoctorsPatient) {
         ctx.status = 403;
+        ctx.body = {
+            error : '접근 권한 없는 환자',
+        };
         return;
     }
 
@@ -137,9 +153,10 @@ exports.getPatientDetail = async ctx => {
     }));
 
     const bottleList = await Promise.all(reqUserBmList.map(async bottleMedicine => {
-        const { dosage, regDtm, medicineId } = bottleMedicine;
+        const { bottleId, dosage, regDtm, medicineId } = bottleMedicine;
         const medicine = await Medicine.findOne({ medicineId });
         return {
+            bottleId,
             dosage,
             regDtm,
             medicine,
@@ -208,6 +225,7 @@ exports.getBottleDetail = async ctx => {
     }).sort({ fdbDtm : 'desc' });
 
     const result = {
+        bottleId,
         medicine,
         takeMedicineHist,
         feedbackList,
@@ -235,6 +253,9 @@ exports.writeReqPatientReport = async ctx => {
     const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR' || user.useYn !== 'Y') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 유저',
+        };
         return;
     }
 
@@ -242,12 +263,18 @@ exports.writeReqPatientReport = async ctx => {
     const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 유자',
+        };
         return;
     }
 
     const patientInfo = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(patientId, userId, 'Y');
     if(!patientInfo) {
         ctx.status = 404;
+        ctx.body = {
+            error : '접근 권한 없는 환자',
+        };
         return;
     }
 
@@ -327,6 +354,9 @@ exports.searchPatientById = async ctx => {
     const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 유저',
+        };
         return;
     }
 
@@ -334,6 +364,9 @@ exports.searchPatientById = async ctx => {
     const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 회원',
+        };
         return;
     }
 
@@ -363,6 +396,9 @@ exports.registerNewPatient = async ctx => {
     const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 유저',
+        };
         return;
     }
 
@@ -370,12 +406,18 @@ exports.registerNewPatient = async ctx => {
     const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 유저',
+        };
         return;
     }
 
     const isExistPatientInfo = await PatientInfo.findByPatientIdAndDoctorId(patientId, userId);
     if(isExistPatientInfo) {
         ctx.status = 403;
+        ctx.body = {
+            error : '이미 등록된 환자이거나, 등록 요청 대기중인 환자',
+        };
         return;
     }
 
@@ -410,6 +452,9 @@ exports.removeReqPatient = async ctx => {
     const user = await User.findByUserId(userId);
     if(!user || user.userTypeCd !== 'DOCTOR') {
         ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 유저',
+        };
         return;
     }
 
@@ -417,12 +462,18 @@ exports.removeReqPatient = async ctx => {
     const patient = await User.findByUserId(patientId);
     if(!patient || patient.useYn !== 'Y') {
         ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 회원',
+        };
         return;
     }
 
     const patientInfo = await PatientInfo.findByPatientIdAndDoctorIdAndUseYn(patientId, userId, 'Y');
     if(!patientInfo) {
         ctx.status = 404;
+        ctx.body = {
+            error : '등록되지 않은 환자',
+        };
         return;
     }
 

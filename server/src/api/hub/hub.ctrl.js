@@ -44,7 +44,7 @@ exports.hubConnect = async (ctx) => {
     await hub.save();
 
     ctx.status = 201;
-    ctx.body = hub;
+
 };
 
 exports.getHubList = async(ctx) => {
@@ -69,7 +69,9 @@ exports.getHubList = async(ctx) => {
     }
 
     ctx.status = 200;
-    ctx.body = hubList;
+    ctx.body = {
+        hubList
+    };
 };
 
 exports.hubDisconnect = async(ctx) => {
