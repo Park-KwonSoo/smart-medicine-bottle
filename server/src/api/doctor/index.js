@@ -53,9 +53,18 @@ doctor.patch('/patient', doctorCtrl.writeReqPatientReport);
  */
 doctor.post('/bottle', doctorCtrl.writeReqBottleFeedback);
 
+
+/**
+ * 현재 로그인한 유저(의사)가 이메일로 유저를 검색함
+ * request parameter : patientId
+ * url : http://localhost:4000/api/doctor/patient/search/:patientId
+ * return : patient Info(simple)
+ */
+doctor.get('/patient/search/:patientId', doctorCtrl.searchPatientById);
+
 /**
  * 현재 로그인한 유저(의사)의 관리 환자를 등록함.
- * request parameter : reqUserId
+ * request parameter : patientId
  * url : http://localhost:4000/doctor/patient
  * return : null
  */
