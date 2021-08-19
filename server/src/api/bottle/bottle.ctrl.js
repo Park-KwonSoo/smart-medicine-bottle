@@ -156,13 +156,15 @@ exports.getBottleInfo = async(ctx) => {
 
         ctx.status = 200;
         ctx.body = {
+            bottle,
             takeMedicineHist,
         };
 
     } else {
-        ctx.status = 404;
+        ctx.status = 200;
         ctx.body = {
-            error : '정보가 등록되지 않은 약병'
+            bottle,
+            takeMedicineHist : [],
         }
     }
 
