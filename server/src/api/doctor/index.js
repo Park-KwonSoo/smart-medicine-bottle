@@ -36,7 +36,6 @@ doctor.get('/patient/:patientId', doctorCtrl.getPatientDetail);
  */
 doctor.get('/bottle/:bottleId', doctorCtrl.getBottleDetail);
 
-
 /**
  * 현재 로그인한 유저(의사)의 특정 관리 환자의 특이사항을 기록함
  * request parameter : reqUserId, info
@@ -52,7 +51,6 @@ doctor.patch('/patient', doctorCtrl.writeReqPatientReport);
  * return : null
  */
 doctor.post('/bottle', doctorCtrl.writeReqBottleFeedback);
-
 
 /**
  * 현재 로그인한 유저(의사)가 이메일로 유저를 검색함

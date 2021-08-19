@@ -37,9 +37,9 @@ PatientInfoSchema.methods.setUseYn = function(useYn) {
 PatientInfoSchema.methods.updateInfo = function(info) {
     const date = moment(new Date()).format('YYYY-MM-DD hh:mm');
     if(this.info.length)
-        this.info = this.info.concat('\n\n', `${date} => ${info}`);
+        this.info = this.info.concat('\n\n', `${date} ➡ ${info}`);
     else
-        this.info = `${date} => ${info}`;
+        this.info = `${date} ➡ ${info}`;
 };
 
 
