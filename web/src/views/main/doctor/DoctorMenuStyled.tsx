@@ -131,6 +131,7 @@ export const NewPatientSearchButton = styled.button `
     justify-content : center;
     align-items : center;
 
+    cursor : pointer;
 
     transition : .25s all;
     &:hover  {

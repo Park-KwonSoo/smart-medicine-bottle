@@ -3,6 +3,8 @@ import React from 'react';
 import * as styled from './DoctorMenuStyled';
 
 const medicineImg = '/static/img/medicine.png';
+const lensImg = '/static/img/lens.png';
+const closeButton = '/static/img/close.png';
 
 
 interface DoctorMenuProps {
@@ -21,11 +23,16 @@ interface DoctorMenuProps {
     onFetchPatientDetail : (arg0 : string) => void;
 
     onInitialize : () => void;
+    onGoBottleDetail : (arg0 : number) => void;
 
     editModal : boolean;
     setEditModal : any;
+
     newPatientRegisterModal : boolean;
     setNewPatientRegisterModal : any;
+    newPatientSearchId: string;
+    onSetNewPatientSearchId : React.ChangeEventHandler<HTMLInputElement>;
+    onSearchNewPatientByEmail : () => void;
 }
 
 const DoctorMenuPresenter = (props : DoctorMenuProps) => {
@@ -38,7 +45,7 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                         <styled.ModalClsButton
                             onClick = {() => props.setEditModal(false)}
                         >
-                            <styled.ModalClsButtonImg />
+                            <styled.ModalClsButtonImg src = {closeButton}/>
                             <styled.ModalClsButtonText>닫기</styled.ModalClsButtonText>
                         </styled.ModalClsButton>
                     </styled.ModalClsButtonWrapper>
@@ -48,9 +55,13 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                             <styled.NewPatientSearchWrapper>
                                 <styled.NewPatientSearchInput 
                                     placeholder = '환자 이메일을 입력하세요.'
+                                    value = {props.newPatientSearchId}
+                                    onChange = {props.onSetNewPatientSearchId}
                                 />
-                                <styled.NewPatientSearchButton>
-                                    <styled.NewPatientSearchButtonImg />
+                                <styled.NewPatientSearchButton
+                                    onClick = {props.onSearchNewPatientByEmail}
+                                >
+                                    <styled.NewPatientSearchButtonImg src = {lensImg}/>
                                 </styled.NewPatientSearchButton>
                             </styled.NewPatientSearchWrapper>
                             <styled.NewPatientSearchResultWrapper>
@@ -177,7 +188,8 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                 props.patientDetail.bottleList.map((bottle : any) => {
                     return (
                         <styled.EachBottleWrapper
-                            key = {bottle._id}
+                            key = {bottle.bottleId}
+                            onClick = {() => props.onGoBottleDetail(bottle.bottleId)}
                         >
                             <styled.EachBottleImg src = {medicineImg}/>
                             <styled.EachBottleInfo>{bottle.medicine.name.slice(0, 14)}</styled.EachBottleInfo>

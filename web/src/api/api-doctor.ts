@@ -44,6 +44,13 @@ export default {
             },
         });
     },
+    searchPatientById : (token : RecoilState<any>, patientId : string) => {
+        return client.get(`/doctor/patient/search/${patientId}`, {
+            headers : {
+                Authorization : token,
+            },
+        });
+    },
     registerPatient : (token : RecoilState<any>, Data : any) => {
         return client.post('/doctor/patient', Data, {
             headers : {

@@ -11,7 +11,7 @@ export const Container = styled.div `
 
 export const LoginWrapper = styled.div `
     width : 35%;
-    border : 1px solid #ddd;
+    border : none;
     border-radius : 3px;
     display : flex;
     flex-direction : column;
@@ -21,6 +21,11 @@ export const LoginWrapper = styled.div `
 
     box-shadow: 0px 0px 10px #a0a0a0;
 
+`;
+
+export const LoginTitle = styled.div `
+    font-size : 20px;
+    font-weight : 700;
 `;
 
 export const LoginInputWrapper = styled.div `

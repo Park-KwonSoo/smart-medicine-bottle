@@ -9,6 +9,7 @@ interface LoginProps {
     };
     onSetUserId : React.ChangeEventHandler<HTMLInputElement>;
     onSetPassword : React.ChangeEventHandler<HTMLInputElement>;
+    onGoRegister : () => void;
     onLogin : React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -16,6 +17,7 @@ const LoginPresenter = (props : LoginProps) => {
     return (
         <styled.Container>
             <styled.LoginWrapper>
+                <styled.LoginTitle>로그인</styled.LoginTitle>
                 <styled.LoginInputWrapper>
                     <styled.LoginEachInputWrapper>
                         <styled.LoginInputText>
@@ -42,7 +44,7 @@ const LoginPresenter = (props : LoginProps) => {
                 </styled.LoginInputWrapper>
                 <styled.RegisterButtonWrapper>
                     <styled.RegisterButton
-                        onClick = {() => console.log('회원가입 버튼')}
+                        onClick = {props.onGoRegister}
                     >
                         회원가입
                     </styled.RegisterButton>

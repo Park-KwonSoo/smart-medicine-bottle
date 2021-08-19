@@ -35,6 +35,10 @@ const LoginContainer = (props : LoginProps) => {
         });
     };
 
+    const onGoRegister = () => {
+        props.history.push('/register');
+    };
+
     const onLogin = async () => {
         try {
             const result : any = await authApi.login(loginForm);
@@ -59,6 +63,7 @@ const LoginContainer = (props : LoginProps) => {
             loginForm = {loginForm}
             onSetUserId = {onSetUserId}
             onSetPassword = {onSetPassword}
+            onGoRegister = {onGoRegister}
             onLogin = {onLogin}
         />
     )

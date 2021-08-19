@@ -41,25 +41,28 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const [editModal, setEditModal] = useState<boolean>(false);
     const [newPatientRegisterModal, setNewPatientRegisterModal] = useState<boolean>(false);
+    const [newPatientSearchId, setNewPatientSearchId] = useState<string>('');
+
 
 
     const fetchData = async() => {
         try {
             const res = await doctorApi.getDoctorsInfo(token);
             if(res.statusText === 'OK') {
-                setDoctorInfo(res.data);
+                const { doctorInfo } = res.data;
+                setDoctorInfo(doctorInfo);
                 setInfo({
                     infoType : 'DOCTOR',
-                    userNm : res.data.doctorNm,
-                    doctorType : res.data.doctorType,
-                    contact : res.data.contact,
+                    userNm : doctorInfo.doctorNm,
+                    doctorType : doctorInfo.doctorType,
+                    contact : doctorInfo.contact,
                     userAge : null,
                     patientInfo : '',
                 });
 
                 //로그인한 환자의 리스트를 가져옴 : 프론트에서 필터로 검색
                 await doctorApi.getPatientList(token).then(res => {
-                    setPatientList(res.data);
+                    setPatientList(res.data.patientList);
                 }).catch(error => console.log(error));
             }
         } catch(e) {
@@ -104,6 +107,26 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     };
 
 
+    const onSetNewPatientSearchId = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setNewPatientSearchId(e.target.value);
+    };
+
+    const onSearchNewPatientByEmail = async () => {
+        try {
+            await doctorApi.searchPatientById(token, newPatientSearchId).then(res => {
+                console.log(res.data);
+            }).catch(err => console.log(err));
+        } catch(e) {
+            console.log(e);
+        }
+    };
+
+
+    const onGoBottleDetail = (bottleId : number) => {
+        console.log(bottleId);
+    };
+
+
     useEffect(() => {
         if(!token || !token.length) {
             props.history.push('/login');
@@ -131,11 +154,16 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             onFetchPatientDetail = {onFetchPatientDetail}
 
             onInitialize = {onInitialize}
+            onGoBottleDetail = {onGoBottleDetail}
 
             editModal = {editModal}
             setEditModal = {setEditModal}
+
             newPatientRegisterModal = {newPatientRegisterModal}
             setNewPatientRegisterModal = {setNewPatientRegisterModal}
+            newPatientSearchId = {newPatientSearchId}
+            onSetNewPatientSearchId = {onSetNewPatientSearchId}
+            onSearchNewPatientByEmail = {onSearchNewPatientByEmail}
         />
     );
 };
