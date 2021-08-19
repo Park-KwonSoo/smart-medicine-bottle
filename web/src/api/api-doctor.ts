@@ -2,6 +2,13 @@ import { client } from "./client";
 import { RecoilState } from "recoil";
 
 export default {
+    getDoctorsInfo : (token : RecoilState<any>) => {
+        return client.get('/doctor', {
+            headers : {
+                Authorization : token,
+            },
+        });
+    },
     getPatientList : (token : RecoilState<any>) => {
         return client.get('/doctor/patient', {
             headers : {

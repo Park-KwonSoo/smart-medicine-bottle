@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps} from 'react-router-dom';
 
-import MainPresenter from './MainPresenter';
-
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import * as recoilUtil from '../../util/recoilUtil';
 
-import { doctorApi, managerApi, userApi, authApi } from '../../api';
+import DoctorMenuContainer from './doctor';
+import ManagerMenuContainer from './manager';
 
 
 type MainProps = RouteComponentProps
@@ -23,9 +22,9 @@ const MainContainer = (props : MainProps) => {
     }, []);
 
     return (
-        <MainPresenter
-            userTypeCd = {userTypeCd}
-        />
+        userTypeCd === 'DOCTOR' ?
+        <DoctorMenuContainer {...props}/> :
+        <ManagerMenuContainer {...props}/>
     );
 };
 
