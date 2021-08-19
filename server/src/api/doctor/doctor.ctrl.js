@@ -132,7 +132,7 @@ exports.getPatientDetail = async ctx => {
         const bmList = await BottleMedicine.find({
             doctorId : userId,
             bottleId : bottle.bottleId,
-        }).sort({ regDtm : 'desc '}).limit(1);
+        }).sort({ regDtm : 'desc' }).limit(1);
         reqUserBmList.push(...bmList);
     }));
 
