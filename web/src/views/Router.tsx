@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import { LoginContainer } from "./login";
 import { RegisterContainer } from './register';
 import { MainContainer } from "./main";
+import { BottleInfoContainer } from "./bottleInfo";
 
 
 const Router = () => {
@@ -17,6 +18,7 @@ const Router = () => {
                 <Route exact path = '/' component = {MainContainer}/>
                 <Route exact path = '/login' component = {LoginContainer}/>
                 <Route exact path = '/register' component = {RegisterContainer}/>
+                <Route exact path = '/bottle' component = {BottleInfoContainer}/>
             </Switch>
         </BrowserRouter>
     )
