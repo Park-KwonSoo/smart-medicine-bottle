@@ -492,6 +492,17 @@ export const EachBottleWrapper = styled.div `
     }
 `;
 
+export const EachBottleImg = styled.img `
+    height : 50px;
+    width : 50px;
+    margin : 0 0 10px 0;
+`;
+
+export const EachBottleInfo = styled.div `
+    font-size : 11px;
+    letter-spacing : 1px;
+`;
+
 export const NothingWrapper = styled.div `
     height : 100%;
     width : 100%;

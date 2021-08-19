@@ -40,9 +40,17 @@ const LoginPresenter = (props : LoginProps) => {
                         />
                     </styled.LoginEachInputWrapper>
                 </styled.LoginInputWrapper>
+                <styled.RegisterButtonWrapper>
+                    <styled.RegisterButton
+                        onClick = {() => console.log('회원가입 버튼')}
+                    >
+                        회원가입
+                    </styled.RegisterButton>
+                </styled.RegisterButtonWrapper>
                 <styled.LoginButtonWrapper>
                     <styled.LoginButton
                         onClick = {props.onLogin}
+                        isLoginButton = {true}
                     >
                         로그인
                     </styled.LoginButton>

@@ -2,6 +2,8 @@ import React from 'react';
 
 import * as styled from './DoctorMenuStyled';
 
+const medicineImg = '/static/img/medicine.png';
+
 
 interface DoctorMenuProps {
     info : {
@@ -177,9 +179,9 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                         <styled.EachBottleWrapper
                             key = {bottle._id}
                         >
-                        {
-                            bottle.bottleId
-                        }
+                            <styled.EachBottleImg src = {medicineImg}/>
+                            <styled.EachBottleInfo>{bottle.medicine.name.slice(0, 14)}</styled.EachBottleInfo>
+                            <styled.EachBottleInfo>{`등록일 : ${bottle.regDtm.slice(0, 10)}`}</styled.EachBottleInfo>
                         </styled.EachBottleWrapper>
                     )
                 }) :
