@@ -29,7 +29,9 @@ exports.getMyDetail = async ctx => {
     const profile = await Profile.findByUserId(userId);
 
     ctx.status = 200;
-    ctx.body = profile;
+    ctx.body = {
+        profile,
+    };
 
 }
 
@@ -78,7 +80,9 @@ exports.getMyDoctorList = async ctx => {
     }));
 
     ctx.status = 200;
-    ctx.body = doctorList;
+    ctx.body = {
+        doctorList,
+    };
 
 };
 
@@ -105,7 +109,9 @@ exports.viewAllDoctorRegisterReq = async ctx => {
     const patientInfoList = await PatientInfo.findAllByPatientIdAndUseYn(userId, 'W');
 
     ctx.status = 200;
-    ctx.body = patientInfoList;
+    ctx.body = {
+        patientInfoList,
+    };
 
 };
 

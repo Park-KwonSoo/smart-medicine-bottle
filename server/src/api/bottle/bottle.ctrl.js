@@ -155,7 +155,9 @@ exports.getBottleInfo = async(ctx) => {
             .populate('bmId');
 
         ctx.status = 200;
-        ctx.body = takeMedicineHist;
+        ctx.body = {
+            takeMedicineHist,
+        };
 
     } else {
         ctx.status = 404;
@@ -371,7 +373,9 @@ exports.getHubsBottleList = async(ctx) => {
     }
 
     ctx.status = 200;
-    ctx.body = bottleList;
+    ctx.body = {
+        bottleList,
+    };
     
 };
 
@@ -399,6 +403,8 @@ exports.getAllBottleList = async ctx => {
     }));
 
     ctx.status = 200;
-    ctx.body = bottleList;
+    ctx.body = {
+        bottleList
+    };
 
 };
