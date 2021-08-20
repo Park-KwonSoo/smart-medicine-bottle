@@ -106,11 +106,25 @@ exports.viewAllDoctorRegisterReq = async ctx => {
         return;
     }
 
-    const patientInfoList = await PatientInfo.findAllByPatientIdAndUseYn(userId, 'W');
+    const patientInfoList = await PatientInfo.find({
+        patientId : userId,
+        useYn : 'W',
+    })
+    
+    const doctorReqList = await Promise.all(patientInfoList.map(async patientInfo => {
+        const doctor = await DoctorInfo.findOne({ doctorId : patientInfo.doctorId });
+        return {
+            patientId : patientInfo.patientId,
+            doctorId : patientInfo.doctorId,
+            useYn : patientInfo.useYn,
+            info : patientInfo.info,
+            doctorNm : doctor.info.doctorNm,
+        }
+    }));
 
     ctx.status = 200;
     ctx.body = {
-        patientInfoList,
+        doctorReqList,
     };
 
 };
