@@ -8,17 +8,3 @@ export const client : AxiosInstance = axios.create({
         'Access-Control-Allow-Origin': '*',
     },
 });
-
-client.interceptors.request.use(
-
-);
-
-client.interceptors.response.use(
-    function (response) {
-        return response;
-    },
-    function (error) {
-        console.log(error.message);
-        return error;
-    }
-);

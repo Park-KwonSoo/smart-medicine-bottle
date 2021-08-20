@@ -17,7 +17,7 @@ const LoginPresenter = (props : LoginProps) => {
     return (
         <styled.Container>
             <styled.LoginWrapper>
-                <styled.LoginTitle>로그인</styled.LoginTitle>
+                <styled.LoginTitle>🩺로그인</styled.LoginTitle>
                 <styled.LoginInputWrapper>
                     <styled.LoginEachInputWrapper>
                         <styled.LoginInputText>

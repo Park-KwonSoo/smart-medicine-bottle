@@ -9,7 +9,7 @@ const RegisterPresenter = () => {
             <styled.RegisterWrapper>
                 <styled.RegisterTitle>회원 가입</styled.RegisterTitle>
                 <styled.RegisterInfo>* 의사만 회원가입이 가능합니다.</styled.RegisterInfo>
-                <styled.RegisterInfo style = {{fontSize : 10,}}>의사 인증을 위한 정보가 요구됩니다.</styled.RegisterInfo>
+                <styled.RegisterInfo style = {{fontSize : 10,}}>의사 인증을 위한 정보가 요구됩니다. 해당 정보는 인증을 위한 용도로만 사용됩니다.</styled.RegisterInfo>
                 <styled.RegisterInputWrapper>
                     <styled.RegisterInputText>이메일</styled.RegisterInputText>
                     <styled.RegisterInput 

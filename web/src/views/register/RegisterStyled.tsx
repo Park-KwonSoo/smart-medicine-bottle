@@ -35,7 +35,7 @@ export const RegisterTitle = styled.div `
 
 export const RegisterInfo = styled.div `
     width : 90%;
-    font-size : 12px;
+    font-size : 13px;
     color : #a0a0a0;
 `;
 

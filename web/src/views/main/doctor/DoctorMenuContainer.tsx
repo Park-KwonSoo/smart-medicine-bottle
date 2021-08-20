@@ -6,6 +6,8 @@ import DoctorMenuPresenter from './DoctorMenuPresenter';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import * as recoilUtil from '../../../util/recoilUtil';
 
+import * as Alert from '../../../util/alertMessage';
+
 import { doctorApi, authApi } from '../../../api';
 
 
@@ -36,13 +38,15 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const [searchPatientKeyword, setSearchPatientKeyword] = useState<string>('');
     const [filteringPatientList, setFilteringPatientList] = useState<any>([]);
-
+    
     const [patientDetail, setPatientDetail] = useState<any>();
 
     const [editModal, setEditModal] = useState<boolean>(false);
+    const [editPatientInfo, setEditPatientInfo] = useState<string>(''); 
+
     const [newPatientRegisterModal, setNewPatientRegisterModal] = useState<boolean>(false);
     const [newPatientSearchId, setNewPatientSearchId] = useState<string>('');
-
+    const [newPatientSearchResult, setNewPatientSearchResult] = useState<any | null>(null);
 
 
     const fetchData = async() => {
@@ -92,7 +96,8 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         }
     };
 
-    const onInitialize = () => {
+    const onInitialize = async () => {
+        await fetchData();
         setInfo({
             infoType : 'DOCTOR',
             userNm : doctorInfo.doctorNm,
@@ -103,7 +108,44 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         });
         setFilteringPatientList([]);
         setSearchPatientKeyword('');
+        setEditModal(false);
+        setEditPatientInfo('');
+        setNewPatientRegisterModal(false);
+        setNewPatientSearchId('');
+        setNewPatientSearchResult(null);
         setPatientDetail(null);
+    };
+
+    const onEditPatientInfo = (e : React.ChangeEvent<HTMLTextAreaElement>) => {
+        setEditPatientInfo(e.target.value);
+    };
+
+    const onSubmitPatientInfo = () => {
+        if(editPatientInfo.length && patientDetail) {
+            const onSubmit = async () => {
+                try {
+                    const result = await doctorApi.writePatientInfo(token, {
+                        patientId : patientDetail.profile.userId,
+                        info : editPatientInfo,
+                    });
+                    if(result.statusText === 'OK') {
+                        Alert.onSuccess('환자의 특이사항을 업데이트했습니다.', () => onInitialize());
+                    } else {
+                        Alert.onError('특이사항을 기록하는데 실패했습니다.', () => null);
+                    }
+    
+                } catch(e) {
+                    Alert.onError(e.response.data.error, () => null);
+                }
+            };
+
+            Alert.onCheck('환자의 특이사항을 업데이트하시겠습니까?', onSubmit, () => null);
+
+        } else {
+            Alert.onError('환자의 특이사항을 기록하세요.', () => null);
+        }
+        
+
     };
 
 
@@ -114,16 +156,51 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const onSearchNewPatientByEmail = async () => {
         try {
             await doctorApi.searchPatientById(token, newPatientSearchId).then(res => {
-                console.log(res.data);
-            }).catch(err => console.log(err));
+                setNewPatientSearchResult(res.data);
+            }).catch(err => {
+                console.log(err);
+                Alert.onError('검색 결과가 없습니다.', () => null);
+                setNewPatientSearchResult(null);
+            });
         } catch(e) {
-            console.log(e);
+            Alert.onError(e.response.data.error, () => null);
         }
     };
 
+    const onRegisterNewPatient = () => {
+        if(newPatientSearchResult) {
+            const { patientId, patientNm } = newPatientSearchResult;
+            const onRegisterReq = async () => {
+                try {
+                    const result = await doctorApi.registerPatient(token, {
+                        patientId,
+                    });
+                    if(result.statusText === 'OK') {
+                        Alert.onSuccess('환자에게 담당의 등록 요청을 전송했습니다.', () => null);
+                    } else {
+                        Alert.onError('환자에게 담당의 등록 요청을 실패했습니다.', () => null);
+                    }
+                } catch(e) {
+                    Alert.onError(e.response.data.error, () => null);
+                }
+            };
+
+            Alert.onCheck(`${patientNm} 환자에게 담당의 등록 요청을 전송하시겠습니까?`, onRegisterReq, () => null);
+        } else {
+            Alert.onError('환자를 먼저 검색해주세요.', () => null);
+        }
+    };
+
+    const onCloseModal = async () => {
+        setNewPatientRegisterModal(false);
+        setNewPatientSearchId('');
+        setNewPatientSearchResult(null);
+        setEditModal(false);
+        setEditPatientInfo('');
+    };
 
     const onGoBottleDetail = (bottleId : number) => {
-        console.log(bottleId);
+        props.history.push(`/bottle/${bottleId}`);
     };
 
 
@@ -158,12 +235,19 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
             editModal = {editModal}
             setEditModal = {setEditModal}
+            editPatientInfo = {editPatientInfo}
+            onEditPatientInfo = {onEditPatientInfo}
+            onSubmitPatientInfo = {onSubmitPatientInfo}
 
             newPatientRegisterModal = {newPatientRegisterModal}
             setNewPatientRegisterModal = {setNewPatientRegisterModal}
             newPatientSearchId = {newPatientSearchId}
             onSetNewPatientSearchId = {onSetNewPatientSearchId}
             onSearchNewPatientByEmail = {onSearchNewPatientByEmail}
+            onRegisterNewPatient = {onRegisterNewPatient}
+            onCloseModal = {onCloseModal}
+
+            newPatientSearchResult = {newPatientSearchResult}
         />
     );
 };

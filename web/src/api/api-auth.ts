@@ -16,4 +16,11 @@ export default {
     logout : () => {
         return client.post('/auth/logout');
     },
+    verifyToken : (token : any) => {
+        return client.get('/auth/verifytoken', {
+            headers : {
+                Authorization : token,
+            },
+        });
+    },
 };

@@ -4,12 +4,16 @@ import { RouteComponentProps } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import * as recoilUtil from '../../util/recoilUtil';
 
+import * as Alert from '../../util/alertMessage';
+
+import Header from '../../components/Header';
 import LoginPresenter from './LoginPresenter';
 
 import { authApi } from '../../api';
 
 
-type LoginProps = RouteComponentProps
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface LoginProps extends RouteComponentProps {}
 
 const LoginContainer = (props : LoginProps) => {
 
@@ -17,9 +21,19 @@ const LoginContainer = (props : LoginProps) => {
         userId : '',
         password : '',
     });
+
     const [token, setToken] = useRecoilState(recoilUtil.token);
     const [userTypeCd, setUserTypeCd] = useRecoilState(recoilUtil.userTypeCd);
-    const [error, setError] = useRecoilState(recoilUtil.error);
+
+
+    const fetchData = async() => {
+        if(token && token.length) {
+            const result = await authApi.verifyToken(token);
+            if (result.statusText === 'OK') {
+                props.history.push('/');
+            }
+        } 
+    };
 
     const onSetUserId = (e : React.ChangeEvent<HTMLInputElement>) => {
         setLoginForm({
@@ -42,23 +56,26 @@ const LoginContainer = (props : LoginProps) => {
     const onLogin = async () => {
         try {
             const result : any = await authApi.login(loginForm);
-            if(result.statusText === 'OK') {
+            if(result.statusText === 'OK' && result.data.userTypeCd !== 'NORMAL') {
                 setToken(result.data.token);
                 setUserTypeCd(result.data.userTypeCd);
-                props.history.push('/');
+                Alert.onSuccess('로그인 성공, 메인 화면으로 이동합니다.', () => props.history.push('/'));
+            } else if(result.data.userTypeCd === 'NORMAL') {
+                Alert.onError('권한이 없는 유저입니다.', () => props.history.push('/'));
             }
         } catch(e) {
-            setError('로그인에 실패했습니다.');
-            console.log(e);
+            Alert.onError(e.response.data, () => null);
         }
 
     };
 
     useEffect(() => {
-        console.log('loginPage');
+        fetchData();
     }, []);
 
     return (
+        <>
+        <Header {...props} />
         <LoginPresenter
             loginForm = {loginForm}
             onSetUserId = {onSetUserId}
@@ -66,6 +83,7 @@ const LoginContainer = (props : LoginProps) => {
             onGoRegister = {onGoRegister}
             onLogin = {onLogin}
         />
+        </>
     )
 };
 

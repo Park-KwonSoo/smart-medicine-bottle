@@ -4,6 +4,8 @@ import { RouteComponentProps} from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import * as recoilUtil from '../../util/recoilUtil';
 
+
+import Header from '../../components/Header';
 import DoctorMenuContainer from './doctor';
 import ManagerMenuContainer from './manager';
 
@@ -22,9 +24,15 @@ const MainContainer = (props : MainProps) => {
     }, []);
 
     return (
-        userTypeCd === 'DOCTOR' ?
-        <DoctorMenuContainer {...props}/> :
-        <ManagerMenuContainer {...props}/>
+        <>
+        <Header {...props}/>
+        {
+            userTypeCd === 'DOCTOR' ?
+            <DoctorMenuContainer {...props}/> :
+            userTypeCd === 'MANAGER' ?
+            <ManagerMenuContainer {...props}/> : null
+        }
+        </>
     );
 };
 

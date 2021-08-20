@@ -1,4 +1,49 @@
-import styled from 'styled-components';
+import styled, { keyframes} from 'styled-components';
+
+
+const twinkle = keyframes `
+    0% {
+        opacity : 1;
+        background-color : #337DFF;
+    }
+    20% {
+        opacity : .75;
+    }
+    40% {
+        opacity : .5;
+    }
+    60% {
+        opacity : .5;
+    }
+    80% {
+        opacity : .75;
+    }
+    100% {
+        opacity : 1;
+        background-color : #337DFF;
+    }
+`
+
+const twinkleText = keyframes `
+    0% {
+        opacity : 1;
+    }
+    20% {
+        opacity : .75;
+    }
+    40% {
+        opacity : .5;
+    }
+    60% {
+        opacity : .5;
+    }
+    80% {
+        opacity : .75;
+    }
+    100% {
+        opacity : 1;
+    }
+`;
 
 export const Container = styled.div `
     width : 100%;
@@ -73,10 +118,8 @@ export const RegisterButton = styled.button `
 
     font-size : 11px;
 
-    transition : .25s all;
-
     &:hover { 
-        opacity : .5;
+        animation : ${twinkleText} 2s infinite;
     }
     
 `;
@@ -97,10 +140,10 @@ export const LoginButton = styled.button<{isLoginButton : boolean}> `
     border-radius : 5px;
     padding : 10px 30px;
 
+    width : 80%;
+
     cursor : pointer;
     
-    transition : .25s all;
-
     color : #343434;
     font-weight : 600;
 
@@ -108,6 +151,7 @@ export const LoginButton = styled.button<{isLoginButton : boolean}> `
         background-color : #343434;
         color : #fff;
         border : 1.2px solid transparent;
+        animation : ${twinkle} 1.5s infinite linear;
     }
 
     margin : 0 15px;

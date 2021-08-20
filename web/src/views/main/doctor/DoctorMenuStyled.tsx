@@ -1,4 +1,28 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+
+const ModalOn = keyframes `
+    0% {
+        background-color : rgba(52, 52, 52, .0);
+    }
+    20% {
+        background-color : rgba(52, 52, 52, .2);
+    }
+    40% {
+        background-color : rgba(52, 52, 52, .4);
+    }
+    60% {
+        background-color : rgba(52, 52, 52, .5);
+    }
+    80% {
+        background-color : rgba(52, 52, 52, .6);
+    }
+    100% {
+        background-color : rgba(52, 52, 52, .7);
+    }
+
+`;
+
 
 export const Container = styled.div `
     height : 100vh;
@@ -16,6 +40,8 @@ export const ModalContainer = styled.div `
 
     display : flex;
     flex-direction : column;
+
+    animation : ${ModalOn} .5s;
 
     background-color : rgba(52, 52, 52, .7);
 
@@ -55,8 +81,8 @@ export const ModalClsButton = styled.button `
 `;
 
 export const ModalClsButtonImg = styled.img `
-    height : 25px;
-    width : 25px;
+    height : 20px;
+    width : 20px;
 
     margin : 0 10px 0 0;
 `;
@@ -159,6 +185,35 @@ export const NewPatientSearchResultWrapper = styled.div `
 
     font-size : 14px;
     color : #a0a0a0;
+    font-weight : 600;
+`;
+
+export const NewPatientSearchResult = styled.div `
+    border : none;
+
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : center;
+`;
+
+export const NewPatientSearchResultInfoWrapper = styled.div `
+    display : flex;
+`;
+
+export const NewPatientSearchResultInfo = styled.div `
+    font-size : 13px;
+    font-weight : 600;
+    color : #a0a0a0;
+
+    margin : 0 5px 0 0;
+`;
+
+export const NewPatientSearchResultInfoText = styled.div `
+    font-size : 14px;
+    color : #343434;
+    font-weight : 600;
+    letter-spacing : 1px;
 `;
 
 export const NewPatientRegisterButtonWrapper = styled.div `
@@ -193,6 +248,130 @@ export const NewPatientRegisterButton = styled.button `
         border : 1px solid transparent;
     }
 `;
+
+
+export const PatientInfoViewContainer = styled.div `
+    overflow : scroll;
+    flex : 6;
+
+    border : none;
+    width : 100%;
+
+    display : flex;
+    flex-direction : column;
+
+    &::-webkit-scrollbar {
+        width : 3px;
+        background-color : transparent;
+        height : 1px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color : #337DFF;
+    }
+`;
+
+export const PatientInfoPatientNmWrapper = styled.div `
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+    
+    width : 100%;
+
+    padding : 15px 0;
+
+    border : none;
+    border-bottom : 1px solid #ddd;
+
+`;
+
+export const PatientInfoPatientNmInfo = styled.div `
+    font-size : 15px;
+    font-weight : 500;
+    margin : 0 5px;
+`;
+
+export const PatientInfoPatientNm = styled.div `
+    font-size : 20px;
+    font-weight : 700;
+    margin : 0 5px;
+    letter-spacing : 1px;
+
+    color : #337DFF;
+`;
+
+export const PatientInfoView = styled.div `
+    padding : 15px 15px;
+
+    font-size : 15px;
+    font-weight : 500;
+    letter-spacing : 1px;
+
+`;
+
+export const PatientInfoEditWrapper = styled.div `
+    flex : 3;
+
+    border : none;
+    width : 100%;
+
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
+`;
+
+export const PatientInfoEditInput = styled.textarea `
+    width : 100%;
+
+    resize : none;
+
+    padding : 15px;
+    margin : 15px;
+    border : 1px solid #ddd;
+`;
+
+export const PatientInfoEditButtonWrapper = styled.div `
+    flex : 2;
+
+    border : none;
+    width : 100%;
+
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+
+    gap : 8%;
+
+`;
+
+export const PatientInfoEditButton = styled.button `
+    background-color : #fff;
+    color : #337DFF;
+    border : 1px solid #337DFF;
+    border-radius : 3px;
+
+    cursor : pointer;
+
+    transition : .25s all;
+
+    font-size : 16px;
+    font-weight : 600;
+
+    padding : 10px 30px;
+    margin : 0 10px;
+
+    &:hover {
+        background-color : #337DFF;
+        color : #fff;
+        border : 1px solid transparent;
+    }
+`;
+
 
 
 export const InfoAndSearchWrapper = styled.div `
@@ -369,8 +548,10 @@ export const SearchBar = styled.input `
 
 export const SearchButton = styled.button `
     border : 1px solid #ddd;
+    border-radius : 3px;
 
     background-color : transparent;
+    opacity : .7;
 
     height : 50px;
     width : 50px;
@@ -379,10 +560,18 @@ export const SearchButton = styled.button `
 
     cursor : pointer;
 
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
     &:hover {
-        color : #fff;
-        background-color : #343434;
+        opacity : 1;
     }
+`;
+
+export const SearchButtonImg = styled.img `
+    height : 20px;
+    width : 20px;
 `;
 
 export const SearchResultWrapper = styled.div `
