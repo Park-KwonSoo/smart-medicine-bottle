@@ -146,7 +146,7 @@ export const MedicineInfoWrapper = styled.div `
     width : 100%;
 
     overflow : scroll;
-    border : 1px solid;
+    border : none;
 
     display : flex;
     flex-direction : column;

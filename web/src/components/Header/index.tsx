@@ -63,7 +63,7 @@ const Header = (props : HeaderProps) => {
         <styled.Container>
             <styled.HeaderLeftWrapper>
             {
-                (token && token.length && props.location.pathname !== '/') || props.location.pathname === '/register' ?
+                (token && token.length && props.location.pathname !== '/') ?
                 <styled.Backbutton
                     onClick = {onGoBack}
                 >

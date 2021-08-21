@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from 'react-router-dom';
 
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import * as recoilUtil from '../../util/recoilUtil';
+
+import validator from 'validator';
+import * as Alert from '../../util/alertMessage';
 
 import Header from '../../components/Header';
 import RegisterPresenter from "./RegisterPresenter";
 
 import { authApi } from '../../api';
+import { resourceLimits } from "worker_threads";
 
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -15,7 +19,26 @@ interface RegisterProps extends RouteComponentProps {}
 
 const RegisterContainer = (props : RegisterProps) => {
 
-    const [token, setToken] = useRecoilState(recoilUtil.token);
+    const token = useRecoilValue(recoilUtil.token);
+
+    const [registerForm, setRegisterForm] = useState<any>({
+        userId : '',
+        password : '',
+        passwordCheck : '',
+        info : {
+            doctorLicense : '',
+            hospitalNm : '',
+            hospitalAddr : '',
+            contact : '',
+            doctorType : '',
+            doctorNm : '',
+        },
+    });
+
+    const [page, setPage] = useState<number>(1);
+    const [error, setError] = useState<string | null>(null);
+
+
 
     const fetchData = async() => {
         if(token && token.length) {
@@ -26,8 +49,167 @@ const RegisterContainer = (props : RegisterProps) => {
         } 
     };
 
+    const onCancleRegister = () => {
+        Alert.onCheck('회원가입을 취소하시겠습니까?', 
+        () => props.history.push('/login'), 
+        () => null);
+    };
+
+    const onGoBackPage = () => {
+        if(page > 1) {
+            setPage(page - 1);
+        }
+    };
+
+
+    const validateRegisterForm = () => {
+        if(page === 1) {
+            if (!validator.isEmail(registerForm.userId)) {
+                setError('회원 가입 ID는 이메일이어야 합니다.');
+            } else if(registerForm.password === registerForm.password.toLowerCase()
+                || !/\d/.test(registerForm.password)
+            ) {
+                setError('비밀번호는 최소 8자 이상이어야 하고, 대문자 및 숫자를 1개 이상 포함하고 있어야 합니다.');
+            } else if(registerForm.password !== registerForm.passwordCheck) {
+                setError('비밀번호가 일치하지 않습니다.')
+            } else setError(null);
+        } else if(page === 2) {
+            if(!registerForm.info.doctorLicense.length &&
+                 !validator.isAlphanumeric(registerForm.info.doctorLicense)) {
+                setError('의사 자격 번호를 입력해야 합니다.');
+            } else if(registerForm.info.doctorNm.length < 2) {
+                setError('의사 이름을 올바르게 입력해야 합니다.');
+            } else if(!registerForm.info.contact) {
+                setError('연락처를 입력해주세요.');
+            } else setError(null);
+        } else if(page === 3) {
+            if(!registerForm.info.doctorType.length) {
+                setError('전문 분야를 입력해주세요.');
+            } else if(!registerForm.info.hospitalNm || !registerForm.info.hospitalAddr) {
+                setError('올바른 병원 정보를 입력해주세요');
+            } else setError(null);
+        }
+
+
+    };
+
+
+    const onSetUserId = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            userId : e.target.value,
+        });
+    };
+
+    const onSetPassword = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            password : e.target.value,
+        });
+    };
+
+    const onSetPasswordCheck = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            passwordCheck : e.target.value,
+        });
+    };
+
+    const onSetDoctorLicense = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            info : {
+                ...registerForm.info,
+                doctorLicense : e.target.value,
+            },
+        });
+    };
+
+    const onSetHospitalNm = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            info : {
+                ...registerForm.info,
+                hospitalNm : e.target.value,
+            },
+        });
+    };
+
+    const onSetHospitalAddr = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            info : {
+                ...registerForm.info,
+                hospitalAddr : e.target.value,
+            },
+        });
+    };
+
+    const onSetContact = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            info : {
+                ...registerForm.info,
+                contact : e.target.value,
+            },
+        });
+    };
+
+    const onSetDoctorType = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            info : {
+                ...registerForm.info,
+                doctorType : e.target.value,
+            },
+        });
+    };
+
+    const onSetDoctorNm = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setRegisterForm({
+            ...registerForm,
+            info : {
+                ...registerForm.info,
+                doctorNm : e.target.value,
+            },
+        });
+    };
+
+    const onSubmitButton = () => {
+        if(error) {
+            Alert.onError(error, () => null);
+            return;
+        }
+
+        if(page === 1) {
+            setPage(2);
+        } else if(page === 2) {
+            setPage(3);
+        } else if(page === 3) {
+            const onRegisterDoctor = async () => {
+                try {
+                    const result = await authApi.registerDoctor(registerForm);
+                    if(result.data === 'Created') {
+                        Alert.onSuccess('회원가입 성공, 관리자의 승인을 대기하세요.', () => props.history.push('/login'));
+                    }
+                } catch(e) {
+                    Alert.onError(e.response.data, () => null);
+                }
+            };
+
+            Alert.onCheck('입력하신 정보로 회원가입을 진행하시겠습니까?', onRegisterDoctor, () => null);
+        }
+
+    };
+
+    useEffect(() => {
+        validateRegisterForm();
+    }, [registerForm, page]);
+
+
     useEffect(() => {
         fetchData();
+        validateRegisterForm();
     }, []);
 
 
@@ -35,7 +217,23 @@ const RegisterContainer = (props : RegisterProps) => {
         <>
         <Header {...props}/>
         <RegisterPresenter
+            registerForm = {registerForm}
+            page = {page}
+            error = {error}
 
+            onGoBackPage = {onGoBackPage}
+            onCancleRegister = {onCancleRegister}
+
+            onSetUserId = {onSetUserId}
+            onSetPassword = {onSetPassword}
+            onSetPasswordCheck = {onSetPasswordCheck}
+            onSetDoctorLicense = {onSetDoctorLicense}
+            onSetHospitalNm = {onSetHospitalNm}
+            onSetHospitalAddr = {onSetHospitalAddr}
+            onSetContact = {onSetContact}
+            onSetDoctorType = {onSetDoctorType}
+            onSetDoctorNm = {onSetDoctorNm}
+            onSubmitButton = {onSubmitButton}
         />
         </>
     )
