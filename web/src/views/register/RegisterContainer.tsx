@@ -193,7 +193,7 @@ const RegisterContainer = (props : RegisterProps) => {
                         Alert.onSuccess('회원가입 성공, 관리자의 승인을 대기하세요.', () => props.history.push('/login'));
                     }
                 } catch(e) {
-                    Alert.onError(e.response.data, () => null);
+                    Alert.onError(e.response.data.error, () => null);
                 }
             };
 
