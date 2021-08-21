@@ -16,7 +16,7 @@ export default {
             },
         });
     },
-    acceotDoctorRegReq : (token : RecoilState<any>, Data : any) => {
+    acceptDoctorRegReq : (token : RecoilState<any>, Data : any) => {
         return client.post('/manage/doctor/accept', Data, {
             headers : {
                 Authorization : token,

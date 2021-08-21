@@ -43,4 +43,18 @@ export const onCheck = (text : string, confirmAction : () => void, denyAction : 
             denyAction();
         }
     });
-}
+};
+
+export const onWarning = (text : string, confirmAction : () => void) => {
+    Swal.fire({
+        title : '주의',
+        icon : 'warning',
+        text,
+        confirmButtonText : '확인',
+        confirmButtonColor : '#337DFF',
+    }).then(res => {
+        if(res.isConfirmed) {
+            confirmAction();
+        }
+    });
+};

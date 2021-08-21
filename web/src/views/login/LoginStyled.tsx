@@ -96,6 +96,10 @@ export const LoginInput = styled.input `
     border-radius : 3px;
     width : 100%;
     align-self : center;
+
+    &::placeholder {
+        color : #ddd;
+    }
 `;
 
 export const RegisterButtonWrapper = styled.div `

@@ -120,7 +120,6 @@ export const ModalContent = styled.div `
 `;
 
 export const MedicineNameWrapper = styled.div `
-    flex : 1
     border : none;
     border-bottom : 1px solid #ddd;
     width : 100%;
