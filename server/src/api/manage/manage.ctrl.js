@@ -98,7 +98,7 @@ exports.getDoctorRegReqDetail = async ctx => {
             ctx.status = 400;
             ctx.body = {
                 error : '이미 의사 인증이 완료된 회원입니다.'
-            };1
+            };
             return;
         } else if(doctorInfo.useYn === 'N') {
             ctx.status = 400;
@@ -118,7 +118,6 @@ exports.getDoctorRegReqDetail = async ctx => {
         ctx.body = {
             error : '알 수 없는 에러가 발생했습니다.',
         };
-        console.log(e);
     }
 };
 
@@ -172,8 +171,15 @@ exports.acceptDoctorRegReq = async ctx => {
             return;
         }
 
+        const doctorInfo = await DoctorInfo.findOne({
+            doctorId,
+            useYn : 'W',
+        });
+
         doctor.setUseYn('Y');
         doctor.save();
+        doctorInfo.setUseYn('Y');
+        doctorInfo.save();
 
         ctx.status = 200;
 
@@ -236,8 +242,16 @@ exports.acceptDoctorRegReq = async ctx => {
             return;
         }
 
+
+        const doctorInfo = await DoctorInfo.findOne({
+            doctorId,
+            useYn : 'W',
+        });
+
         doctor.setUseYn('N');
         doctor.save();
+        doctorInfo.setUseYn('N');
+        doctorInfo.save();
 
         ctx.status = 200;
 
