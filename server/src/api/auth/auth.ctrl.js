@@ -155,7 +155,7 @@ exports.login = async(ctx) => {
 
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd) {
-        ctx.stauts = 401;
+        ctx.status = 401;
         ctx.body = {
             error : '존재하지 않는 회원입니다.',
         };
