@@ -264,3 +264,33 @@ exports.acceptDoctorRegReq = async ctx => {
     }
 };
 
+/**
+ * 회원가입을 요청한 의사의 유효한 자격 번호인지를 검증한다.
+ * @param {*} ctx 
+ * @returns 
+ */
+exports.validateDoctorLicense = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if (!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || user.userTypeCd !== 'MANAGER' || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+    const { doctorLicense } = ctx.request.body;
+    const doctorInfo = await DoctorInfo.find({ 'info.doctorLicense' : doctorLicense });
+
+    ctx.status = 200;
+    ctx.body = {
+        result : doctorInfo.length > 1 ? false : true,
+    };
+
+};
+

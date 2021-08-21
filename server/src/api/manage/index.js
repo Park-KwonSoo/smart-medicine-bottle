@@ -35,5 +35,13 @@ manage.post('/doctor/accept', manageCtrl.acceptDoctorRegReq);
  */
 manage.post('/doctor/reject', manageCtrl.rejectDoctorRegReq);
 
+/**
+ * 의사 요청을 한 회원의 자격 번호가 유효한지 검증한다
+ * reqeust parameter : doctor License
+ * url : http://localhost:4000/api/manage/doctor/validate
+ * return : result true or false
+ */
+manage.post('/doctor/validate', manageCtrl.validateDoctorLicense);
+
 
 module.exports = manage;
