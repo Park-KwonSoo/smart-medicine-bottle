@@ -1,6 +1,7 @@
 const User = require('../../models/user');
 const DoctorInfo = require('../../models/doctorInfo');
 const Profile = require('../../models/profile');
+const jwt = require('jsonwebtoken');
 
 /**
  * 의사 회원가입을 요청한 회원 리스트를 확인한다.
@@ -24,8 +25,7 @@ exports.getDoctorRegReqList = async ctx => {
     }
 
     try {
-        const doctorRegReqList = await User.find({
-            userTypeCd : 'DOCTOR',
+        const doctorRegReqList = await DoctorInfo.find({
             useYn : 'W',
         });
 
