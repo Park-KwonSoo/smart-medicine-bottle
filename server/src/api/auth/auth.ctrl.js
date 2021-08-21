@@ -29,12 +29,18 @@ exports.register = async(ctx) => {
     const result = schema.validate(ctx.request.body);
     if(result.error || password !== passwordCheck) {
         ctx.status = 400;
+        ctx.body = {
+            error : '회원가입 양식이 잘못되었습니다.',
+        };
         return;
     }
 
     const existUser = await User.findByUserId(userId);
     if(existUser) {
         ctx.status = 409;
+        ctx.body = {
+            error : '이미 존재하는 회원입니다.',
+        };
         return;
     }
 
@@ -78,13 +84,33 @@ exports.doctorRegister = async ctx => {
     const result = schema.validate(ctx.request.body);
     if(result.error || password !== passwordCheck) {
         ctx.status = 400;
+        ctx.body = {
+            error : '회원가입 양식이 잘못되었습니다.',
+        };
         return;
     }
 
     const existUser = await User.findByUserId(userId);
-    const existDoctorInfo = await DoctorInfo.findByDoctorId(userId);
-    if(existUser || existDoctorInfo) {
+    if(existUser) {
         ctx.status = 409;
+        ctx.body = {
+            error : '이미 존재하는 회원입니다.',
+        };
+        return;
+    }
+
+    const existDoctorInfo = await DoctorInfo.findByDoctorId(userId);
+    if(existDoctorInfo.useYn === 'W') {
+        ctx.status = 401;
+        ctx.body = {
+            error : '가입 승인 대기중인 회원입니다.',
+        };
+        return;
+    } else if(existDoctorInfo.useYn === 'N') {
+        ctx.status = 401;
+        ctx.body = {
+            error : '가입이 거절된 회원입니다.',
+        };
         return;
     }
 
@@ -121,23 +147,35 @@ exports.login = async(ctx) => {
     const result = schema.validate(ctx.request.body);
     if(result.error) {
         ctx.status = 400;
+        ctx.body = {
+            error : '로그인 양식이 잘못되었습니다.',
+        };
         return;
     }
 
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd) {
         ctx.stauts = 401;
+        ctx.body = {
+            error : '존재하지 않는 회원입니다.',
+        };
         return;
     }
 
     const isPasswordTrue = await user.checkPassword(password);
     if(!isPasswordTrue) {
         ctx.status = 401;
+        ctx.body = {
+            error : '비밀번호가 틀렸습니다.',
+        };
         return;
     }
 
     if(user.useYn !== 'Y') {
         ctx.status = 403;
+        ctx.body = {
+            error : '가입 대기중이거나 탈퇴한 회원입니다.',
+        };
         return;
     }
 
