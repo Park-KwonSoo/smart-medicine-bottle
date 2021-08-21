@@ -100,13 +100,13 @@ exports.doctorRegister = async ctx => {
     }
 
     const existDoctorInfo = await DoctorInfo.findByDoctorId(userId);
-    if(existDoctorInfo.useYn === 'W') {
+    if(existDoctorInfo && existDoctorInfo.useYn === 'W') {
         ctx.status = 401;
         ctx.body = {
             error : '가입 승인 대기중인 회원입니다.',
         };
         return;
-    } else if(existDoctorInfo.useYn === 'N') {
+    } else if(existDoctorInfo && existDoctorInfo.useYn === 'N') {
         ctx.status = 401;
         ctx.body = {
             error : '가입이 거절된 회원입니다.',

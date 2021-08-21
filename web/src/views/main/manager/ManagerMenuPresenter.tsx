@@ -13,6 +13,8 @@ interface ManagerMenuProps {
     modalUp : boolean;
     setModalUp : any;
     onViewDetailReq : (arg0 : string) => void;
+    validate : string;
+    onValidate : () => void;
 
     onAcceptRequest : () => void;
     onRejectRequest : () => void;
@@ -42,7 +44,23 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                                 <styled.ModalBodyLeftAndRight>
                                     <styled.ModalInfoWrapper>
                                         <styled.ModalInfoExplain>의사 자격 번호</styled.ModalInfoExplain>
-                                        <styled.ModalInfo>{props.doctorDetail.info.doctorLicense}</styled.ModalInfo>
+                                        <styled.ModalInfo>
+                                            {props.doctorDetail.info.doctorLicense}
+                                            <styled.ValidateButton
+                                                onClick = {props.onValidate}
+                                                disabled = {props.validate !== 'W'}
+                                                validate = {props.validate}
+                                            >
+                                                {
+                                                    props.validate === 'Y' ?
+                                                    '검증 완료' :
+                                                    props.validate === 'W' ?
+                                                    '검증' : 
+                                                    props.validate === 'N' ?
+                                                    '검증 실패' : null
+                                                }
+                                            </styled.ValidateButton>
+                                        </styled.ModalInfo>
                                     </styled.ModalInfoWrapper>
                                     <styled.ModalInfoWrapper>
                                         <styled.ModalInfoExplain>이름</styled.ModalInfoExplain>

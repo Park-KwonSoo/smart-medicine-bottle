@@ -30,4 +30,11 @@ export default {
             },
         });
     },
+    validateDoctorLicense : (token : RecoilState<any>, Data : any) => {
+        return client.post('/manage/doctor/validate', Data, {
+            headers : {
+                Authorization : token,
+            },
+        });
+    },
 };

@@ -21,11 +21,13 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
     
     const [doctorDetail, setDoctorDetail] = useState<any>({});
     const [modalUp, setModalUp] = useState<boolean>(false);
+    const [validate, setValidate] = useState<string>('W');
     
 
 
     const fetchData = async() => {
         setModalUp(false);
+        setValidate('W');
 
         try {
             await managerApi.getDoctorRegReqList(token)
@@ -43,6 +45,8 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
 
 
     const onViewDetailReq = async (doctorId : string) => {
+        setValidate('W');
+
         try {
             await managerApi.getDoctorRegReqDetail(token, doctorId)
                 .then((res : any) => {
@@ -58,6 +62,14 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
 
     //회원 가입 수락
     const onAcceptRequest = () => {
+        if(validate === 'W') {
+            Alert.onError('먼저 의사의 자격번호가 유효한지 검증해주세요.', () => null);
+            return;
+        } else if(validate === 'N') {
+            Alert.onError('유효한 자격 번호가 아닙니다.', () => null);
+            return;
+        }
+
         const onAccept = async() => {
             try {
                 await managerApi.acceptDoctorRegReq(token, doctorDetail)
@@ -91,7 +103,29 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
 
         Alert.onCheck('회원 가입 요청을 취소하시겠습니까?', onReject, () => null);
     };
-    
+
+    const onValidate = async () => {
+        try {
+            await managerApi.validateDoctorLicense(token, {
+                doctorLicense : doctorDetail.info.doctorLicense,
+            }).then(res => {
+                if(res.statusText === 'OK') {
+                    setValidate(res.data.result ? 'Y' : 'N');
+                }
+            }).catch(err => {
+                Alert.onError(err.response.data, () => {
+                    setModalUp(false);
+                    setValidate('W');
+                });
+            })
+        } catch(e) {
+            Alert.onError(e.response.data, () => {
+                setModalUp(false);
+                setValidate('W');
+            });
+        }
+    };
+
     useEffect(() => {
         fetchData();
     }, []);
@@ -104,6 +138,8 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
             modalUp = {modalUp}
             setModalUp = {setModalUp}
             onViewDetailReq = {onViewDetailReq}
+            validate = {validate}
+            onValidate = {onValidate}
 
             onAcceptRequest = {onAcceptRequest}
             onRejectRequest = {onRejectRequest}

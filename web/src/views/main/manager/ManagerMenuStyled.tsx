@@ -194,6 +194,43 @@ export const ModalInfo = styled.div `
     margin : 5px 0 20px 0;
     font-size : 20px;
     font-weight : 700;
+
+    display : flex;
+    flex-direction : row;
+    align-items : center;
+`;
+
+export const ValidateButton = styled.button<{validate : string}> `
+    margin : 0 0 0 15px;
+    padding : 2px 5px;
+    
+    border-radius : 3px;
+
+    border : ${props => props.validate === 'W' ? '1px solid #343434'
+        : props.validate === 'Y' ? '1px solid #337DFF'
+        : props.validate === 'N' ? '1px solid #dedede' : 'transparent'
+    };
+    background-color : ${props => props.validate === 'W' ? 'transparent'
+        : props.validate === 'Y' ? '#377DFF'
+        : props.validate === 'N' ? '#f2f2f2' : 'transparent'
+    };
+    color : ${props => props.validate === 'W' ? '#343434'
+        : props.validate === 'Y' ? '#fff'
+        : props.validate === 'N' ? '#a0a0a0' : 'transparent'
+    };
+
+
+    transition : .25s all;
+
+    :not(:disabled) {
+        cursor : pointer;
+        &:hover {
+            background-color : #343434;
+            color : #fff;
+            border : 1px solid #343434;
+        }
+    }
+
 `;
 
 export const ModalButtonWrapper = styled.div `
