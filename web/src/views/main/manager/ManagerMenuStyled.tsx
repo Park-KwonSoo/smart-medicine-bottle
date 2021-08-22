@@ -416,3 +416,14 @@ export const EachContentNm = styled.div<{isLast : boolean}> `
     border-right : ${props => props.isLast ? '1px solid transparent' : '1px solid #ddd'};
 
 `;
+
+export const NothingWrapper = styled.div `
+    height : 100%;
+    width : 100%;
+
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
+    color : #a0a0a0;
+`;

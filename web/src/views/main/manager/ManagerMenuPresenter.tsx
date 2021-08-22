@@ -131,6 +131,7 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                         </styled.ContentInfo>
                     </styled.ContentInfoWrapper>
                     {
+                        props.doctorRegReqList.length ?
                         props.doctorRegReqList.map((doctor : any) => {
                             return (
                                 <styled.EachContentWrapper
@@ -154,7 +155,10 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                                     </styled.EachContentNm>
                                 </styled.EachContentWrapper>
                             )
-                        })
+                        }) :
+                        <styled.NothingWrapper>
+                            🤔검색 결과가 없습니다.
+                        </styled.NothingWrapper>
                     }
                 </styled.ContentBody>
             </styled.ContentWrapper>
