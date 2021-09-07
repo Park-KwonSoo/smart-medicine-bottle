@@ -37,7 +37,7 @@ bottle.get('/feedback/:bottleId', bottleCtrl.getBottleFeedback);
 
 /**
  * 약병에 약 등록 = 약 검색 후 약 ID(medicineId)와 복용 정보 보고 사용자가 약 복용량(dosage) 입력
- * request parameter : medicineId, dosage
+ * request parameter : medicineId, dosage, doctorId
  * url : http://localhost:4000/api/bottle/:bottleId
  * return : bottle(json type)
  */
