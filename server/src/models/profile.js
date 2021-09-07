@@ -7,6 +7,7 @@ const ProfileSchema = new Schema({
     userNm : { type : String, required : true, },
     userAge : { type : Number, required : true, },
     contact : { type : String, required : true, },
+    deviceToken : { type : String, default : null, },
 });
 
 ProfileSchema.statics.findByUserId = function(userId) {
@@ -19,6 +20,10 @@ ProfileSchema.methods.updateUserContact = function(contact) {
 
 ProfileSchema.methods.updateUserAge = function() {
     this.userAge = this.userAge + 1;
+};
+
+ProfileSchema.methods.updateDeviceToken = function(deviceToken) {
+    this.deviceToken = deviceToken;
 };
 
 
