@@ -3,6 +3,7 @@ import React from 'react';
 import * as styled from './DoctorMenuStyled';
 
 const medicineImg = '/static/img/medicine.png';
+const addButton = '/static/img/plus.png';
 const lensImg = '/static/img/lens.png';
 const closeButton = '/static/img/close.png';
 const edit = '/static/img/edit.png';
@@ -42,6 +43,14 @@ interface DoctorMenuProps {
     onCloseModal : () => void;
 
     newPatientSearchResult : any;
+
+    prescribeModal : boolean;
+    setPrescribeModal : any;
+    searchMedicineKeyword : string;
+    onSetSearchMedicineKeyword : React.ChangeEventHandler<HTMLInputElement>;
+
+    medicineInfo : any;
+    searchMedicine : () => void;
 }
 
 const DoctorMenuPresenter = (props : DoctorMenuProps) => {
@@ -158,10 +167,30 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                     <styled.ModalClsButtonWrapper/>
                 </styled.ModalContainer> : null
             }
+            {
+                props.prescribeModal ? 
+                <styled.ModalContainer>
+                    <styled.ModalClsButtonWrapper>
+                        <styled.ModalClsButton
+                            onClick = {props.onCloseModal}
+                        >
+                            <styled.ModalClsButtonImg src = {closeButton}/>
+                            <styled.ModalClsButtonText>닫기</styled.ModalClsButtonText>
+                        </styled.ModalClsButton>
+                    </styled.ModalClsButtonWrapper>
+                    <styled.ModalContentWrapper>
+                        <styled.ModalContent>
+
+                        </styled.ModalContent>
+                    </styled.ModalContentWrapper>
+                    <styled.ModalClsButtonWrapper/>
+                </styled.ModalContainer> : null
+            }
             <styled.InfoAndSearchWrapper>
                 <styled.InfoWrapper>
                     {
                         props.info.infoType === 'DOCTOR' ?
+                        <>
                         <styled.InfoSquare>
                             <styled.InfoEachWrapper>
                                 <styled.InfoEachTopic>분야</styled.InfoEachTopic>
@@ -175,13 +204,20 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                                 <styled.InfoEachTopic>연락처</styled.InfoEachTopic>
                                 <styled.InfoEachText>{props.info.contact}</styled.InfoEachText>
                             </styled.InfoEachWrapper>
-                        </styled.InfoSquare> :
+                        </styled.InfoSquare>
+                        <styled.NewPatientButton
+                            disabled = {true}
+                        >
+                            내 정보
+                        </styled.NewPatientButton>
+                        </> :
+                        <>
                         <styled.InfoSquare>
                             <styled.EditPatientInfoButton
                                 onClick = {() => props.setEditModal(true)}
                             >
                                 <styled.EditPatientInfoButtonImg src = {edit}/>
-                                <styled.EditPatientInfoButtonText>수정</styled.EditPatientInfoButtonText>
+                                <styled.EditPatientInfoButtonText>특이사항</styled.EditPatientInfoButtonText>
                             </styled.EditPatientInfoButton>
                             <styled.InfoEachWrapper>
                                 <styled.InfoEachTopic>이름</styled.InfoEachTopic>
@@ -212,12 +248,13 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                                 </styled.PatientInfo>
                             </styled.InfoEachWrapper>
                         </styled.InfoSquare>
+                        <styled.NewPatientButton 
+                            onClick = {() => props.setPrescribeModal(true)}
+                        >
+                            처방 하기
+                        </styled.NewPatientButton>
+                        </>
                     }
-                    <styled.NewPatientButton 
-                        onClick = {() => props.setNewPatientRegisterModal(true)}
-                    >
-                        새 환자 등록
-                    </styled.NewPatientButton>
                 </styled.InfoWrapper>
                 <styled.SearchAndDetailWrapper>
                     <styled.SearchBarWrapper>
@@ -226,8 +263,10 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                             value = {props.searchPatientKeyword}
                             onChange = {props.onSetKeyword}
                         />
-                        <styled.SearchButton>
-                            <styled.SearchButtonImg src = {lensImg}/>
+                        <styled.SearchButton
+                            onClick = {() => props.setNewPatientRegisterModal(true)}
+                        >
+                            <styled.SearchButtonImg src = {addButton}/>
                         </styled.SearchButton>
                         <styled.SearchButton
                             onClick = {props.onInitialize}
