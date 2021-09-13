@@ -96,7 +96,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             } else {
                 Alert.onError('접근 권한이 없습니다.', () => props.history.push('/'));
             }
-        } catch(e) {
+        } catch(e : any) {
             Alert.onError(e.response.data.error, () => props.history.push('/'));
 
             console.log(e);
@@ -122,7 +122,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
                         console.log(res);
                         Alert.onError('피드백 등록에 실패했습니다.', () => null);
                     }
-                } catch(e) {
+                } catch(e : any) {
                     Alert.onError(e.response.data.error, () => fetchData());
                 }
            } else {

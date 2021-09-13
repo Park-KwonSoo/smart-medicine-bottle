@@ -8,7 +8,7 @@ import * as recoilUtil from '../../../util/recoilUtil';
 
 import * as Alert from '../../../util/alertMessage';
 
-import { doctorApi, authApi } from '../../../api';
+import { doctorApi, medicineApi } from '../../../api';
 
 
 type DoctorMenuProps = RouteComponentProps
@@ -47,6 +47,10 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [newPatientRegisterModal, setNewPatientRegisterModal] = useState<boolean>(false);
     const [newPatientSearchId, setNewPatientSearchId] = useState<string>('');
     const [newPatientSearchResult, setNewPatientSearchResult] = useState<any | null>(null);
+
+    const [prescribeModal, setPrescribeModal] = useState<boolean>(false);
+    const [searchMedicineKeyword, setSearchMedicineKeyword] = useState<string>('');
+    const [medicineInfo, setMedicineInfo] = useState<any>();
 
 
     const fetchData = async() => {
@@ -134,7 +138,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                         Alert.onError('특이사항을 기록하는데 실패했습니다.', () => null);
                     }
     
-                } catch(e) {
+                } catch(e : any) {
                     Alert.onError(e.response.data.error, () => null);
                 }
             };
@@ -162,7 +166,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                 Alert.onError('검색 결과가 없습니다.', () => null);
                 setNewPatientSearchResult(null);
             });
-        } catch(e) {
+        } catch(e : any) {
             Alert.onError(e.response.data.error, () => null);
         }
     };
@@ -180,7 +184,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     } else {
                         Alert.onError('환자에게 담당의 등록 요청을 실패했습니다.', () => null);
                     }
-                } catch(e) {
+                } catch(e : any) {
                     Alert.onError(e.response.data.error, () => null);
                 }
             };
@@ -197,10 +201,27 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         setNewPatientSearchResult(null);
         setEditModal(false);
         setEditPatientInfo('');
+        setPrescribeModal(false);
+        setSearchMedicineKeyword('');
     };
 
     const onGoBottleDetail = (bottleId : number) => {
         props.history.push(`/bottle/${bottleId}`);
+    };
+
+    const onSetSearchMedicineKeyword = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setSearchMedicineKeyword(e.target.value);
+    };
+
+    const searchMedicine = async() => {
+        try {
+            const res = await medicineApi.searchMedicine(token, searchMedicineKeyword);
+            if(res.statusText === 'OK') {
+                setMedicineInfo(res.data);
+            }
+        } catch(e : any) {
+            Alert.onError(e.response.data.error, () => null);
+        }
     };
 
 
@@ -246,6 +267,13 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             onSearchNewPatientByEmail = {onSearchNewPatientByEmail}
             onRegisterNewPatient = {onRegisterNewPatient}
             onCloseModal = {onCloseModal}
+
+            prescribeModal = {prescribeModal}
+            setPrescribeModal = {setPrescribeModal}
+            searchMedicineKeyword = {searchMedicineKeyword}
+            onSetSearchMedicineKeyword = {onSetSearchMedicineKeyword}
+            medicineInfo = {medicineInfo}
+            searchMedicine = {searchMedicine}
 
             newPatientSearchResult = {newPatientSearchResult}
         />
