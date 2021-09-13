@@ -372,6 +372,166 @@ export const PatientInfoEditButton = styled.button `
     }
 `;
 
+export const MedicineSearchTitle = styled.div `
+    font-size : 20px;
+    font-weight : 700;
+
+    color : #337DFF;
+`;
+
+export const MedicineSearchInputWrapper = styled.div `
+    margin : 20px 0;
+
+    display : flex;
+    flex-direction : row;
+
+    justify-content : space-between;
+    align-items : center;
+
+    width : 80%;
+
+    border : none;
+    border-bottom : 1px solid #343434;
+`;
+
+export const MedicineSearchInput = styled.input `
+    width : 80%;
+    border : none;
+    padding : 10px;
+
+    font-size : 15px;
+    font-weight : 500;
+
+    color : #343434;
+
+    transition : .25s all;
+
+    &::placeholder {
+        color : #dedede;
+    }
+`;
+
+export const MedicineSearchButton = styled.button `
+    width : 30px;
+    height : 30px;
+
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
+    border : none;
+    background : transparent;
+
+    cursor : pointer;
+
+    transition : .25s all;
+
+    &:hover {
+        opacity : .5;
+    }
+
+`;
+
+export const MedicineSearchButtonImg = styled.img `
+    height : 15px;
+    width : 15px;
+    
+`;
+
+export const MedicineSearchResultWrapper = styled.div `
+    overflow : scroll;
+
+    border : 1px solid;
+    min-height : 180px;
+    max-height : 180px;
+
+    width : 80%;
+
+    border : .5px solid #337DFF;
+
+    &::-webkit-scrollbar {
+        width : 3px;
+        background-color : transparent;
+        height : 1px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color : #337DFF;
+    }
+`;
+
+export const MedicineSearchResultEach = styled.button `
+    width : 100%;
+    height : 36px;
+
+    display : flex;
+    flex-direction : row;
+
+    align-items : center;
+    justify-content : space-between;
+
+    border : none;
+    border-bottom : 1px solid #dedede;
+
+    cursor : pointer;
+
+    background : transparent;
+    color : #343434;
+
+    font-size : 15px;
+    font-weight : 500;
+
+    transition : .1s all;
+
+    &:hover {
+        background-color : #337DFF;
+        color : #fff;
+    }
+
+`;
+
+export const MedicineSearchResultEachInfo = styled.div `
+    margin : 0 10px;
+`;
+
+export const MedicineSelectButtonImg = styled.img `
+    height : 15px;
+    width : 15px;
+`;
+
+export const MedicinePrescribeButtonWrapper = styled.div `
+    margin : 20px 0 0 0;
+    
+    width : 40%;
+
+    display : flex;
+    flex-direction : row;
+
+    justify-content : space-between;
+
+`;
+
+export const MedicinePrescribeButton = styled.button<{isClose : boolean}> `
+    height : 40px;
+    width : 100px;
+
+    background-color : ${props => props.isClose ? 'transparent' : '#337DFF'};
+    border : 1px solid ${props => props.isClose ? '#343434' : '#337DFF'};
+    border-radius : 4px;
+
+    font-size : 16px;
+    font-weight : 600;
+
+    color : ${props => props.isClose ? '#343434' : '#fff'};
+
+    cursor : pointer;
+
+    transition : .25s all;
+
+    &:hover {
+        opacity : .7;
+    }
+`;
 
 
 export const InfoAndSearchWrapper = styled.div `

@@ -11,11 +11,14 @@ import * as Alert from '../../../util/alertMessage';
 import { doctorApi, medicineApi } from '../../../api';
 
 
+//toDo : Generate QR Code By Medicine Id
+
 type DoctorMenuProps = RouteComponentProps
 
 const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const token = useRecoilValue(recoilUtil.token);
+    const [loading, setLoading] = useRecoilState(recoilUtil.loading);
 
     const [doctorInfo, setDoctorInfo] = useState<any>({
         doctorNm : '',
@@ -50,11 +53,13 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const [prescribeModal, setPrescribeModal] = useState<boolean>(false);
     const [searchMedicineKeyword, setSearchMedicineKeyword] = useState<string>('');
-    const [medicineInfo, setMedicineInfo] = useState<any>();
+    const [medicineList, setMedicineList] = useState<any>([]);
+    const [prescribeMedicine, setPrescribeMedicine] = useState<any>(null);
 
 
     const fetchData = async() => {
         try {
+            setLoading(true);
             const res = await doctorApi.getDoctorsInfo(token);
             if(res.statusText === 'OK') {
                 const { doctorInfo } = res.data;
@@ -73,8 +78,10 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     setPatientList(res.data.patientList);
                 }).catch(error => console.log(error));
             }
+            setLoading(false);
         } catch(e) {
             console.log(e);
+            setLoading(false);
         }
     };
 
@@ -84,6 +91,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const onFetchPatientDetail = async (patientId : string) => {
         try {
+            setLoading(true);
             await doctorApi.getPatientDetail(token, patientId).then(res => {
                 setPatientDetail(res.data);
                 setInfo({
@@ -95,8 +103,10 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     patientInfo : res.data.info,
                 });
             }).catch(err => console.log(err));
+            setLoading(false);
         } catch(e) {
             console.log(e);
+            setLoading(false);
         }
     };
 
@@ -112,12 +122,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         });
         setFilteringPatientList([]);
         setSearchPatientKeyword('');
-        setEditModal(false);
-        setEditPatientInfo('');
-        setNewPatientRegisterModal(false);
-        setNewPatientSearchId('');
-        setNewPatientSearchResult(null);
-        setPatientDetail(null);
+        onCloseModal();
     };
 
     const onEditPatientInfo = (e : React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -149,7 +154,6 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             Alert.onError('환자의 특이사항을 기록하세요.', () => null);
         }
         
-
     };
 
 
@@ -159,14 +163,18 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const onSearchNewPatientByEmail = async () => {
         try {
+            setLoading(true);
             await doctorApi.searchPatientById(token, newPatientSearchId).then(res => {
                 setNewPatientSearchResult(res.data);
+                setLoading(false);
             }).catch(err => {
                 console.log(err);
+                setLoading(false);
                 Alert.onError('검색 결과가 없습니다.', () => null);
                 setNewPatientSearchResult(null);
             });
         } catch(e : any) {
+            setLoading(false);
             Alert.onError(e.response.data.error, () => null);
         }
     };
@@ -203,6 +211,8 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         setEditPatientInfo('');
         setPrescribeModal(false);
         setSearchMedicineKeyword('');
+        setMedicineList([]);
+        setPrescribeMedicine(null);
     };
 
     const onGoBottleDetail = (bottleId : number) => {
@@ -214,14 +224,30 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     };
 
     const searchMedicine = async() => {
+        setMedicineList([]);
+        setPrescribeMedicine(null);
         try {
+            setLoading(true);
             const res = await medicineApi.searchMedicine(token, searchMedicineKeyword);
             if(res.statusText === 'OK') {
-                setMedicineInfo(res.data);
+                console.log(res.data.medicineList)
+                setMedicineList(res.data.medicineList);
             }
+            setLoading(false);
         } catch(e : any) {
             Alert.onError(e.response.data.error, () => null);
         }
+    };
+
+    const onPrescribeSubmit = async() => {
+        //toDo : 처방해서, QR코드 생성
+        Alert.onWarning('작업 중입니다.', () => null);
+    };
+
+    const onPrescribeCancel = () => {
+        Alert.onCheck('취소하시면 작업중인 내용이 사라집니다.', () => {
+            onCloseModal();
+        }, () => null)
     };
 
 
@@ -272,8 +298,12 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             setPrescribeModal = {setPrescribeModal}
             searchMedicineKeyword = {searchMedicineKeyword}
             onSetSearchMedicineKeyword = {onSetSearchMedicineKeyword}
-            medicineInfo = {medicineInfo}
+            medicineList = {medicineList}
             searchMedicine = {searchMedicine}
+            prescribeMedicine = {prescribeMedicine}
+            setPrescribeMedicine = {setPrescribeMedicine}
+            onPrescribeSubmit = {onPrescribeSubmit}
+            onPrescribeCancel = {onPrescribeCancel}
 
             newPatientSearchResult = {newPatientSearchResult}
         />

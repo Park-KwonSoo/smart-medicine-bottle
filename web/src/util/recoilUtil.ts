@@ -14,3 +14,9 @@ export const userTypeCd = atom({
     default : 'NORMAL',
     effects_UNSTABLE : [persistAtom],
 });
+
+export const loading = atom({
+    key : 'loading',
+    default : false,
+    effects_UNSTABLE : [persistAtom],
+});

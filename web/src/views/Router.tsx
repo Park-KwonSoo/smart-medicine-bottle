@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import Error from '../components/error';
+import Loading from '../components/Loading';
 import { LoginContainer } from "./login";
 import { RegisterContainer } from './register';
 import { MainContainer } from "./main";
@@ -12,6 +13,7 @@ const Router = () => {
     return (
         <BrowserRouter>
             <Error />
+            <Loading />
             <Switch>
                 <Route exact path = '/' component = {MainContainer}/>
                 <Route exact path = '/login' component = {LoginContainer}/>
