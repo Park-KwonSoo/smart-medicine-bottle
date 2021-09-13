@@ -8,7 +8,7 @@ exports.medicineSearch = async(ctx) => {
         return;
     }
 
-    const { keyword } = ctx.request.body;
+    const { keyword } = ctx.query;
 
     const medicineList = await Medicine.findByKeyword(keyword);
 

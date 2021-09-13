@@ -9,7 +9,7 @@ const medicine = new Router();
  * url : http://localhost:4000/api/medicine
  * return : medicine List(json 타입의 List)
  */
-medicine.post('/', medicineCtrl.medicineSearch);
+medicine.get('/', medicineCtrl.medicineSearch);
 
 /**
  * 약 검색 후 검색 대상 가져오기
