@@ -8,6 +8,8 @@ const lensImg = '/static/img/lens.png';
 const closeButton = '/static/img/close.png';
 const edit = '/static/img/edit.png';
 const refreshing = '/static/img/refreshing.png';
+const check = '/static/img/check.png';
+const uncheck = '/static/img/uncheck.png'
 
 
 interface DoctorMenuProps {
@@ -49,8 +51,14 @@ interface DoctorMenuProps {
     searchMedicineKeyword : string;
     onSetSearchMedicineKeyword : React.ChangeEventHandler<HTMLInputElement>;
 
-    medicineInfo : any;
+    medicineList : any;
     searchMedicine : () => void;
+
+    prescribeMedicine : any;
+    setPrescribeMedicine : (arg0 : any) => void;
+
+    onPrescribeSubmit : () => void;
+    onPrescribeCancel : () => void;
 }
 
 const DoctorMenuPresenter = (props : DoctorMenuProps) => {
@@ -180,7 +188,61 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                     </styled.ModalClsButtonWrapper>
                     <styled.ModalContentWrapper>
                         <styled.ModalContent>
-
+                            <styled.MedicineSearchTitle>
+                                약 검색
+                            </styled.MedicineSearchTitle>
+                            <styled.MedicineSearchInputWrapper>
+                                <styled.MedicineSearchInput 
+                                    placeholder = '증상, 또는 약 이름을 검색하세요.'
+                                    onChange = {props.onSetSearchMedicineKeyword}
+                                    value = {props.searchMedicineKeyword}
+                                />
+                                <styled.MedicineSearchButton
+                                    onClick = {props.searchMedicine}
+                                >
+                                    <styled.MedicineSearchButtonImg src = {lensImg}/>
+                                </styled.MedicineSearchButton>
+                            </styled.MedicineSearchInputWrapper>
+                            <styled.MedicineSearchResultWrapper>
+                            {
+                                props.medicineList.length ?
+                                props.medicineList.map((medicine : any) => {
+                                    return (
+                                        <styled.MedicineSearchResultEach
+                                            key = {medicine.medicineId}
+                                            onClick = {() => props.setPrescribeMedicine(medicine)}
+                                        >
+                                            <styled.MedicineSearchResultEachInfo>
+                                                {medicine.name}
+                                            </styled.MedicineSearchResultEachInfo>
+                                            <styled.MedicineSearchButtonImg 
+                                                src = {
+                                                    props.prescribeMedicine && props.prescribeMedicine.medicineId === medicine.medicineId ?
+                                                    check : uncheck
+                                                }
+                                            />
+                                        </styled.MedicineSearchResultEach>
+                                    )
+                                }) :
+                                <styled.NothingWrapper style = {{fontSize : 13,}}>
+                                    🤔검색 결과가 없습니다.
+                                </styled.NothingWrapper>
+                            }
+                            </styled.MedicineSearchResultWrapper>
+                            <styled.MedicinePrescribeButtonWrapper>
+                                <styled.MedicinePrescribeButton
+                                    isClose = {false}
+                                    onClick = {props.onPrescribeSubmit}
+                                >
+                                    처방
+                                </styled.MedicinePrescribeButton>
+                                <styled.MedicinePrescribeButton
+                                    isClose = {true}
+                                    onClick = {props.onPrescribeCancel}
+                                >
+                                    취소
+                                </styled.MedicinePrescribeButton>
+                            </styled.MedicinePrescribeButtonWrapper>
                         </styled.ModalContent>
                     </styled.ModalContentWrapper>
                     <styled.ModalClsButtonWrapper/>
@@ -303,7 +365,7 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
             </styled.InfoAndSearchWrapper>
             <styled.BottleListWrapper>
             {
-                props.patientDetail && props.patientDetail.bottleList ?
+                props.patientDetail && props.patientDetail.bottleList.length ?
                 props.patientDetail.bottleList.map((bottle : any) => {
                     return (
                         <styled.EachBottleWrapper
@@ -316,6 +378,11 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                         </styled.EachBottleWrapper>
                     )
                 }) :
+                props.patientDetail && !props.patientDetail.bottleList.length ?
+                <styled.NothingWrapper>
+                    🤔관리하고 있는 환자의 약병이 없습니다.
+                </styled.NothingWrapper>
+                :
                 <styled.NothingWrapper>
                     🤔먼저 환자를 선택하세요.
                 </styled.NothingWrapper>

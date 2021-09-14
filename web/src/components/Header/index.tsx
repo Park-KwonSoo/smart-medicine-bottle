@@ -74,7 +74,7 @@ const Header = (props : HeaderProps) => {
             </styled.HeaderLeftWrapper>
             <styled.HeaderCenterWrapper>
                 <styled.TitleImg src = {headerImg} />
-                <styled.Title>내 손 안의 주치의</styled.Title>
+                <styled.Title>SMART MEDICINE BOX for Doctor</styled.Title>
             </styled.HeaderCenterWrapper>
             <styled.HeaderRightWrapper>
             {

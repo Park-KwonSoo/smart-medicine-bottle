@@ -20,7 +20,8 @@
     "@koa/cors": "^3.1.0",
     "firebase-admin": "^9.11.1",
     "moment": "^2.29.1",
-    "mqtt": "^4.2.6"
+    "mqtt": "^4.2.6",
+    "node-cron": "^3.0.0"
   },
   "devDependencies": {
     "eslint": "^7.32.0"
