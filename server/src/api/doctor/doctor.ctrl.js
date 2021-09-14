@@ -150,7 +150,8 @@ exports.getPatientDetail = async ctx => {
             bottleId : bottle.bottleId,
             useYn : 'Y',
         });
-        reqUserBmList.push(bm);
+
+        if(bm) reqUserBmList.push(bm);
     }));
 
     const bottleList = await Promise.all(reqUserBmList.map(async bottleMedicine => {
