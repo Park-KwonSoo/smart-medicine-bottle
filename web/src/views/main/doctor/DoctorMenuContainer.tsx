@@ -42,7 +42,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [searchPatientKeyword, setSearchPatientKeyword] = useState<string>('');
     const [filteringPatientList, setFilteringPatientList] = useState<any>([]);
     
-    const [patientDetail, setPatientDetail] = useState<any>();
+    const [patientDetail, setPatientDetail] = useState<any>(null);
 
     const [editModal, setEditModal] = useState<boolean>(false);
     const [editPatientInfo, setEditPatientInfo] = useState<string>(''); 
@@ -112,6 +112,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const onInitialize = async () => {
         await fetchData();
+        setPatientDetail(null);
         setInfo({
             infoType : 'DOCTOR',
             userNm : doctorInfo.doctorNm,

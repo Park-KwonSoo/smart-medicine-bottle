@@ -668,6 +668,12 @@ export const NewPatientButton = styled.button `
         background-color : #337DFF;
         color : #fff;
     }
+
+    &:disabled {
+        cursor : default;
+        background-color : #337DFF;
+        color : #fff;
+    }
 `;
 
 export const SearchAndDetailWrapper = styled.div `

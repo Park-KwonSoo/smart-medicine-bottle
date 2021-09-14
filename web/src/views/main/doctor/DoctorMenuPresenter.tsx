@@ -8,6 +8,8 @@ const lensImg = '/static/img/lens.png';
 const closeButton = '/static/img/close.png';
 const edit = '/static/img/edit.png';
 const refreshing = '/static/img/refreshing.png';
+const check = '/static/img/check.png';
+const uncheck = '/static/img/uncheck.png'
 
 
 interface DoctorMenuProps {
@@ -216,7 +218,7 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                                             <styled.MedicineSearchButtonImg 
                                                 src = {
                                                     props.prescribeMedicine && props.prescribeMedicine.medicineId === medicine.medicineId ?
-                                                    lensImg : addButton
+                                                    check : uncheck
                                                 }
                                             />
                                         </styled.MedicineSearchResultEach>
@@ -363,7 +365,7 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
             </styled.InfoAndSearchWrapper>
             <styled.BottleListWrapper>
             {
-                props.patientDetail && props.patientDetail.bottleList ?
+                props.patientDetail && props.patientDetail.bottleList.length ?
                 props.patientDetail.bottleList.map((bottle : any) => {
                     return (
                         <styled.EachBottleWrapper
@@ -376,6 +378,11 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                         </styled.EachBottleWrapper>
                     )
                 }) :
+                props.patientDetail && !props.patientDetail.bottleList.length ?
+                <styled.NothingWrapper>
+                    🤔관리하고 있는 환자의 약병이 없습니다.
+                </styled.NothingWrapper>
+                :
                 <styled.NothingWrapper>
                     🤔먼저 환자를 선택하세요.
                 </styled.NothingWrapper>
