@@ -28,10 +28,19 @@ const BottleMedicineSchema = new Schema({
         required : true,
         default : Date.now,
     },
+    useYn : {
+        type : String,
+        required : true,
+        default : 'Y',
+    },
 });
 
 BottleMedicineSchema.methods.setDoctorId = function(doctorId) {
     this.doctorId = doctorId;
+};
+
+BottleMedicineSchema.methods.setUseYn = function(useYn) {
+    this.useYn = useYn;
 };
 
 

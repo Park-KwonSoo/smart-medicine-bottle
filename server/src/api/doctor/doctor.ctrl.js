@@ -145,11 +145,12 @@ exports.getPatientDetail = async ctx => {
 
     const reqUserBmList = [];
     await Promise.all(reqUserBottleList.map(async bottle => {
-        const bmList = await BottleMedicine.find({
+        const bm = await BottleMedicine.findOne({
             doctorId : userId,
             bottleId : bottle.bottleId,
-        }).sort({ regDtm : 'desc' }).limit(1);
-        reqUserBmList.push(...bmList);
+            useYn : 'Y',
+        });
+        reqUserBmList.push(bm);
     }));
 
     const bottleList = await Promise.all(reqUserBmList.map(async bottleMedicine => {
@@ -207,7 +208,7 @@ exports.getBottleDetail = async ctx => {
         return;
     }
 
-    const bottleMedicine = await BottleMedicine.findOne({ bottleId, doctorId : userId });
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, doctorId : userId, useYn : 'Y' });
     if(!bottleMedicine) {
         ctx.status = 403;
         ctx.body = {
@@ -318,11 +319,9 @@ exports.writeReqBottleFeedback = async ctx => {
         return;
     }
 
-    const bottleMedicine = await BottleMedicine.find({ bottleId, doctorId : userId })
-        .sort({ regDtm : 'desc' })
-        .limit(1);
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, doctorId : userId, useYn : 'Y' });
 
-    if(!bottleMedicine.length) {
+    if(!bottleMedicine) {
         ctx.status = 403;
         ctx.body = {
             error : '약병에 대한 권한 없음'
@@ -332,7 +331,7 @@ exports.writeReqBottleFeedback = async ctx => {
 
     const newFeedback = new Feedback({
         fdbType,
-        bmId : bottleMedicine[0]._id,
+        bmId : bottleMedicine._id,
         doctorId : userId,
         feedback,
     });

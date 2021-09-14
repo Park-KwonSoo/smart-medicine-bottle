@@ -63,7 +63,7 @@ const bottleInfoUpdate = async(data) => {
     humidity = parseFloat(humidity);
     balance = parseInt(balance);
 
-    const bottleMedicine = await BottleMedicine.find({ bottleId }).sort((a, b) => a.regDtm < b.regDtm)[0];
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
 
     if(bottleMedicine) {
         if(isOpen) {
@@ -83,7 +83,7 @@ const bottleInfoUpdate = async(data) => {
 const transPublishingTopicAndMessage = async(bottleId) => {
     const topic = 'bottle/' + bottleId + '/stb';
 
-    const bottleMedicine = await BottleMedicine.find({ bottleId }).sort((a, b) => a.regDtm < b.regDtm)[0];
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
     const takeMedicineHist = await TakeMedicineHist.find({ 
         bmId : bottleMedicine._id 
     }).sort((a, b) => a.takeDate < b.takeDate)[0];
