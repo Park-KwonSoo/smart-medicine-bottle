@@ -1,12 +1,14 @@
 const Koa = require('koa');
-const cors = require('@koa/cors');
 const Router = require('koa-router');
+
+const cors = require('@koa/cors');
 const bodyparser = require('koa-bodyparser');
 
 const Mongoose = require('mongoose');
 const api = require('./src/api');
 const updateMedicineInfo = require('./src/lib/UpdatingMedicineInfo');
 const MqttServer = require('./src/util/MqttServer');
+const BatchSystem = require('./src/util/Batch');
 
 require('dotenv').config();
 // eslint-disable-next-line no-undef
@@ -26,7 +28,7 @@ Mongoose.connect(MONGO_URL, {
     // updateMedicineInfo.updateMedicineInfo();
 }).catch(e => {
     console.log(e);
-})
+});
 
 app.use(bodyparser());
 router.use('/api', api.routes());
@@ -36,4 +38,6 @@ app.use(router.routes()).use(router.allowedMethods());
 app.listen(SERVER_PORT, () => {
     console.log('\x1b[1;36mPORT : ', SERVER_PORT, 'is connected\x1b[0m');
     MqttServer.on();
-})
+    BatchSystem.CheckNewYear();
+    BatchSystem.PushNotifyByDosage();
+});
