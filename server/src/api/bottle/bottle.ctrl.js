@@ -143,14 +143,11 @@ exports.getBottleInfo = async(ctx) => {
     const message = 'req';
     await Mqtt.mqttPublishMessage(client, { topic, message });
 
-    const bottleMedicine = await BottleMedicine.find({ bottleId })
-            .sort({ regDtm : 'desc' })
-            .limit(1);
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
     
-    if(bottleMedicine.length) {
-
+    if(bottleMedicine) {
         const takeMedicineHist = await TakeMedicineHist
-            .find({ bmId : bottleMedicine[0]._id })
+            .find({ bmId : bottleMedicine._id })
             .sort({ takeDate : 'desc' })
             .populate('bmId');
 
@@ -208,12 +205,10 @@ exports.getBottleFeedback = async ctx => {
         return;
     }
 
-    const bottleMedicine = await BottleMedicine.find({ bottleId })
-        .sort({ regDtm : 'desc' })
-        .limit(1);
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
 
-    if(bottleMedicine.length) {
-        const feedbackList = await Feedback.find({ bmId : bottleMedicine[0]._id })
+    if(bottleMedicine) {
+        const feedbackList = await Feedback.find({ bmId : bottleMedicine._id })
             .sort({ fdbDtm : 'desc' })
             .populate('bmId');
 
@@ -294,6 +289,7 @@ exports.setMedicine = async(ctx) => {
         bottleMedicine.setDoctorId(doctorId);
     }
 
+    await BottleMedicine.updateMany({ bottleId }, { useYn : 'N '});
     
     bottleMedicine.save();
 
