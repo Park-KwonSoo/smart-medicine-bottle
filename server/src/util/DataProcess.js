@@ -86,7 +86,7 @@ const transPublishingTopicAndMessage = async(bottleId) => {
     const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
     const takeMedicineHist = await TakeMedicineHist.find({ 
         bmId : bottleMedicine._id 
-    }).sort((a, b) => a.takeDate < b.takeDate)[0];
+    }).sort({ takeDate : 'asc' })[0];
 
     const message = 'res/' + await transDate(takeMedicineHist.takeDate) + '/' + bottleMedicine.dosage;
    
