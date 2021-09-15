@@ -67,7 +67,7 @@ interface DoctorMenuProps {
     qrcodeUrl : string | null;
 
     onPrescribeSubmit : () => void;
-    onPrintQrcode : () => void;
+    onPrintQrcode : (arg0 : string) => void;
     onPrescribeCancel : () => void;
 }
 
@@ -264,7 +264,9 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                                     />
                                 </styled.MedicineDosageSetWrapper>
                                 :
-                                <styled.MedicineQRCodeWrapper>
+                                <styled.MedicineQRCodeWrapper
+                                    id = 'qrCodePrint'
+                                >
                                     <styled.MedicineQRCodeInfo>
                                         *어플리케이션에서 QR코드를 스캔하면 약병에 약이 등록됩니다.
                                     </styled.MedicineQRCodeInfo>
@@ -293,7 +295,7 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                                     :
                                     <styled.MedicinePrescribeButton
                                         isClose = {false}
-                                        onClick = {props.onPrintQrcode}
+                                        onClick = {() => props.onPrintQrcode('qrCodePrint')}
                                     >
                                         출력
                                     </styled.MedicinePrescribeButton>

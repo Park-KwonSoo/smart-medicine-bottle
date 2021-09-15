@@ -267,15 +267,21 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         Alert.onCheck(`${prescribeMedicine.name}(일 복용량:${dosage})\n을 처방하시겠습니까?`, async () => {
             setQrcodeUrl(await QRCode.toDataURL(`${prescribeMedicine.name}/${prescribeMedicine.medicineId}/${dosage}/${userId}`, {
                 type : "image/png", 
-                color : {dark : '#337DFF', light : '#FFF'},
+                color : { dark : '#337DFF', light : '#FFF' },
             }));
             Alert.onSuccess('처방 정보가 생성 되었습니다.', () => onSetNextStepPrescribe());
         }, () => null);
     };
 
-    const onPrintQrcode = async() => {
-        //toDo : QR코드 출력
-        Alert.onWarning('준비 중입니다.', () => null);
+    const onPrintQrcode = async(divId : string) => {
+        const printContent : any = document.getElementById(divId);
+        const windowOpen : any = window.open('', 'PrintQRCode');
+
+        windowOpen.document.writeln(printContent.innerHTML);
+        windowOpen.document.close();
+        windowOpen.focus();
+        windowOpen.print();
+        windowOpen.close();
     };
 
     const onPrescribeCancel = () => {
