@@ -3,8 +3,7 @@
  * 21/09/14
  * Author : 박권수
  * 배치 시스템
- * 1) 매년 지나면 프로필의 Age를 +1
- * 2) Dosage에 따라, Push Notification 발송
+ * 1) Dosage에 따라, Push Notification 발송
  */
 
  const cron = require('node-cron');
@@ -16,19 +15,19 @@
  const BottleMedicine = require('../models/bottleMedicine');
  
  
- //매년 1월 1일 00시 00분에 1살씩 추가
- exports.CheckNewYear = () => {
-     cron.schedule('0 0 0 1 1 *', async () => {
-         const profileList = await Profile.find();
-         profileList.forEach(async profile => {
-             await profile.updateUserAge();
-             profile.save();
-         });
+//  //매년 1월 1일 00시 00분에 1살씩 추가
+//  exports.CheckNewYear = () => {
+//      cron.schedule('0 0 0 1 1 *', async () => {
+//          const profileList = await Profile.find();
+//          profileList.forEach(async profile => {
+//              await profile.updateUserAge();
+//              profile.save();
+//          });
  
-     }, {
-         timezone : 'Asia/Tokyo',
-     });
- };
+//      }, {
+//          timezone : 'Asia/Tokyo',
+//      });
+//  };
  
  //dosage에 따라, Push Notification을 발송한다.
  //아침 8시, 점심 12시, 저녁 6시에 한번씩 발송

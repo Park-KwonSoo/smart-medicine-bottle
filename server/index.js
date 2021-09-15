@@ -38,6 +38,5 @@ app.use(router.routes()).use(router.allowedMethods());
 app.listen(SERVER_PORT, () => {
     console.log('\x1b[1;36mPORT : ', SERVER_PORT, 'is connected\x1b[0m');
     MqttServer.on();
-    BatchSystem.CheckNewYear();
     BatchSystem.PushNotifyByDosage();
 });

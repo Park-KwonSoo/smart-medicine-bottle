@@ -13,7 +13,7 @@ exports.register = async(ctx) => {
         password,
         passwordCheck,
         userNm,
-        userAge,
+        birth,
         contact,
     } = ctx.request.body;
 
@@ -22,7 +22,7 @@ exports.register = async(ctx) => {
         password : Joi.string().required(),
         passwordCheck : Joi.string().required(),
         userNm : Joi.string().required(),
-        userAge : Joi.number().required(),
+        birth : Joi.string().required(),
         contact : Joi.string().required(),
     });
     
@@ -55,7 +55,7 @@ exports.register = async(ctx) => {
     const profile = new Profile({
         userId,
         userNm,
-        userAge,
+        birth,
         contact,        
     });
 
