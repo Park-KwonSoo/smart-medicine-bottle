@@ -10,6 +10,8 @@ import * as Alert from '../../../util/alertMessage';
 
 import { doctorApi, medicineApi } from '../../../api';
 
+import QRCode from 'qrcode';
+
 
 //toDo : Generate QR Code By Medicine Id
 
@@ -18,6 +20,7 @@ type DoctorMenuProps = RouteComponentProps
 const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const token = useRecoilValue(recoilUtil.token);
+    const userId = useRecoilValue(recoilUtil.userId);
     const [loading, setLoading] = useRecoilState(recoilUtil.loading);
 
     const [doctorInfo, setDoctorInfo] = useState<any>({
@@ -52,9 +55,13 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [newPatientSearchResult, setNewPatientSearchResult] = useState<any | null>(null);
 
     const [prescribeModal, setPrescribeModal] = useState<boolean>(false);
+    const [prescribeModalStep, setPrescribeModalStep] = useState<number>(1);
     const [searchMedicineKeyword, setSearchMedicineKeyword] = useState<string>('');
     const [medicineList, setMedicineList] = useState<any>([]);
     const [prescribeMedicine, setPrescribeMedicine] = useState<any>(null);
+    const [dosage, setDosage] = useState<string>('1');
+
+    const [qrcodeUrl, setQrcodeUrl] = useState<string | null>(null);
 
 
     const fetchData = async() => {
@@ -213,9 +220,11 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         setEditModal(false);
         setEditPatientInfo('');
         setPrescribeModal(false);
+        setPrescribeModalStep(1);
         setSearchMedicineKeyword('');
         setMedicineList([]);
         setPrescribeMedicine(null);
+        setDosage('1');
     };
 
     const onGoBottleDetail = (bottleId : number) => {
@@ -233,7 +242,6 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             setLoading(true);
             const res = await medicineApi.searchMedicine(token, searchMedicineKeyword);
             if(res.statusText === 'OK') {
-                console.log(res.data.medicineList)
                 setMedicineList(res.data.medicineList);
             }
             setLoading(false);
@@ -242,9 +250,32 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         }
     };
 
+    const onSetDosage = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setDosage(e.target.value);
+    };
+
+    const onSetNextStepPrescribe = () => {
+        if(prescribeMedicine)   setPrescribeModalStep(prescribeModalStep + 1);
+        else    Alert.onWarning('먼저 처방할 약을 선택해야 합니다.', () => null);
+    };
+
+    const onSetPrevStepPrescribe = () => {
+        if(prescribeModalStep > 1)  setPrescribeModalStep(prescribeModalStep - 1);
+    };
+
     const onPrescribeSubmit = async() => {
-        //toDo : 처방해서, QR코드 생성
-        Alert.onWarning('작업 중입니다.', () => null);
+        Alert.onCheck(`${prescribeMedicine.name}(일 복용량:${dosage})\n을 처방하시겠습니까?`, async () => {
+            setQrcodeUrl(await QRCode.toDataURL(`${prescribeMedicine.name}/${prescribeMedicine.medicineId}/${dosage}/${userId}`, {
+                type : "image/png", 
+                color : {dark : '#337DFF', light : '#FFF'},
+            }));
+            Alert.onSuccess('처방 정보가 생성 되었습니다.', () => onSetNextStepPrescribe());
+        }, () => null);
+    };
+
+    const onPrintQrcode = async() => {
+        //toDo : QR코드 출력
+        Alert.onWarning('준비 중입니다.', () => null);
     };
 
     const onPrescribeCancel = () => {
@@ -298,14 +329,21 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             onCloseModal = {onCloseModal}
 
             prescribeModal = {prescribeModal}
+            prescribeModalStep = {prescribeModalStep}
+            onSetNextStepPrescribe = {onSetNextStepPrescribe}
+            onSetPrevStepPrescribe = {onSetPrevStepPrescribe}
             setPrescribeModal = {setPrescribeModal}
             searchMedicineKeyword = {searchMedicineKeyword}
             onSetSearchMedicineKeyword = {onSetSearchMedicineKeyword}
             medicineList = {medicineList}
             searchMedicine = {searchMedicine}
             prescribeMedicine = {prescribeMedicine}
+            dosage = {dosage}
+            onSetDosage = {onSetDosage}
+            qrcodeUrl = {qrcodeUrl}
             setPrescribeMedicine = {setPrescribeMedicine}
             onPrescribeSubmit = {onPrescribeSubmit}
+            onPrintQrcode = {onPrintQrcode}
             onPrescribeCancel = {onPrescribeCancel}
 
             newPatientSearchResult = {newPatientSearchResult}

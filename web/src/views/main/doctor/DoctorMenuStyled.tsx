@@ -436,6 +436,7 @@ export const MedicineSearchButtonImg = styled.img `
     height : 15px;
     width : 15px;
     
+    transition : .25s all;
 `;
 
 export const MedicineSearchResultWrapper = styled.div `
@@ -497,6 +498,92 @@ export const MedicineSearchResultEachInfo = styled.div `
 export const MedicineSelectButtonImg = styled.img `
     height : 15px;
     width : 15px;
+`;
+
+export const MedicineDosageSetWrapper = styled.div `
+    width : 80%;
+    
+    display : flex;
+    flex-direction : column;
+
+    justify-content : center;
+    align-items : center;
+
+    border : none;
+
+    margin : 20px 0;
+
+    height : 200px;
+`;
+
+export const MedicineDosageInfo = styled.div `
+    font-size : 15px;
+    font-weight : 500;
+
+    color : #a0a0a0;
+
+    width : 100%;
+    margin : 0 0 20px 0;
+
+    border : none;
+    background-color : transparent;
+
+    text-align : center;
+`;
+
+export const MedicineDosageInput = styled.input.attrs({
+    type : 'number',
+    min : '1',
+    max : '3',
+}) `
+    width : 40%;
+
+    padding : 10px 20px;
+    color : #337DFF;
+    font-size : 20px;
+
+    font-weight : 700;
+
+    border : none;
+    border-bottom : 1px solid #337DFF;
+
+    display : flex;
+    flex-direction : row;
+
+    text-align : center;
+
+    transition : .25s all;
+`;
+
+export const MedicineQRCodeWrapper = styled.div `
+    width : 80%;
+    height : 200px;
+
+    display : flex;
+    flex-direction : column;
+
+    justify-content : center;
+    align-items : center;
+
+    margin : 20px 0;
+
+    border : none;
+`;
+
+export const MedicineQRCodeInfo = styled.div `
+    font-size : 15px;
+    font-weight : 500;
+
+    color : #a0a0a0;
+
+    text-align : center;
+`;
+
+export const MedicineQRCode = styled.img `
+    margin : 10px 0 0 0;
+
+    height : 170px;
+    width : 170px;
 `;
 
 export const MedicinePrescribeButtonWrapper = styled.div `

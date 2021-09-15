@@ -48,6 +48,10 @@ interface DoctorMenuProps {
 
     prescribeModal : boolean;
     setPrescribeModal : any;
+    prescribeModalStep : number;
+    onSetNextStepPrescribe : () => void;
+    onSetPrevStepPrescribe : () => void;
+
     searchMedicineKeyword : string;
     onSetSearchMedicineKeyword : React.ChangeEventHandler<HTMLInputElement>;
 
@@ -57,7 +61,13 @@ interface DoctorMenuProps {
     prescribeMedicine : any;
     setPrescribeMedicine : (arg0 : any) => void;
 
+    dosage : string;
+    onSetDosage : React.ChangeEventHandler<HTMLInputElement>;
+
+    qrcodeUrl : string | null;
+
     onPrescribeSubmit : () => void;
+    onPrintQrcode : () => void;
     onPrescribeCancel : () => void;
 }
 
@@ -189,53 +199,105 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                     <styled.ModalContentWrapper>
                         <styled.ModalContent>
                             <styled.MedicineSearchTitle>
-                                약 검색
-                            </styled.MedicineSearchTitle>
-                            <styled.MedicineSearchInputWrapper>
-                                <styled.MedicineSearchInput 
-                                    placeholder = '증상, 또는 약 이름을 검색하세요.'
-                                    onChange = {props.onSetSearchMedicineKeyword}
-                                    value = {props.searchMedicineKeyword}
-                                />
-                                <styled.MedicineSearchButton
-                                    onClick = {props.searchMedicine}
-                                >
-                                    <styled.MedicineSearchButtonImg src = {lensImg}/>
-                                </styled.MedicineSearchButton>
-                            </styled.MedicineSearchInputWrapper>
-                            <styled.MedicineSearchResultWrapper>
                             {
-                                props.medicineList.length ?
-                                props.medicineList.map((medicine : any) => {
-                                    return (
-                                        <styled.MedicineSearchResultEach
-                                            key = {medicine.medicineId}
-                                            onClick = {() => props.setPrescribeMedicine(medicine)}
-                                        >
-                                            <styled.MedicineSearchResultEachInfo>
-                                                {medicine.name}
-                                            </styled.MedicineSearchResultEachInfo>
-                                            <styled.MedicineSearchButtonImg 
-                                                src = {
-                                                    props.prescribeMedicine && props.prescribeMedicine.medicineId === medicine.medicineId ?
-                                                    check : uncheck
-                                                }
-                                            />
-                                        </styled.MedicineSearchResultEach>
-                                    )
-                                }) :
-                                <styled.NothingWrapper style = {{fontSize : 13,}}>
-                                    🤔검색 결과가 없습니다.
-                                </styled.NothingWrapper>
+                                props.prescribeModalStep === 1 ?
+                                '약 검색' :
+                                props.prescribeModalStep === 2 ?
+                                '복용량 입력' :
+                                '처방 정보 QR코드'
                             }
-                            </styled.MedicineSearchResultWrapper>
+                            </styled.MedicineSearchTitle>
+                            {
+                                props.prescribeModalStep === 1 ?
+                                <>
+                                <styled.MedicineSearchInputWrapper>
+                                    <styled.MedicineSearchInput 
+                                        placeholder = '증상, 또는 약 이름을 검색하세요.'
+                                        onChange = {props.onSetSearchMedicineKeyword}
+                                        value = {props.searchMedicineKeyword}
+                                    />
+                                    <styled.MedicineSearchButton
+                                        onClick = {props.searchMedicine}
+                                    >
+                                        <styled.MedicineSearchButtonImg src = {lensImg}/>
+                                    </styled.MedicineSearchButton>
+                                </styled.MedicineSearchInputWrapper>
+                                <styled.MedicineSearchResultWrapper>
+                                {
+                                    props.medicineList.length ?
+                                    props.medicineList.map((medicine : any) => {
+                                        return (
+                                            <styled.MedicineSearchResultEach
+                                                key = {medicine.medicineId}
+                                                onClick = {() => props.setPrescribeMedicine(
+                                                    props.prescribeMedicine && props.prescribeMedicine.medicineId === medicine.medicineId ? 
+                                                    null : medicine
+                                                )}
+                                            >
+                                                <styled.MedicineSearchResultEachInfo>
+                                                    {medicine.name}
+                                                </styled.MedicineSearchResultEachInfo>
+                                                <styled.MedicineSearchButtonImg 
+                                                    src = {
+                                                        props.prescribeMedicine && props.prescribeMedicine.medicineId === medicine.medicineId ?
+                                                        check : uncheck
+                                                    }
+                                                />
+                                            </styled.MedicineSearchResultEach>
+                                        )
+                                    }) :
+                                    <styled.NothingWrapper style = {{fontSize : 13,}}>
+                                        🤔검색 결과가 없습니다.
+                                    </styled.NothingWrapper>
+                                }
+                                </styled.MedicineSearchResultWrapper>
+                                </>
+                                :
+                                props.prescribeModalStep === 2 ?
+                                <styled.MedicineDosageSetWrapper>
+                                     <styled.MedicineDosageInfo>
+                                        *하루 복용량을 입력하세요.
+                                    </styled.MedicineDosageInfo>
+                                    <styled.MedicineDosageInput
+                                        value = {props.dosage}
+                                        onChange = {props.onSetDosage}
+                                    />
+                                </styled.MedicineDosageSetWrapper>
+                                :
+                                <styled.MedicineQRCodeWrapper>
+                                    <styled.MedicineQRCodeInfo>
+                                        *어플리케이션에서 QR코드를 스캔하면 약병에 약이 등록됩니다.
+                                    </styled.MedicineQRCodeInfo>
+                                    {
+                                        props.qrcodeUrl ?
+                                        <styled.MedicineQRCode src = {props.qrcodeUrl}/> : null
+                                    }
+                                </styled.MedicineQRCodeWrapper>
+                            }
                             <styled.MedicinePrescribeButtonWrapper>
-                                <styled.MedicinePrescribeButton
-                                    isClose = {false}
-                                    onClick = {props.onPrescribeSubmit}
-                                >
-                                    처방
-                                </styled.MedicinePrescribeButton>
+                                {
+                                    props.prescribeModalStep === 1 ?
+                                    <styled.MedicinePrescribeButton
+                                        isClose = {false}
+                                        onClick = {props.onSetNextStepPrescribe}
+                                    >
+                                        다음 단계
+                                    </styled.MedicinePrescribeButton> :
+                                    props.prescribeModalStep === 2 ?
+                                    <styled.MedicinePrescribeButton
+                                        isClose = {false}
+                                        onClick = {props.onPrescribeSubmit}
+                                    >
+                                        처방
+                                    </styled.MedicinePrescribeButton> 
+                                    :
+                                    <styled.MedicinePrescribeButton
+                                        isClose = {false}
+                                        onClick = {props.onPrintQrcode}
+                                    >
+                                        출력
+                                    </styled.MedicinePrescribeButton>
+                                }
                                 <styled.MedicinePrescribeButton
                                     isClose = {true}
                                     onClick = {props.onPrescribeCancel}

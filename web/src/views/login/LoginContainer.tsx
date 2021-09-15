@@ -23,6 +23,7 @@ const LoginContainer = (props : LoginProps) => {
     });
 
     const [token, setToken] = useRecoilState(recoilUtil.token);
+    const [userId, setUserId] = useRecoilState(recoilUtil.userId);
     const [userTypeCd, setUserTypeCd] = useRecoilState(recoilUtil.userTypeCd);
 
 
@@ -58,12 +59,13 @@ const LoginContainer = (props : LoginProps) => {
             const result : any = await authApi.login(loginForm);
             if(result.statusText === 'OK' && result.data.userTypeCd !== 'NORMAL') {
                 setToken(result.data.token);
+                setUserId(loginForm.userId);
                 setUserTypeCd(result.data.userTypeCd);
                 Alert.onSuccess('로그인 성공, 메인 화면으로 이동합니다.', () => props.history.push('/'));
             } else if(result.data.userTypeCd === 'NORMAL') {
                 Alert.onError('권한이 없는 유저입니다.', () => props.history.push('/'));
             }
-        } catch(e) {
+        } catch(e : any) {
             Alert.onError(e.response.data.error, () => null);
         }
 
