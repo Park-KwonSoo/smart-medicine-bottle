@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const ProfileSchema = new Schema({
     userId : { type : String, required : true, ref : 'User', },
     userNm : { type : String, required : true, },
-    userAge : { type : Number, required : true, },
+    birth : { type : String, required : true, },
     contact : { type : String, required : true, },
     deviceToken : { type : String, default : null, },
 });
@@ -16,10 +16,6 @@ ProfileSchema.statics.findByUserId = function(userId) {
 
 ProfileSchema.methods.updateUserContact = function(contact) {
     this.contact = contact;
-};
-
-ProfileSchema.methods.updateUserAge = function() {
-    this.userAge = this.userAge + 1;
 };
 
 ProfileSchema.methods.updateDeviceToken = function(deviceToken) {
