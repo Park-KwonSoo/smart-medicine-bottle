@@ -74,7 +74,7 @@ const bottleInfoUpdate = async(data) => {
                 humidity,
                 balance,
             });
-            takeMedicineHist.save();
+            await takeMedicineHist.save();
         }
     }
 }
