@@ -1,8 +1,8 @@
 //허브(Mqtt Broker)등록 및 삭제
 const Hub = require('../../models/hub');
 const User = require('../../models/user');
-const Mqtt = require('../../lib/MqttModule');
-const DataProcess = require('../../lib/DataProcess');
+const Mqtt = require('../../util/MqttModule');
+const DataProcess = require('../../util/DataProcess');
 const jwt = require('jsonwebtoken');
 
 exports.hubConnect = async (ctx) => {

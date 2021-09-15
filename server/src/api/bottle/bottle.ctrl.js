@@ -8,7 +8,7 @@ const PatientInfo = require('../../models/patientInfo');
 const TakeMedicineHist = require('../../models/takeMedicineHistory');
 const BottleMedicine = require('../../models/bottleMedicine');
 const Feedback = require('../../models/feedback');
-const Mqtt = require('../../lib/MqttModule');
+const Mqtt = require('../../util/MqttModule');
 const jwt = require('jsonwebtoken');
 
 //약병 등록

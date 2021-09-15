@@ -1,5 +1,5 @@
-const Mqtt = require('../lib/MqttModule');
-const DataProcess = require('../lib/DataProcess');
+const Mqtt = require('./MqttModule');
+const DataProcess = require('./DataProcess');
 const Hub = require('../models/hub');
 const Bottle = require('../models/bottle');
 
