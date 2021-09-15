@@ -22,7 +22,7 @@ const factoring = async (topic, message) => {
     const data = message.split('/');
     let [isOpen, temperature, humidity, balance] = data;
 
-    if(isOpen === '0')
+    if(isOpen === '1')
         balance = await balanceFactoring(balance);
     else    balance = '-1';
     
