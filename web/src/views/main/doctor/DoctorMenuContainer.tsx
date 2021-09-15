@@ -33,7 +33,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [info, setInfo] = useState<any>({
         infoType : 'DOCTOR',
         userNm : '',
-        userAge : 0,
+        birth : '',
         contact : '',
         doctorType : '',
         patientInfo : '',
@@ -69,7 +69,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     userNm : doctorInfo.doctorNm,
                     doctorType : doctorInfo.doctorType,
                     contact : doctorInfo.contact,
-                    userAge : null,
+                    birth : null,
                     patientInfo : '',
                 });
 
@@ -94,10 +94,12 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             setLoading(true);
             await doctorApi.getPatientDetail(token, patientId).then(res => {
                 setPatientDetail(res.data);
+
+                const birth = res.data.profile.birth.split('/');
                 setInfo({
                     infoType : 'PATIENT',
                     userNm : res.data.profile.userNm,
-                    userAge : res.data.profile.userAge,
+                    birth : `${birth[0]}년 ${birth[1]}월 ${birth[2]}일`,
                     contact : res.data.profile.contact,
                     doctorType : null,
                     patientInfo : res.data.info,
@@ -118,7 +120,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             userNm : doctorInfo.doctorNm,
             doctorType : doctorInfo.doctorType,
             contact : doctorInfo.contact,
-            userAge : null,
+            birth : null,
             patientInfo : '',
         });
         setFilteringPatientList([]);

@@ -18,7 +18,7 @@ interface DoctorMenuProps {
         userNm : string;
         doctorType : string | null;
         contact : string;
-        userAge : number | null;
+        birth : number | null;
         patientInfo : string;
     };
     searchPatientKeyword : string;
@@ -287,7 +287,7 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                             </styled.InfoEachWrapper>
                             <styled.InfoEachWrapper>
                                 <styled.InfoEachTopic>생년월일</styled.InfoEachTopic>
-                                <styled.InfoEachText>{props.info.userAge}세</styled.InfoEachText>
+                                <styled.InfoEachText>{props.info.birth}</styled.InfoEachText>
                             </styled.InfoEachWrapper>
                             <styled.InfoEachWrapper>
                                 <styled.InfoEachTopic>연락처</styled.InfoEachTopic>
@@ -351,7 +351,7 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                                         onClick = {() => props.onFetchPatientDetail(patient.userId)}
                                     >
                                         <styled.SearchResultEachText isLast = {false}>{patient.userNm}</styled.SearchResultEachText>
-                                        <styled.SearchResultEachText isLast = {false}>{patient.userAge}세</styled.SearchResultEachText>
+                                        <styled.SearchResultEachText isLast = {false}>{patient.birth}</styled.SearchResultEachText>
                                         <styled.SearchResultEachText isLast = {true}>{patient.contact}</styled.SearchResultEachText>
                                     </styled.SearchResultEach>
                                 )
