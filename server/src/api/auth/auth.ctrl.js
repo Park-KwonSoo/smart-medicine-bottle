@@ -5,6 +5,7 @@ const Profile = require('../../models/profile');
 const DoctorInfo = require('../../models/doctorInfo');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 
 
 exports.register = async(ctx) => {
@@ -64,6 +65,26 @@ exports.register = async(ctx) => {
 
     ctx.status = 201;
 
+};
+
+exports.searchHospital = async ctx => {
+    const {
+        hospitalNm,
+        page,
+    } = ctx.query;
+
+    const url = 'http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1';
+    let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + process.env.SERVICE_KEY;
+    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(page);
+    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(10);
+    queryParams += '&' + encodeURIComponent('yadmNm') + '=' + encodeURIComponent(hospitalNm);
+
+    const result = await axios.get(url + queryParams);
+    
+    ctx.status = 200;
+    ctx.body = {
+        hospitalList : result.data.response.body.items.item,
+    };
 };
 
 exports.doctorRegister = async ctx => {
