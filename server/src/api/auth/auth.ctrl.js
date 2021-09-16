@@ -73,16 +73,19 @@ exports.searchHospital = async ctx => {
         page,
     } = ctx.query;
 
+    const pageSlice = 5;
+
     const url = 'http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1';
     let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + process.env.SERVICE_KEY;
     queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(page);
-    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(10);
+    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(pageSlice);
     queryParams += '&' + encodeURIComponent('yadmNm') + '=' + encodeURIComponent(hospitalNm);
 
     const result = await axios.get(url + queryParams);
     
     ctx.status = 200;
     ctx.body = {
+        totalPage : Math.ceil(result.data.response.body.totalCount / pageSlice),
         hospitalList : result.data.response.body.items.item,
     };
 };
