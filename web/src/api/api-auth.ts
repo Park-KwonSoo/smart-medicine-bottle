@@ -5,6 +5,15 @@ export default {
         return client.post('/auth/register', Data);
     },
 
+    searchHospital : (hospitalNm : string, page : number) => {
+        return client.get('/auth/hospital', {
+            params : {
+                hospitalNm,
+                page,
+            },
+        });
+    },
+
     registerDoctor : (Data : any) => {
         return client.post('/auth/register/doctor', Data);
     },

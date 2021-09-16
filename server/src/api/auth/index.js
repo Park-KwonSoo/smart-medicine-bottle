@@ -12,6 +12,14 @@ const auth = new Router()
 auth.post('/register', authCtrl.register)
 
 /**
+ * 병원 검색
+ * url : http://localhost:4000/api/auth/hospital
+ * request parameter : hospitalNm
+ * return : xml type data
+ */
+auth.get('/hospital', authCtrl.searchHospital);
+
+/**
  * 회원가입 (email type) : 의사 회원가입
  * url : http://localhost:4000/api/auth/register/doctor
  * request parameter : userId, password, passwordCheck, doctorInfo

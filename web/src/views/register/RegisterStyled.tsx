@@ -1,4 +1,27 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+
+const ModalOn = keyframes `
+    0% {
+        background-color : rgba(52, 52, 52, .0);
+    }
+    20% {
+        background-color : rgba(52, 52, 52, .2);
+    }
+    40% {
+        background-color : rgba(52, 52, 52, .4);
+    }
+    60% {
+        background-color : rgba(52, 52, 52, .5);
+    }
+    80% {
+        background-color : rgba(52, 52, 52, .6);
+    }
+    100% {
+        background-color : rgba(52, 52, 52, .7);
+    }
+
+`;
 
 
 export const Container = styled.div `
@@ -9,6 +32,274 @@ export const Container = styled.div `
     justify-content : center;
     align-items : center;
 `;
+
+export const ModalContainer = styled.div `
+    height : 100%;
+    width : 100%;
+    z-index : 99;
+    position : absolute;
+
+    display : flex;
+    flex-direction : column;
+
+    animation : ${ModalOn} .5s;
+
+    background-color : rgba(52, 52, 52, .7);
+
+`;
+
+export const ModalClsButtonWrapper = styled.div `
+    flex : 1;    
+
+    display : flex;
+
+    justify-content : flex-end;
+    align-items : center;
+    padding : 0 20px;
+
+    border : none;
+    background-color : transprent;    
+`;
+
+export const ModalClsButton = styled.button `
+    border : none;
+    background-color : transparent;
+
+    cursor : pointer;
+
+    color : #fff;
+
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+
+    transition : .25s all;
+    &:hover {
+        opacity : .5;
+    }
+`;
+
+export const ModalClsButtonImg = styled.img `
+    height : 20px;
+    width : 20px;
+
+    margin : 0 10px 0 0;
+`;
+
+export const ModalClsButtonText = styled.div `
+    font-size : 18px;
+    font-weight : 700;
+`;
+
+export const ModalContentWrapper = styled.div `
+    flex : 8;
+
+    display : flex;
+    flex-direction : column;
+
+    justify-content : center;
+    align-items : center;
+
+    border : none;
+`;
+
+export const ModalContent = styled.div `
+    width : 600px;
+    height : 400px;
+
+    background-color : #fff;
+    border : 1.2px solid #337DFF;
+    border-radius : 5px;
+    
+    display : flex;
+    flex-direction : column;
+
+    justify-content : center;
+    align-items : center;
+`;
+
+export const SearchTitle  = styled.div `
+    font-weight : 600;
+    font-size : 20;
+
+    color : #337DFF;
+
+`;
+
+export const HospitalListWrapper = styled.div `
+    margin : 20px 0;
+
+    height : 200px;
+    width : 80%;
+
+    border : 1px solid #337DFF;
+    
+    display : flex;
+    flex-direction : column;
+`;
+
+export const HospitalListInfo = styled.div `
+
+    height : 20px;
+    width : 100%;
+
+    border : none;
+    border-bottom : 1px solid #ddd;
+
+    display : flex;
+    flex-direction : row;
+`;
+
+export const HospitalListInfoEach = styled.div<{isLast : boolean}> `
+    flex : ${props => props.isLast ? '1' : '3'}; 
+
+    display : flex;
+    align-items : center;
+    justify-content : center;
+    
+    font-size : 14px;
+    font-weight : 500;
+
+    color : #343434;
+
+    border : none;
+    border-right : ${props => props.isLast ? 'none' : '1px solid #ddd'};
+
+    padding : 3px 5px;
+`;
+
+export const HospitalListEach = styled.div `
+    min-height : 35px;
+    max-height : 35px;
+    width : 100%;
+
+    display : flex;
+    flex-direction : row;
+
+    border : none;
+    border-bottom : 1px solid #ddd;
+`;
+
+export const HospitalListEachInfo = styled.div<{isLast : boolean}> `
+    flex : ${props => props.isLast ? '1' : '3'}; 
+
+    display : flex;
+
+    font-size : 12px;
+    font-weight : 500;
+
+    justify-content : center;
+    align-items : center;
+
+    border : none;
+    border-right : ${props => props.isLast ? 'none' : '1px solid #ddd'};
+
+    padding : 3px 5px;
+`;
+
+export const CheckButton = styled.button `
+    border : none;
+    background-color : transparent;
+
+    height : 15px;
+    width : 15px;
+
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+
+    cursor : pointer;
+    transition : .25s all;
+
+    &:hover {
+        opacity : .5;
+    }
+`;
+
+export const CheckButtonImg = styled.img `
+    height : 15px;
+    width : 15px;
+`;
+
+export const PageWrapper = styled.div `
+    width : 50%;
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+
+    gap : 2%;
+`;
+
+export const PageButton = styled.button<{isSelect : boolean}> `
+    height : 18px;
+    width : 18px;
+    
+    display : flex;
+    align-items : center;
+    justify-content : center;
+
+    border : none;
+    border-radius : 4px;
+    background-color : ${props => props.isSelect ? '#337DFF' : 'transparent'};
+    color : ${props => props.isSelect ? '#fff' : '#343434'};
+
+    font-size : 12px;
+    font-weight : 600;
+
+    cursor : pointer;
+
+    transition : .25s all;
+
+    &:hover {
+        opacity : .7;
+    }
+`;
+
+export const PageArrowImg = styled.img `
+    height : 15px;
+    width : 15px;
+`;
+
+export const ModalButtonWrapper = styled.div `
+    margin : 20px 0 0 0;
+    width : 50%;
+
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+
+    border : none;
+
+    gap : 10%;
+`;
+
+export const ModalButton = styled.div<{isCloseButton : boolean}> `
+    padding : 2.5% 10%;
+    cursor : pointer;
+
+    border : 1px solid ${props => props.isCloseButton ? '#343434' : '#337DFF'};
+    background-color : ${props => props.isCloseButton ? 'transparent' : '#337DFF'};
+
+    border-radius : 5px;
+
+    color : ${props => props.isCloseButton ? '#343434' : '#fff'};
+    font-weight : 600;
+    font-size : 16px;
+
+    transition : .25s all;
+
+    &:hover {
+        opacity : .7;
+    }
+
+`
+
 
 export const RegisterWrapper = styled.div `
     width : 35%;
@@ -24,9 +315,8 @@ export const RegisterWrapper = styled.div `
     padding : 30px 3px;
 
     box-shadow: 0px 0px 10px #a0a0a0;
-
-
 `;
+
 
 export const RegisterBackButtonWrapper = styled.div `
     width : 100%;
@@ -97,6 +387,18 @@ export const RegisterInputText = styled.div `
 
 `;
 
+export const RegisterInputWrapperForSearch = styled.div `
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+
+    width : 100%;
+
+    border : none;
+    background-color : transparent;
+`;
+
 export const RegisterInput = styled.input `
     width : 80%;
     padding : 5px 10px;
@@ -109,6 +411,38 @@ export const RegisterInput = styled.input `
     &::placeholder {
         color : #ddd;
     }
+`;
+
+export const RegisterInputSearchButton = styled.button `
+    position : absolute;
+
+    height : 25px;
+    width : 25px;
+
+    align-self : end;
+
+    margin : 0 0 1px 24%;
+
+    background-color : transparent;
+    border : none;
+
+    transition : .25s all;
+    &:hover {
+        opacity : .5;
+    }
+
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+
+    cursor : pointer;
+`;
+
+export const RegisterInputSearchButtonImg = styled.img `
+    height : 20px;
+    width : 20px; 
 `;
 
 export const RegisterButtonWrapper = styled.div `
