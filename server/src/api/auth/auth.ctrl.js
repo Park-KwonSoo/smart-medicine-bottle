@@ -7,6 +7,8 @@ const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
+const { Storage } = require('@google-cloud/storage');
+const GoogleStorageUrl = 'https://storage.googleapis.com/';
 
 exports.register = async(ctx) => {
     const { 
@@ -95,17 +97,38 @@ exports.doctorRegister = async ctx => {
         userId, 
         password, 
         passwordCheck,
-        info,
+
+        contact,
+        hospitalNm,
+        hospitalAddr,
+        doctorType,
+        doctorNm,
     } = ctx.request.body;
+
+    const { doctorInfoFile } = ctx.request.files;
+
+    const info = {
+        contact,
+        hospitalAddr,
+        hospitalNm,
+        doctorType,
+        doctorNm,
+        doctorLicense : '',
+    };
 
     const schema = Joi.object().keys({
         userId : Joi.string().email().max(50).required(),
         password : Joi.string().required(),
         passwordCheck : Joi.string().required(),
-        info : Joi.object().required(),
-    })
-    
-    const result = schema.validate(ctx.request.body);
+        doctorInfoFile : Joi.object().required(),
+    });
+
+    const result = schema.validate({
+        userId,
+        password,
+        passwordCheck,
+        doctorInfoFile,
+    });
     if(result.error || password !== passwordCheck) {
         ctx.status = 400;
         ctx.body = {
@@ -145,19 +168,31 @@ exports.doctorRegister = async ctx => {
     });
 
     await doctor.setPassword(password);
-
-    const doctorInfo = new DoctorInfo({
-        doctorId : userId,
-        info,
-        useYn : 'W',
-    });
-
-
     doctor.save();
-    doctorInfo.save();
+
+
+    const destination = userId + '_' + doctorInfoFile.name;
+    const storage = new Storage();
+    storage.bucket('doctor-info').upload(doctorInfoFile.path, {
+        destination,
+    }, (err, file, res) => {
+        if(err) console.log('Fail to upload Doctor License');
+        else {
+            info.doctorLicense = GoogleStorageUrl + `${res.bucket}/${res.name}`;
+            console.log('Success to Upload Doctor License!');
+        }
+
+        const doctorInfo = new DoctorInfo({
+            doctorId : userId,
+            info,
+            useYn : 'W',
+        });    
+
+        doctorInfo.save();
+    });
     
     ctx.status = 201;
-
+  
 }
 
 exports.login = async(ctx) => {

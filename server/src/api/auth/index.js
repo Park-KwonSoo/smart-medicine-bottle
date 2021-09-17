@@ -1,4 +1,5 @@
 const Router = require('koa-router')
+const KoaBody = require('koa-body')({multipart : true});
 const authCtrl = require('./auth.ctrl')
 
 const auth = new Router()
@@ -22,10 +23,10 @@ auth.get('/hospital', authCtrl.searchHospital);
 /**
  * 회원가입 (email type) : 의사 회원가입
  * url : http://localhost:4000/api/auth/register/doctor
- * request parameter : userId, password, passwordCheck, doctorInfo
+ * request parameter : userId, password, passwordCheck, doctorInfo(File)
  * return : null
  */
- auth.post('/register/doctor', authCtrl.doctorRegister)
+ auth.post('/register/doctor', KoaBody, authCtrl.doctorRegister)
 
 /**
  * 로그인 (email type)

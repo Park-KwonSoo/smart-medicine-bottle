@@ -6,7 +6,6 @@ const bodyparser = require('koa-bodyparser');
 
 const Mongoose = require('mongoose');
 const api = require('./src/api');
-const updateMedicineInfo = require('./src/lib/UpdatingMedicineInfo');
 const MqttServer = require('./src/util/MqttServer');
 const BatchSystem = require('./src/util/Batch');
 
@@ -25,7 +24,7 @@ Mongoose.connect(MONGO_URL, {
     useCreateIndex : true
 }).then(() => {
     console.log('\x1b[1;32mMongo DB is connected : ', MONGO_URL, '\x1b[0m');
-    // updateMedicineInfo.updateMedicineInfo();
+    BatchSystem.updateMedicineData();
 }).catch(e => {
     console.log(e);
 });
