@@ -1,4 +1,3 @@
-const Bottle = require('../models/bottle');
 const BottleMedicine = require('../models/bottleMedicine');
 const TakeMedicineHist = require('../models/takeMedicineHistory');
 
