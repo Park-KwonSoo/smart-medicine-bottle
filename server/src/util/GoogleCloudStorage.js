@@ -1,0 +1,37 @@
+const { Storage } = require('@google-cloud/storage');
+
+const storage = new Storage();
+const GoogleStorageUrl = 'https://storage.googleapis.com/';
+
+
+//의사 아이디, 업로드할 파일명, 업로드할 파일 경로를 인자로 받아, File을 GCS에 업로드 후 GCS 주소를 반환
+exports.uploadDoctorLicense = async ({ userId, fileName, filePath }) => {
+    const destination = userId + '_' + fileName;
+    const result = await storage.bucket('doctor-info').upload(filePath, {
+        destination,
+    });
+
+    const doctorLicenseUrl = GoogleStorageUrl + `${result[0].bucket.id}/${result[0].name}`;
+
+    return doctorLicenseUrl;
+};
+
+//의사 정보를 인자로 받아 해당 Doctor License의 Signed URL을 반환
+exports.viewDoctorLicense = async ({ doctorInfo }) => {
+    const fileName = doctorInfo.info.doctorLicense.split('/').pop();
+    const file = new Storage().bucket('doctor-info').file(fileName);
+    const option = {
+        version : 'v4',
+        expires : Date.now() + 1000 * 60 * 15,
+        action : 'read',
+    };
+
+    const [signedUrl] = file ? await file.getSignedUrl(option) : [null];
+
+    return signedUrl;
+};
+
+//의사 ID, 약 ID, 복용량을 인자로 받아, QR Code를 생성
+exports.prescribeMedicine = async ({ doctorId, medicineId, dosage }) => {
+    //toDo
+};
