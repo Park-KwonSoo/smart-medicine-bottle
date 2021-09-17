@@ -1,12 +1,14 @@
 import React from 'react';
 
+import Modal from '../../components/Modal';
 import * as styled from './RegisterStyled';
 
 
 const lensImg = '/static/img/lens.png';
-const closeButton = '/static/img/close.png';
 const check = '/static/img/check.png';
 const uncheck = '/static/img/uncheck.png'
+const next = '/static/img/next.png';
+const prev = '/static/img/prev.png';
 
 interface RegisterProps {
     registerForm : {
@@ -33,9 +35,7 @@ interface RegisterProps {
     onSetPasswordCheck : React.ChangeEventHandler<HTMLInputElement>;
     onSetDoctorLicense : React.ChangeEventHandler<HTMLInputElement>;
     hospitalNm : string;
-    setHospitalNm : (arg0 : string) => void;
     onSetHospitalNm : React.ChangeEventHandler<HTMLInputElement>;
-    // onSetHospitalAddr : React.ChangeEventHandler<HTMLInputElement>;
     onSetContact : React.ChangeEventHandler<HTMLInputElement>;
     onSetDoctorType : React.ChangeEventHandler<HTMLInputElement>;
     onSetDoctorNm : React.ChangeEventHandler<HTMLInputElement>;
@@ -50,7 +50,9 @@ interface RegisterProps {
     hospitalSearchPageList : number[];
     onSetSearchPrevPage : () => void;
     onSetSearchNextPage : () => void;
-    onCancelSearchHospital : () => void;
+
+    onConfirmSelectHospital : () => void;
+    onCancelSelectHospital : () => void;
 
     hospitalList : any[];
     selectHospital : any;
@@ -62,99 +64,91 @@ const RegisterPresenter = (props : RegisterProps) => {
         <styled.Container>
             {
                 props.searchHospital ?
-                <styled.ModalContainer>
-                    <styled.ModalClsButtonWrapper>
-                        <styled.ModalClsButton
-                            onClick = {props.onCancelSearchHospital}
+                <Modal onModalClose = {props.onCancelSelectHospital}>
+                    <>
+                    <styled.SearchTitle>
+                        {`[${props.hospitalNm}] 에 대한 검색 결과 : `}
+                        <styled.SearchResultCount style = {{marginLeft : 5, marginRight : 5,}}>총 </styled.SearchResultCount>
+                        {props.hospitalSearchPageList.length}
+                        <styled.SearchResultCount>페이지</styled.SearchResultCount>
+                    </styled.SearchTitle>
+                    <styled.HospitalListWrapper>
+                        <styled.HospitalListInfo>
+                            <styled.HospitalListInfoEach isLast = {false}>이름</styled.HospitalListInfoEach>
+                            <styled.HospitalListInfoEach isLast = {false}>주소</styled.HospitalListInfoEach>
+                            <styled.HospitalListInfoEach isLast = {true}>선택</styled.HospitalListInfoEach>
+                        </styled.HospitalListInfo>
+                        {
+                            props.hospitalList.map((hospital : any) => {
+                                return (
+                                    <styled.HospitalListEach
+                                        key = {hospital.addr}
+                                    >
+                                        <styled.HospitalListEachInfo isLast = {false}>
+                                            {hospital.yadmNm}
+                                        </styled.HospitalListEachInfo>
+                                        <styled.HospitalListEachInfo isLast = {false}>
+                                            {hospital.addr}
+                                        </styled.HospitalListEachInfo>
+                                        <styled.HospitalListEachInfo isLast = {true}>
+                                            <styled.CheckButton
+                                                onClick = {() => props.setSelectHospital(hospital)}
+                                            >
+                                                <styled.CheckButtonImg src = {
+                                                    props.selectHospital && props.selectHospital.addr === hospital.addr ?
+                                                    check : uncheck
+                                                }/>
+                                            </styled.CheckButton>
+                                        </styled.HospitalListEachInfo>
+                                    </styled.HospitalListEach>
+                                )
+                            })
+                        }
+                    </styled.HospitalListWrapper>
+                    <styled.PageWrapper>
+                        <styled.PageButton
+                            isSelect = {false}
+                            onClick = {props.onSetSearchPrevPage}
                         >
-                            <styled.ModalClsButtonImg src = {closeButton}/>
-                            <styled.ModalClsButtonText>닫기</styled.ModalClsButtonText>
-                        </styled.ModalClsButton>
-                    </styled.ModalClsButtonWrapper>
-                    <styled.ModalContentWrapper>
-                        <styled.ModalContent>
-                            <styled.SearchTitle>
-                                {`"${props.hospitalNm}"에 대한 검색 결과`}
-                            </styled.SearchTitle>
-                            <styled.HospitalListWrapper>
-                                <styled.HospitalListInfo>
-                                    <styled.HospitalListInfoEach isLast = {false}>이름</styled.HospitalListInfoEach>
-                                    <styled.HospitalListInfoEach isLast = {false}>주소</styled.HospitalListInfoEach>
-                                    <styled.HospitalListInfoEach isLast = {true}>선택</styled.HospitalListInfoEach>
-                                </styled.HospitalListInfo>
-                                {
-                                    props.hospitalList.map((hospital : any) => {
-                                        return (
-                                            <styled.HospitalListEach
-                                                key = {hospital.addr}
-                                            >
-                                                <styled.HospitalListEachInfo isLast = {false}>
-                                                    {hospital.yadmNm}
-                                                </styled.HospitalListEachInfo>
-                                                <styled.HospitalListEachInfo isLast = {false}>
-                                                    {hospital.addr}
-                                                </styled.HospitalListEachInfo>
-                                                <styled.HospitalListEachInfo isLast = {true}>
-                                                    <styled.CheckButton
-                                                        onClick = {() => props.setSelectHospital(hospital)}
-                                                    >
-                                                        <styled.CheckButtonImg src = {
-                                                            props.selectHospital && props.selectHospital.addr === hospital.addr ?
-                                                            check : uncheck
-                                                        }/>
-                                                    </styled.CheckButton>
-                                                </styled.HospitalListEachInfo>
-                                            </styled.HospitalListEach>
-                                        )
-                                    })
-                                }
-                            </styled.HospitalListWrapper>
-                            <styled.PageWrapper>
-                                <styled.PageButton
-                                    isSelect = {false}
-                                    onClick = {props.onSetSearchPrevPage}
-                                >
-                                    prev
-                                </styled.PageButton>
-                                {
-                                    props.hospitalSearchPageList.slice(Math.floor((props.hospitalSearchPage - 1) / 5) * 5, Math.floor((props.hospitalSearchPage - 1) / 5) * 5 + 5)
-                                    .map((page : number) => {
-                                        return (
-                                            <styled.PageButton
-                                                key = {page}
-                                                isSelect = {props.hospitalSearchPage === page}
-                                                onClick = {() => props.setHospitalSearchPage(page)}
-                                            >
-                                                {page}
-                                            </styled.PageButton>
-                                        )
-                                    })
-                                }
-                                <styled.PageButton
-                                    isSelect = {false}
-                                    onClick = {props.onSetSearchNextPage}
-                                >
-                                    next
-                                </styled.PageButton>
-                            </styled.PageWrapper>
-                            <styled.ModalButtonWrapper>
-                                <styled.ModalButton
-                                    isCloseButton = {false}
-                                    onClick = {() => props.setSearchHospital(false)}
-                                >
-                                    확인
-                                </styled.ModalButton>
-                                <styled.ModalButton
-                                    isCloseButton = {true}
-                                    onClick = {props.onCancelSearchHospital}
-                                >
-                                    취소
-                                </styled.ModalButton>
-                            </styled.ModalButtonWrapper>
-                        </styled.ModalContent>
-                    </styled.ModalContentWrapper>
-                    <styled.ModalClsButtonWrapper />
-                </styled.ModalContainer>
+                            <styled.PageArrowImg src = {prev}/>
+                        </styled.PageButton>
+                        {
+                            props.hospitalSearchPageList.slice(Math.floor((props.hospitalSearchPage - 1) / 5) * 5, Math.floor((props.hospitalSearchPage - 1) / 5) * 5 + 5)
+                            .map((page : number) => {
+                                return (
+                                    <styled.PageButton
+                                        key = {page}
+                                        isSelect = {props.hospitalSearchPage === page}
+                                        onClick = {() => props.setHospitalSearchPage(page)}
+                                    >
+                                        {page}
+                                    </styled.PageButton>
+                                )
+                            })
+                        }
+                        <styled.PageButton
+                            isSelect = {false}
+                            onClick = {props.onSetSearchNextPage}
+                        >
+                            <styled.PageArrowImg src = {next}/>
+                        </styled.PageButton>
+                    </styled.PageWrapper>
+                    <styled.ModalButtonWrapper>
+                        <styled.ModalButton
+                            isCloseButton = {false}
+                            onClick = {props.onConfirmSelectHospital}
+                        >
+                            확인
+                        </styled.ModalButton>
+                        <styled.ModalButton
+                            isCloseButton = {true}
+                            onClick = {props.onCancelSelectHospital}
+                        >
+                            취소
+                        </styled.ModalButton>
+                    </styled.ModalButtonWrapper>
+                    </>
+                </Modal>
                 :null
             }
             <styled.RegisterWrapper>

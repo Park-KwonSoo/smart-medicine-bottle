@@ -67,7 +67,6 @@ const RegisterContainer = (props : RegisterProps) => {
         }
     };
 
-
     const validateRegisterForm = () => {
         if(page === 1) {
             if (!validator.isEmail(registerForm.userId)) {
@@ -196,8 +195,15 @@ const RegisterContainer = (props : RegisterProps) => {
             setHospitalSearchPage(Math.ceil(hospitalSearchPage / pageSlice) * pageSlice + 1);
         }
     };
+
+    const onConfirmSelectHospital = () => {
+        setSearchHospital(false);
+        setHospitalSearchPage(1);
+        setHospitalSearchPageList([1]);
+        setHospitalList([]);
+    };
     
-    const onCancelSearchHospital = () => {
+    const onCancelSelectHospital = () => {
         Alert.onCheck('병원 등록이 취소됩니다. 계속하시겠습니까?', () => {
             setSearchHospital(false);
             setHospitalNm('');
@@ -296,7 +302,6 @@ const RegisterContainer = (props : RegisterProps) => {
             onSetPasswordCheck = {onSetPasswordCheck}
             onSetDoctorLicense = {onSetDoctorLicense}
             hospitalNm = {hospitalNm}
-            setHospitalNm = {setHospitalNm}
             onSetHospitalNm = {onSetHospitalNm}
             onSetContact = {onSetContact}
             onSetDoctorType = {onSetDoctorType}
@@ -311,7 +316,9 @@ const RegisterContainer = (props : RegisterProps) => {
             hospitalSearchPageList = {hospitalSearchPageList}
             onSetSearchPrevPage = {onSetSearchPrevPage}
             onSetSearchNextPage = {onSetSearchNextPage}
-            onCancelSearchHospital = {onCancelSearchHospital}
+
+            onConfirmSelectHospital = {onConfirmSelectHospital}
+            onCancelSelectHospital = {onCancelSelectHospital}
 
             hospitalList = {hospitalList}
             selectHospital = {selectHospital}

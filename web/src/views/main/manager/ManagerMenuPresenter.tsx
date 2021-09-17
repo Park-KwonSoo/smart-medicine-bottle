@@ -1,9 +1,7 @@
 import React from 'react';
 
+import Modal from '../../../components/Modal';
 import  * as styled from './ManagerMenuStyled';
-
-const closeButton = '/static/img/close.png';
-
 
 
 interface ManagerMenuProps {
@@ -26,84 +24,73 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
         <styled.Container>
             {
                 props.modalUp ? 
-                <styled.ModalContainer>
-                    <styled.ModalClsButtonWrapper>
-                        <styled.ModalClsButton
-                            onClick = {() => props.setModalUp(false)}
+                <Modal onModalClose = {() => props.setModalUp(false)}>
+                    <>
+                    <styled.ModalTitleWrapper>
+                        <styled.ModalTitle>가입 요청 정보</styled.ModalTitle>
+                    </styled.ModalTitleWrapper>
+                    <styled.ModalBodyWrapper>
+                        <styled.ModalBodyLeftAndRight>
+                            <styled.ModalInfoWrapper>
+                                <styled.ModalInfoExplain>의사 자격 번호</styled.ModalInfoExplain>
+                                <styled.ModalInfo>
+                                    {props.doctorDetail.info.doctorLicense}
+                                    <styled.ValidateButton
+                                        onClick = {props.onValidate}
+                                        disabled = {props.validate !== 'W'}
+                                        validate = {props.validate}
+                                    >
+                                        {
+                                            props.validate === 'Y' ?
+                                            '검증 완료' :
+                                            props.validate === 'W' ?
+                                            '검증' : 
+                                            props.validate === 'N' ?
+                                            '검증 실패' : null
+                                        }
+                                    </styled.ValidateButton>
+                                </styled.ModalInfo>
+                            </styled.ModalInfoWrapper>
+                            <styled.ModalInfoWrapper>
+                                <styled.ModalInfoExplain>이름</styled.ModalInfoExplain>
+                                <styled.ModalInfo>{props.doctorDetail.info.doctorNm}</styled.ModalInfo>
+                            </styled.ModalInfoWrapper>
+                            <styled.ModalInfoWrapper>
+                                <styled.ModalInfoExplain>연락처</styled.ModalInfoExplain>
+                                <styled.ModalInfo>{props.doctorDetail.info.contact}</styled.ModalInfo>
+                            </styled.ModalInfoWrapper>
+                        </styled.ModalBodyLeftAndRight>
+                        <styled.ModalBodyLeftAndRight>
+                            <styled.ModalInfoWrapper>
+                                <styled.ModalInfoExplain>전문 분야</styled.ModalInfoExplain>
+                                <styled.ModalInfo>{props.doctorDetail.info.doctorType}</styled.ModalInfo>
+                            </styled.ModalInfoWrapper>
+                            <styled.ModalInfoWrapper>
+                                <styled.ModalInfoExplain>병원명</styled.ModalInfoExplain>
+                                <styled.ModalInfo>{props.doctorDetail.info.hospitalNm}</styled.ModalInfo>
+                            </styled.ModalInfoWrapper>
+                            <styled.ModalInfoWrapper>
+                                <styled.ModalInfoExplain>병원 주소</styled.ModalInfoExplain>
+                                <styled.ModalInfo>{props.doctorDetail.info.hospitalAddr}</styled.ModalInfo>
+                            </styled.ModalInfoWrapper>
+                        </styled.ModalBodyLeftAndRight>
+                    </styled.ModalBodyWrapper>
+                    <styled.ModalButtonWrapper>
+                        <styled.ModalButton
+                            onClick = {props.onAcceptRequest}
+                            isAccept = {true}
                         >
-                            <styled.ModalClsButtonImg src = {closeButton}/>
-                            <styled.ModalClsButtonText>닫기</styled.ModalClsButtonText>
-                        </styled.ModalClsButton>
-                    </styled.ModalClsButtonWrapper>
-                    <styled.ModalContentWrapper>
-                        <styled.ModalContent>
-                            <styled.ModalTitleWrapper>
-                                <styled.ModalTitle>가입 요청 정보</styled.ModalTitle>
-                            </styled.ModalTitleWrapper>
-                            <styled.ModalBodyWrapper>
-                                <styled.ModalBodyLeftAndRight>
-                                    <styled.ModalInfoWrapper>
-                                        <styled.ModalInfoExplain>의사 자격 번호</styled.ModalInfoExplain>
-                                        <styled.ModalInfo>
-                                            {props.doctorDetail.info.doctorLicense}
-                                            <styled.ValidateButton
-                                                onClick = {props.onValidate}
-                                                disabled = {props.validate !== 'W'}
-                                                validate = {props.validate}
-                                            >
-                                                {
-                                                    props.validate === 'Y' ?
-                                                    '검증 완료' :
-                                                    props.validate === 'W' ?
-                                                    '검증' : 
-                                                    props.validate === 'N' ?
-                                                    '검증 실패' : null
-                                                }
-                                            </styled.ValidateButton>
-                                        </styled.ModalInfo>
-                                    </styled.ModalInfoWrapper>
-                                    <styled.ModalInfoWrapper>
-                                        <styled.ModalInfoExplain>이름</styled.ModalInfoExplain>
-                                        <styled.ModalInfo>{props.doctorDetail.info.doctorNm}</styled.ModalInfo>
-                                    </styled.ModalInfoWrapper>
-                                    <styled.ModalInfoWrapper>
-                                        <styled.ModalInfoExplain>연락처</styled.ModalInfoExplain>
-                                        <styled.ModalInfo>{props.doctorDetail.info.contact}</styled.ModalInfo>
-                                    </styled.ModalInfoWrapper>
-                                </styled.ModalBodyLeftAndRight>
-                                <styled.ModalBodyLeftAndRight>
-                                    <styled.ModalInfoWrapper>
-                                        <styled.ModalInfoExplain>전문 분야</styled.ModalInfoExplain>
-                                        <styled.ModalInfo>{props.doctorDetail.info.doctorType}</styled.ModalInfo>
-                                    </styled.ModalInfoWrapper>
-                                    <styled.ModalInfoWrapper>
-                                        <styled.ModalInfoExplain>병원명</styled.ModalInfoExplain>
-                                        <styled.ModalInfo>{props.doctorDetail.info.hospitalNm}</styled.ModalInfo>
-                                    </styled.ModalInfoWrapper>
-                                    <styled.ModalInfoWrapper>
-                                        <styled.ModalInfoExplain>병원 주소</styled.ModalInfoExplain>
-                                        <styled.ModalInfo>{props.doctorDetail.info.hospitalAddr}</styled.ModalInfo>
-                                    </styled.ModalInfoWrapper>
-                                </styled.ModalBodyLeftAndRight>
-                            </styled.ModalBodyWrapper>
-                            <styled.ModalButtonWrapper>
-                                <styled.ModalButton
-                                    onClick = {props.onAcceptRequest}
-                                    isAccept = {true}
-                                >
-                                    수락
-                                </styled.ModalButton>
-                                <styled.ModalButton
-                                    onClick = {props.onRejectRequest}
-                                    isAccept = {false}
-                                >
-                                    거절
-                                </styled.ModalButton>
-                            </styled.ModalButtonWrapper>
-                        </styled.ModalContent>
-                    </styled.ModalContentWrapper>
-                    <styled.ModalClsButtonWrapper/>
-                </styled.ModalContainer> : null
+                            수락
+                        </styled.ModalButton>
+                        <styled.ModalButton
+                            onClick = {props.onRejectRequest}
+                            isAccept = {false}
+                        >
+                            거절
+                        </styled.ModalButton>
+                    </styled.ModalButtonWrapper>
+                    </>
+                </Modal> : null
             }
             <styled.ContentWrapper>
                 <styled.ContentTitle>

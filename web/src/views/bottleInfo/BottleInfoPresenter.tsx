@@ -2,10 +2,10 @@ import React from 'react';
 import HighCharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
+import Modal from '../../components/Modal';
 import * as styled from './BottleInfoStyled';
 
 const plus = '/static/img/plus.png';
-const closeButton = '/static/img/close.png';
 
 
 interface BottleInfoProps {
@@ -32,42 +32,32 @@ const BottleInfoPresenter = (props : BottleInfoProps) => {
         <styled.Container>
             {
                 props.medicineInfoModal ?
-                <styled.ModalContainer>
-                    <styled.ModalClsButtonWrapper>
-                        <styled.ModalClsButton
-                            onClick = {() => props.setMedicineInfoModal(false)}
-                        >
-                            <styled.ModalClsButtonImg src = {closeButton}/>
-                            <styled.ModalClsButtonText>닫기</styled.ModalClsButtonText>
-                        </styled.ModalClsButton>
-                    </styled.ModalClsButtonWrapper>
-                    <styled.ModalContentWrapper>
-                        <styled.ModalContent>
-                            <styled.MedicineNameWrapper>
-                                <styled.MedicineName>{props.bottleInfo.medicine.name}</styled.MedicineName>
-                                <styled.MedicineName style = {{color : '#343434', fontSize : 15, marginTop : 4,}}>{props.bottleInfo.medicine.company}</styled.MedicineName>
-                            </styled.MedicineNameWrapper>
-                            <styled.MedicineInfoWrapper>
-                                <styled.MedicineEachInfoWrapper>
-                                    <styled.MedicineEachInfoTitle>효능</styled.MedicineEachInfoTitle>
-                                    <styled.MedicineEachInfo>{props.bottleInfo.medicine.target}</styled.MedicineEachInfo>
-                                </styled.MedicineEachInfoWrapper>
-                                <styled.MedicineEachInfoWrapper>
-                                    <styled.MedicineEachInfoTitle>복용 정보</styled.MedicineEachInfoTitle>
-                                    <styled.MedicineEachInfo>{props.bottleInfo.medicine.dosage}</styled.MedicineEachInfo>
-                                </styled.MedicineEachInfoWrapper>
-                                <styled.MedicineEachInfoWrapper>
-                                    <styled.MedicineEachInfoTitle style = {{color : '#FF3F3F', fontWeight : 'bold'}}>주의 사항</styled.MedicineEachInfoTitle>
-                                    <styled.MedicineEachInfo style = {{color : '#9B0000'}}>{props.bottleInfo.medicine.warn}</styled.MedicineEachInfo>
-                                </styled.MedicineEachInfoWrapper>
-                                <styled.MedicineEachInfoWrapper>
-                                    <styled.MedicineEachInfoTitle style = {{color : '#FF3F3F', fontWeight : 'bold'}}>부작용</styled.MedicineEachInfoTitle>
-                                    <styled.MedicineEachInfo style = {{color : '#9B0000'}}>{props.bottleInfo.medicine.antiEffect}</styled.MedicineEachInfo>
-                                </styled.MedicineEachInfoWrapper>
-                            </styled.MedicineInfoWrapper>
-                        </styled.ModalContent>
-                    </styled.ModalContentWrapper>
-                </styled.ModalContainer> : null
+                <Modal onModalClose = {() => props.setMedicineInfoModal(false)}>
+                    <>
+                    <styled.MedicineNameWrapper>
+                        <styled.MedicineName>{props.bottleInfo.medicine.name}</styled.MedicineName>
+                        <styled.MedicineName style = {{color : '#343434', fontSize : 15, marginTop : 4,}}>{props.bottleInfo.medicine.company}</styled.MedicineName>
+                    </styled.MedicineNameWrapper>
+                    <styled.MedicineInfoWrapper>
+                        <styled.MedicineEachInfoWrapper>
+                            <styled.MedicineEachInfoTitle>효능</styled.MedicineEachInfoTitle>
+                            <styled.MedicineEachInfo>{props.bottleInfo.medicine.target}</styled.MedicineEachInfo>
+                        </styled.MedicineEachInfoWrapper>
+                        <styled.MedicineEachInfoWrapper>
+                            <styled.MedicineEachInfoTitle>복용 정보</styled.MedicineEachInfoTitle>
+                            <styled.MedicineEachInfo>{props.bottleInfo.medicine.dosage}</styled.MedicineEachInfo>
+                        </styled.MedicineEachInfoWrapper>
+                        <styled.MedicineEachInfoWrapper>
+                            <styled.MedicineEachInfoTitle style = {{color : '#FF3F3F', fontWeight : 'bold'}}>주의 사항</styled.MedicineEachInfoTitle>
+                            <styled.MedicineEachInfo style = {{color : '#9B0000'}}>{props.bottleInfo.medicine.warn}</styled.MedicineEachInfo>
+                        </styled.MedicineEachInfoWrapper>
+                        <styled.MedicineEachInfoWrapper>
+                            <styled.MedicineEachInfoTitle style = {{color : '#FF3F3F', fontWeight : 'bold'}}>부작용</styled.MedicineEachInfoTitle>
+                            <styled.MedicineEachInfo style = {{color : '#9B0000'}}>{props.bottleInfo.medicine.antiEffect}</styled.MedicineEachInfo>
+                        </styled.MedicineEachInfoWrapper>
+                    </styled.MedicineInfoWrapper>
+                    </>
+                </Modal> : null
             }
             <styled.ChartAndFeedbackWrapper>
                 <styled.ChartWrapper>
@@ -143,7 +133,6 @@ const BottleInfoPresenter = (props : BottleInfoProps) => {
                     <styled.NewFeedbackRegButton
                         onClick = {props.onSubmitFeedback}
                     >
-                        {/* <styled.NewFeedbackRegButtonImg /> */}
                         <styled.NewFeedbackRegButtonText>피드백<br/>등록</styled.NewFeedbackRegButtonText>
                     </styled.NewFeedbackRegButton>
                 </styled.NewFeedbackButtonWrapper>
