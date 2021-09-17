@@ -26,7 +26,7 @@ const RegisterContainer = (props : RegisterProps) => {
         password : '',
         passwordCheck : '',
         info : {
-            doctorLicense : '',
+            doctorLicense : File,
             hospitalNm : '',
             hospitalAddr : '',
             contact : '',
@@ -225,9 +225,24 @@ const RegisterContainer = (props : RegisterProps) => {
         } else if(page === 2) {
             setPage(3);
         } else if(page === 3) {
+
+            const Data = new FormData();
+            Data.append('userId', registerForm.userId);
+            Data.append('password', registerForm.password);
+            Data.append('passwordCheck', registerForm.passwordCheck);
+
+            Data.append('hospitalNm', registerForm.info.hospitalNm);
+            Data.append('hospitalAddr', registerForm.info.hospitalAddr);
+            Data.append('contact', registerForm.info.contact);
+            Data.append('doctorNm', registerForm.info.doctorNm);
+            Data.append('doctorType', registerForm.info.doctorType);
+
+            Data.append('doctorInfoFile', registerForm.info.doctorLicense[0]);
+
+
             const onRegisterDoctor = async () => {
                 try {
-                    const result = await authApi.registerDoctor(registerForm);
+                    const result = await authApi.registerDoctor(Data);
                     if(result.data === 'Created') {
                         Alert.onSuccess('회원가입 성공, 관리자의 승인을 대기하세요.', () => props.history.push('/login'));
                     }

@@ -1,7 +1,7 @@
 import { client } from "./client";
 
 export default {
-    register : (Data : any) => {
+    register : (Data : FormData) => {
         return client.post('/auth/register', Data);
     },
 
