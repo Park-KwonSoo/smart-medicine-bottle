@@ -13,6 +13,8 @@
  const Hub = require('../models/hub');
  const Bottle = require('../models/bottle');
  const BottleMedicine = require('../models/bottleMedicine');
+
+const updateMedicineInfo = require('../lib/UpdatingMedicineInfo');
  
  
 //  //매년 1월 1일 00시 00분에 1살씩 추가
@@ -28,9 +30,16 @@
 //          timezone : 'Asia/Tokyo',
 //      });
 //  };
+
+//매월 1일 0시 0분에 약 정보 업데이트
+exports.updateMedicineData = async () => {
+    cron.schedule('0 0 0 1 * *', () => {
+        updateMedicineInfo.updateMedicineInfo();
+    });
+};
  
- //dosage에 따라, Push Notification을 발송한다.
- //아침 8시, 점심 12시, 저녁 6시에 한번씩 발송
+//dosage에 따라, Push Notification을 발송한다.
+//아침 8시, 점심 12시, 저녁 6시에 한번씩 발송
  exports.PushNotifyByDosage = async() => {
  
      //매일 아침 8시 : 복용량 상관 없이 보냄

@@ -1,7 +1,9 @@
 const User = require('../../models/user');
 const DoctorInfo = require('../../models/doctorInfo');
-const Profile = require('../../models/profile');
 const jwt = require('jsonwebtoken');
+
+const { Storage } = require('@google-cloud/storage');
+
 
 /**
  * 의사 회원가입을 요청한 회원 리스트를 확인한다.
@@ -108,9 +110,25 @@ exports.getDoctorRegReqDetail = async ctx => {
             return;
         }
 
+        const fileName = doctorInfo.info.doctorLicense.split('/').pop();
+        const file = new Storage().bucket('doctor-info').file(fileName);
+        const option = {
+            version : 'v4',
+            expires : Date.now() + 1000 * 60 * 15,
+            action : 'read',
+        };
+
+        const [signedUrl] = file ? await file.getSignedUrl(option) : [''];
+
         ctx.status = 200;
         ctx.body = {
-            doctorInfo,
+            doctorInfo : {
+                ...doctorInfo._doc,
+                info : {
+                    ...doctorInfo.info,
+                    doctorLicense : signedUrl,
+                },
+            }, 
         };
 
     } catch (e) {
