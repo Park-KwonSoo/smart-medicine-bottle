@@ -17,6 +17,7 @@ const BottleMedicineSchema = new Schema({
         type : String,
         ref : 'User',
         required : true,
+        lowercase : true,
     },
     dosage : {
         type : Number,

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const HubSchema = new Schema ({
     hubId : { type : Number, required : true, unique : true },
     hosting : { type : Object, default : null },
-    userId : { type : String, default : null, ref : 'User' },
+    userId : { type : String, default : null, ref : 'User', lowercase : true, },
 });
 
 HubSchema.statics.findByHubId = function(hubId) {
