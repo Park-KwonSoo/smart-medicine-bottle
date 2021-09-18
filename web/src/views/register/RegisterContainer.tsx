@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RouteComponentProps } from 'react-router-dom';
 
 import { useRecoilValue, useRecoilState } from "recoil";
@@ -26,7 +26,6 @@ const RegisterContainer = (props : RegisterProps) => {
         password : '',
         passwordCheck : '',
         info : {
-            doctorLicense : File,
             hospitalNm : '',
             hospitalAddr : '',
             contact : '',
@@ -34,6 +33,8 @@ const RegisterContainer = (props : RegisterProps) => {
             doctorNm : '',
         },
     });
+    const [doctorInfoFile, setDoctorInfoFile] = useState<FileList | null>(null);
+    const doctorInfoFile_Select = useRef(null);
 
     const [page, setPage] = useState<number>(1);
     const [error, setError] = useState<string | null>(null);
@@ -79,9 +80,8 @@ const RegisterContainer = (props : RegisterProps) => {
                 setError('비밀번호가 일치하지 않습니다.')
             } else setError(null);
         } else if(page === 2) {
-            if(!registerForm.info.doctorLicense.length &&
-                 !validator.isAlphanumeric(registerForm.info.doctorLicense)) {
-                setError('의사 자격 번호를 입력해야 합니다.');
+            if(!doctorInfoFile) {
+                setError('의사 자격 인증 파일을 첨부해야 합니다.');
             } else if(registerForm.info.doctorNm.length < 2) {
                 setError('의사 이름을 올바르게 입력해야 합니다.');
             } else if(!registerForm.info.contact) {
@@ -121,13 +121,7 @@ const RegisterContainer = (props : RegisterProps) => {
     };
 
     const onSetDoctorLicense = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setRegisterForm({
-            ...registerForm,
-            info : {
-                ...registerForm.info,
-                doctorLicense : e.target.value,
-            },
-        });
+        setDoctorInfoFile(e.target.files);
     };
 
     const onSetHospitalNm = (e : React.ChangeEvent<HTMLInputElement>) => {
@@ -237,16 +231,21 @@ const RegisterContainer = (props : RegisterProps) => {
             Data.append('doctorNm', registerForm.info.doctorNm);
             Data.append('doctorType', registerForm.info.doctorType);
 
-            Data.append('doctorInfoFile', registerForm.info.doctorLicense[0]);
+            Data.append('doctorInfoFile', doctorInfoFile ? doctorInfoFile[0] : '');
 
 
             const onRegisterDoctor = async () => {
+                //로딩 진행
+                setLoading(true);
+
                 try {
                     const result = await authApi.registerDoctor(Data);
                     if(result.data === 'Created') {
+                        setLoading(false);
                         Alert.onSuccess('회원가입 성공, 관리자의 승인을 대기하세요.', () => props.history.push('/login'));
                     }
                 } catch(e : any) {
+                    setLoading(false);
                     Alert.onError(e.response.data.error, () => null);
                 }
             };
@@ -265,7 +264,7 @@ const RegisterContainer = (props : RegisterProps) => {
 
     useEffect(() => {
         validateRegisterForm();
-    }, [registerForm, page]);
+    }, [registerForm, doctorInfoFile, page]);
 
     useEffect(() => {
         if(selectHospital) {
@@ -306,6 +305,8 @@ const RegisterContainer = (props : RegisterProps) => {
         <Header {...props}/>
         <RegisterPresenter
             registerForm = {registerForm}
+            doctorInfoFile = {doctorInfoFile}
+            doctorInfoFile_Select = {doctorInfoFile_Select}
             page = {page}
             error = {error}
 

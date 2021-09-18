@@ -314,6 +314,55 @@ export const RegisterInput = styled.input `
     }
 `;
 
+export const RegisterFileUploadWrapper = styled.div `
+    width : 80%;
+    display : flex;
+    flex-direction : row;
+
+    justify-content : flex-start;
+    align-items : center;
+
+    border : none;
+    background-color : transparent;
+`;
+
+export const RegisterFileUploadButton = styled.button `
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+
+    border-radius : 3px;
+    border : 1px solid #343434;
+    background-color : transparent;
+    color : #343434;
+
+    padding : 3px 4px;
+
+    font-size : 12px;
+    font-weight : 600;
+
+    cursor : pointer;
+    transition : .25s all;
+
+    &:hover {
+        border : 1px solid #337DFF;
+        color : #fff;
+        background-color : #337DFF;
+    }
+
+    margin : 0 5% 0 0;
+
+`;
+
+export const RegisterFileUploadInfoText = styled.div `
+    font-size : 12px;
+    font-weight : 600;
+
+    color : #337DFF;
+`;
+
 export const RegisterInputSearchButton = styled.button `
     position : absolute;
 

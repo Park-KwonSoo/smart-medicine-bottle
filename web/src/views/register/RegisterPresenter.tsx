@@ -10,13 +10,13 @@ const uncheck = '/static/img/uncheck.png'
 const next = '/static/img/next.png';
 const prev = '/static/img/prev.png';
 
+
 interface RegisterProps {
     registerForm : {
         userId : string;
         password : string;
         passwordCheck : string;
         info : {
-            doctorLicense : string;
             hospitalNm : string;
             hospitalAddr : string;
             contact : string;
@@ -24,6 +24,8 @@ interface RegisterProps {
             doctorNm : string;
         },
     };
+    doctorInfoFile : FileList | null;
+    doctorInfoFile_Select : any;
     page : number;
     error : string | null;
 
@@ -148,8 +150,7 @@ const RegisterPresenter = (props : RegisterProps) => {
                         </styled.ModalButton>
                     </styled.ModalButtonWrapper>
                     </>
-                </Modal>
-                :null
+                </Modal> : null
             }
             <styled.RegisterWrapper>
                 <styled.RegisterBackButtonWrapper>
@@ -204,11 +205,19 @@ const RegisterPresenter = (props : RegisterProps) => {
                     <>
                     <styled.RegisterInputWrapper>
                         <styled.RegisterInputText>의사 자격증 번호</styled.RegisterInputText>
-                        <styled.RegisterInput 
-                            placeholder = "Doctor's License"
-                            value = {props.registerForm.info.doctorLicense}
+                        <input type = 'file'
+                            style = {{ display : 'none' }}
                             onChange = {props.onSetDoctorLicense}
+                            ref = {props.doctorInfoFile_Select}
                         />
+                        <styled.RegisterFileUploadWrapper>
+                            <styled.RegisterFileUploadButton onClick = {() => props.doctorInfoFile_Select.current.click()}>
+                                파일 첨부
+                            </styled.RegisterFileUploadButton>
+                            <styled.RegisterFileUploadInfoText>
+                                {props.doctorInfoFile ? props.doctorInfoFile[0].name : ''}
+                            </styled.RegisterFileUploadInfoText>
+                        </styled.RegisterFileUploadWrapper>
                     </styled.RegisterInputWrapper>
                     <styled.RegisterInputWrapper>
                         <styled.RegisterInputText>이름</styled.RegisterInputText>
