@@ -16,6 +16,9 @@ interface ManagerMenuProps {
     validate : string;
     onValidate : () => void;
 
+    validateDoctorLicense : string;
+    onSetValidateDoctorLicense : React.ChangeEventHandler<HTMLInputElement>;
+
     onAcceptRequest : () => void;
     onRejectRequest : () => void;
 
@@ -50,6 +53,8 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                                 <styled.ModalInfo>
                                     <styled.DoctorLicenseViewInput
                                         placeholder = '의사 면허 번호'
+                                        value = {props.validateDoctorLicense}
+                                        onChange = {props.onSetValidateDoctorLicense}
                                     />
                                     <styled.ValidateButton
                                         onClick = {props.onValidate}

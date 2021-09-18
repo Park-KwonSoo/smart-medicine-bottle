@@ -22,6 +22,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
     const [doctorDetail, setDoctorDetail] = useState<any>({});
     const [modalUp, setModalUp] = useState<boolean>(false);
     const [validate, setValidate] = useState<string>('W');
+    const [validateDoctorLicense, setValidateDoctorLicense] = useState<string>('');
     
 
 
@@ -65,6 +66,11 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
         licensePage.focus();
     };
 
+    //자격 확인 문서를 보고, 면허 번호를 입력하는 함수
+    const onSetValidateDoctorLicense = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setValidateDoctorLicense(e.target.value);
+    };
+
     //회원 가입 수락
     const onAcceptRequest = () => {
         if(validate === 'W') {
@@ -77,7 +83,10 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
 
         const onAccept = async() => {
             try {
-                await managerApi.acceptDoctorRegReq(token, doctorDetail)
+                await managerApi.acceptDoctorRegReq(token, {
+                    doctorId : doctorDetail.doctorId,
+                    validateDoctorLicense,
+                })
                     .then((res : any) => {
                         if(res.statusText === 'OK') {
                             Alert.onSuccess('회원 등록이 완료되었습니다.', fetchData);
@@ -95,7 +104,9 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
     const onRejectRequest = () => {
         const onReject = async() => {
             try {
-                await managerApi.rejectDoctorRegReq(token, doctorDetail)
+                await managerApi.rejectDoctorRegReq(token, {
+                    doctorId : doctorDetail.doctorId,
+                })
                     .then((res : any) => {
                         if(res.statusText === 'OK') {
                             Alert.onSuccess('회원 등록이 취소되었습니다.', fetchData);
@@ -112,13 +123,13 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
     const onValidate = async () => {
         try {
             await managerApi.validateDoctorLicense(token, {
-                doctorLicense : doctorDetail.info.doctorLicense,
+                validateDoctorLicense,
             }).then(res => {
                 if(res.statusText === 'OK') {
                     setValidate(res.data.result ? 'Y' : 'N');
                 }
             }).catch(err => {
-                Alert.onError(err.response.data, () => {
+                Alert.onError(err.response.data.error, () => {
                     setModalUp(false);
                     setValidate('W');
                 });
@@ -130,6 +141,12 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
             });
         }
     };
+
+    
+    useEffect(() => {
+        setValidate('W');
+        setValidateDoctorLicense('');
+    }, [modalUp]);
 
     useEffect(() => {
         fetchData();
@@ -147,6 +164,9 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
             
             validate = {validate}
             onValidate = {onValidate}
+
+            validateDoctorLicense = {validateDoctorLicense}
+            onSetValidateDoctorLicense = {onSetValidateDoctorLicense}
 
             onAcceptRequest = {onAcceptRequest}
             onRejectRequest = {onRejectRequest}
