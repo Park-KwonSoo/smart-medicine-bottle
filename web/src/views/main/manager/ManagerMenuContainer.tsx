@@ -86,12 +86,11 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                 await managerApi.acceptDoctorRegReq(token, {
                     doctorId : doctorDetail.doctorId,
                     validateDoctorLicense,
-                })
-                    .then((res : any) => {
-                        if(res.statusText === 'OK') {
-                            Alert.onSuccess('회원 등록이 완료되었습니다.', fetchData);
-                        }
-                    })
+                }).then((res : any) => {
+                    if(res.statusText === 'OK') {
+                        Alert.onSuccess('회원 등록이 완료되었습니다.', fetchData);
+                    }
+                });
             } catch(e : any) {
                 Alert.onError(e.response.data.error, () => setModalUp(false));
             }
@@ -106,12 +105,11 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
             try {
                 await managerApi.rejectDoctorRegReq(token, {
                     doctorId : doctorDetail.doctorId,
-                })
-                    .then((res : any) => {
-                        if(res.statusText === 'OK') {
-                            Alert.onSuccess('회원 등록이 취소되었습니다.', fetchData);
-                        }
-                    })
+                }).then((res : any) => {
+                    if(res.statusText === 'OK') {
+                        Alert.onSuccess('회원 등록이 취소되었습니다.', fetchData);
+                    }
+                });
             } catch(e : any) {
                 Alert.onError(e.response.data.error, () => setModalUp(false));
             }
