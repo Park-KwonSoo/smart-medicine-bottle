@@ -38,7 +38,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                     }
                 }).catch(err => {
                     Alert.onError(err.response.data.error, () => null);
-                })
+                });
         } catch(e : any) {
             Alert.onError(e.response.data.error, () => null);
         }
