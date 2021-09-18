@@ -75,25 +75,96 @@ export const ModalInfoExplain = styled.div `
 
     letter-spacing : 1px;
 
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : center;
+
     border : none;
     border-bottom : 1px solid #337DFF;
 
     color : #337DFF;
-    padding : 2px 5px;
+    padding : 2px 1px;
 `;
 
 export const ModalInfo = styled.div `
-    margin : 5px 0 20px 0;
-    font-size : 20px;
-    font-weight : 700;
+    margin : 5px 0 10px 0;
+    font-size : 13px;
+    font-weight : 600;
+
+    letter-spacing : 1px;
 
     display : flex;
     flex-direction : row;
     align-items : center;
 `;
 
+export const ModalInfoNotice = styled.div `
+    font-size : 11px;
+    color : #bbb;
+
+    font-weight : 400;
+
+    letter-spacing : 0px;
+
+    margin : 5px 0 0px 0;
+`;
+
+export const DoctorLicenseViewWrapper = styled.div `
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+    
+    border : none;
+    background-color : transparent;
+`;
+    
+export const DoctorLicenseViewButton = styled.button `
+    margin : 5px 0 0 7px;
+
+    border : 1px solid #343434;
+    border-radius : 3px;
+    background-color : #EAF2FF;
+    padding : 2px 5px;
+
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : center;
+    
+    cursor : pointer;
+    transition : .25s all;
+
+    &:hover {
+        border : 1px solid #337DFF;
+        background-color : #337DFF;
+        color : #fff;
+    }
+
+    font-size : 11px;
+`;
+
+export const DoctorLicenseViewInput = styled.input `
+    padding : 2px 1px;
+
+    font-size : 11px;
+    letter-spacing : 1px;
+    color : #343434;
+
+    border : none;
+    border-bottom : 1px solid #343434;
+
+    &::placeholder {
+        color : #ccc;
+    }
+`;
+
 export const ValidateButton = styled.button<{validate : string}> `
-    margin : 0 0 0 15px;
+    font-size : 11px;
+
+    margin : 0 0 0 5px;
     padding : 2px 5px;
     
     border-radius : 3px;

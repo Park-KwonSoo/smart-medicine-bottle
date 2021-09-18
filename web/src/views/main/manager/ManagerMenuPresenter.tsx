@@ -11,6 +11,8 @@ interface ManagerMenuProps {
     modalUp : boolean;
     setModalUp : any;
     onViewDetailReq : (arg0 : string) => void;
+    onViewLicenseDetail : (arg0 : string) => void;
+
     validate : string;
     onValidate : () => void;
 
@@ -32,13 +34,27 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                     <styled.ModalBodyWrapper>
                         <styled.ModalBodyLeftAndRight>
                             <styled.ModalInfoWrapper>
-                                <styled.ModalInfoExplain>의사 자격 번호</styled.ModalInfoExplain>
+                                <styled.DoctorLicenseViewWrapper>
+                                    <styled.ModalInfoExplain>
+                                        의사 자격 번호
+                                    </styled.ModalInfoExplain>
+                                    <styled.DoctorLicenseViewButton onClick = {() => props.onViewLicenseDetail(props.doctorDetail.info.doctorLicense)}>
+                                        자격정보 확인
+                                    </styled.DoctorLicenseViewButton>
+                                </styled.DoctorLicenseViewWrapper>
+                                <styled.ModalInfoNotice>
+                                    * 자격 정보 확인 버튼을 눌러 정보를 확인하세요. 
+                                    <br/>* 정보 확인은 15분간 유효합니다.
+                                    <br/>* 확인한 면허 번호를 입력 후 검증하세요.
+                                </styled.ModalInfoNotice>
                                 <styled.ModalInfo>
-                                    {props.doctorDetail.info.doctorLicense}
+                                    <styled.DoctorLicenseViewInput
+                                        placeholder = '의사 면허 번호'
+                                    />
                                     <styled.ValidateButton
                                         onClick = {props.onValidate}
                                         disabled = {props.validate !== 'W'}
-                                        validate = {props.validate}
+                                        validate = {props.validate} 
                                     >
                                         {
                                             props.validate === 'Y' ?

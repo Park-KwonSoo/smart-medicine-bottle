@@ -38,7 +38,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                 }).catch(err => {
                     Alert.onError(err.response.data.error, () => null);
                 })
-        } catch(e) {
+        } catch(e : any) {
             Alert.onError(e.response.data.error, () => null);
         }
     };
@@ -55,9 +55,14 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                         setModalUp(true);
                     }
                 })
-        } catch(e) {
+        } catch(e : any) {
             Alert.onError(e.response.data.error, () => setModalUp(false));
         }
+    };
+
+    const onViewLicenseDetail = async (url : string) => {
+        const licensePage : any = window.open(url);
+        licensePage.focus();
     };
 
     //회원 가입 수락
@@ -78,7 +83,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                             Alert.onSuccess('회원 등록이 완료되었습니다.', fetchData);
                         }
                     })
-            } catch(e) {
+            } catch(e : any) {
                 Alert.onError(e.response.data.error, () => setModalUp(false));
             }
         };
@@ -96,7 +101,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                             Alert.onSuccess('회원 등록이 취소되었습니다.', fetchData);
                         }
                     })
-            } catch(e) {
+            } catch(e : any) {
                 Alert.onError(e.response.data.error, () => setModalUp(false));
             }
         };
@@ -118,7 +123,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                     setValidate('W');
                 });
             })
-        } catch(e) {
+        } catch(e : any) {
             Alert.onError(e.response.data, () => {
                 setModalUp(false);
                 setValidate('W');
@@ -138,6 +143,8 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
             modalUp = {modalUp}
             setModalUp = {setModalUp}
             onViewDetailReq = {onViewDetailReq}
+            onViewLicenseDetail = {onViewLicenseDetail}
+            
             validate = {validate}
             onValidate = {onValidate}
 
