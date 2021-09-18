@@ -6,6 +6,7 @@ const DoctorInfoSchema = new Schema({
     doctorId : { type : String, required : true, },
     info : {
         doctorLicense : { type : String, required : true, },
+        validateDoctorLicense : { type : String, default : null },
         hospitalNm : { type : String, default : null, },
         hospitalAddr : { type : String, default : null, },
         contact : { type : String, required : true, },
@@ -21,6 +22,10 @@ DoctorInfoSchema.statics.findByDoctorId = function(doctorId) {
 
 DoctorInfoSchema.methods.setUseYn = function(useYn) {
     this.useYn = useYn;
+};
+
+DoctorInfoSchema.methods.setValidateDoctorLicense = function(validateDoctorLicense) {
+    this.info.validateDoctorLicense = validateDoctorLicense;
 };
 
 

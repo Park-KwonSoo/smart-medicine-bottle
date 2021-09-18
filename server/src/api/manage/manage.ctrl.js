@@ -155,7 +155,7 @@ exports.acceptDoctorRegReq = async ctx => {
     }
 
     try {
-        const { doctorId } = ctx.request.body;
+        const { doctorId, validateDoctorLicense } = ctx.request.body;
         const doctor = await User.findOne({ userId : doctorId });
         if(!doctor) {
             ctx.status = 404;
@@ -181,7 +181,25 @@ exports.acceptDoctorRegReq = async ctx => {
                 error : '의사로 가입된 회원이 아닙니다.',
             };
             return;
+        } else if(!validateDoctorLicense) {
+            ctx.status = 400;
+            ctx.body = {
+                error : '유효한 자격 번호가 아닙니다.',
+            };
+            return;
         }
+
+        const existDoctorInfo = await DoctorInfo.findOne({ 
+            'info.validateDoctorLicense' : validateDoctorLicense
+        });
+        if(existDoctorInfo) {
+            ctx.status = 403;
+            ctx.body = {
+                error : '중복된 자격번호입니다.',
+            };
+            return;
+        }
+
 
         const doctorInfo = await DoctorInfo.findOne({
             doctorId,
@@ -190,7 +208,9 @@ exports.acceptDoctorRegReq = async ctx => {
 
         doctor.setUseYn('Y');
         doctor.save();
+
         doctorInfo.setUseYn('Y');
+        doctorInfo.setValidateDoctorLicense(validateDoctorLicense);
         doctorInfo.save();
 
         ctx.status = 200;
@@ -296,12 +316,12 @@ exports.validateDoctorLicense = async ctx => {
         return;
     }
 
-    const { doctorLicense } = ctx.request.body;
-    const doctorInfo = await DoctorInfo.find({ 'info.doctorLicense' : doctorLicense });
+    const { validateDoctorLicense } = ctx.request.body;
+    const doctorInfo = await DoctorInfo.findOne({ 'info.validateDoctorLicense' : validateDoctorLicense });
 
     ctx.status = 200;
     ctx.body = {
-        result : doctorInfo.length > 1 ? false : true,
+        result : doctorInfo ? false : true,
     };
 
 };
