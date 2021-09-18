@@ -5,8 +5,8 @@ require('moment-timezone');
 const Schema = mongoose.Schema;
 
 const PatientInfoSchema = new Schema({
-    patientId : { type : String, required : true, ref : 'User', },
-    doctorId : { type : String, required : true, ref : 'User', },
+    patientId : { type : String, required : true, ref : 'User', lowercase : true, },
+    doctorId : { type : String, required : true, ref : 'User', lowercase : true, },
     info : { type : String, required : true, },
     useYn : { type : String, required : true, default : 'W', },
 });

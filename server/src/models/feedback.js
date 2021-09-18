@@ -10,7 +10,7 @@ const FeedbackSchema = new Schema({
         required : true, 
         ref : 'BottleMedicine', 
     }, 
-    doctorId : { type : String, required : true, ref : 'User', },
+    doctorId : { type : String, required : true, ref : 'User', lowercase : true, },
     feedback : { type : String, required : true, },
 });
 

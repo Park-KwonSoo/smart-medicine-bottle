@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ProfileSchema = new Schema({
-    userId : { type : String, required : true, ref : 'User', },
+    userId : { type : String, required : true, ref : 'User', lowercase : true, },
     userNm : { type : String, required : true, },
     birth : { type : String, required : true, },
     contact : { type : String, required : true, },
