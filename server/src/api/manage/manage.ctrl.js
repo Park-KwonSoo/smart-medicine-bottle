@@ -317,6 +317,14 @@ exports.validateDoctorLicense = async ctx => {
     }
 
     const { validateDoctorLicense } = ctx.request.body;
+    if(!validateDoctorLicense) {
+        ctx.status = 404;
+        ctx.body = {
+            error : '유효한 자격번호를 입력해주세요', 
+        };
+        return;
+    }
+
     const doctorInfo = await DoctorInfo.findOne({ 'info.validateDoctorLicense' : validateDoctorLicense });
 
     ctx.status = 200;
