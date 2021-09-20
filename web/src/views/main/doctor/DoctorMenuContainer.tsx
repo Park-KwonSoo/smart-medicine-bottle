@@ -10,10 +10,7 @@ import * as Alert from '../../../util/alertMessage';
 
 import { doctorApi, medicineApi } from '../../../api';
 
-import QRCode from 'qrcode';
 
-
-//toDo : Generate QR Code By Medicine Id
 
 type DoctorMenuProps = RouteComponentProps
 
@@ -264,19 +261,36 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     };
 
     const onPrescribeSubmit = async() => {
+        const onPrescribeMedicine = async () => {
+            setLoading(true);
+            try {
+                const res = await doctorApi.prescribeMedicine(token, {
+                    patientId : patientDetail.profile.userId,
+                    medicineId : prescribeMedicine.medicineId,
+                    dosage,
+                });
+
+                if(res.statusText === 'OK') {
+                    setQrcodeUrl(res.data.qrCode);
+                    setLoading(false);
+                }
+            } catch(e : any) {
+                setLoading(false);
+                Alert.onError(e.response.data.error, () => null);
+            }
+        };
+
         Alert.onCheck(`${prescribeMedicine.name}(일 복용량:${dosage})\n을 처방하시겠습니까?`, async () => {
-            setQrcodeUrl(await QRCode.toDataURL(`${prescribeMedicine.name}/${prescribeMedicine.medicineId}/${dosage}/${userId}`, {
-                type : "image/png", 
-                color : { dark : '#337DFF', light : '#FFF' },
-            }));
+            await onPrescribeMedicine();
             Alert.onSuccess('처방 정보가 생성 되었습니다.', () => onSetNextStepPrescribe());
         }, () => null);
     };
 
     const onPrintQrcode = async(divId : string) => {
         const printContent : any = document.getElementById(divId);
-        const windowOpen : any = window.open('', 'PrintQRCode');
+        const windowOpen : any = window.open('', '_blank');
 
+        //toDo : 현재 인증되지 않은 사용자(=http)이기 때문에, GCS에서 signed url을 불러와도 만료되어, 이미지가 정상 표시 안됨 : 해결 필요
         windowOpen.document.writeln(printContent.innerHTML);
         windowOpen.document.close();
         windowOpen.focus();

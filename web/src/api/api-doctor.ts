@@ -65,4 +65,11 @@ export default {
             },
         });
     },
+    prescribeMedicine : (token : RecoilState<any>, Data : any) => {
+        return client.post('/doctor/prescribe', Data, {
+            headers : {
+                Authorization : token,
+            },
+        });
+    },
 };

@@ -242,7 +242,8 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                             </styled.MedicineQRCodeInfo>
                             {
                                 props.qrcodeUrl ?
-                                <styled.MedicineQRCode src = {props.qrcodeUrl}/> : null
+                                <styled.MedicineQRCode 
+                                    src = {props.qrcodeUrl}/> : null
                             }
                         </styled.MedicineQRCodeWrapper>
                     }
