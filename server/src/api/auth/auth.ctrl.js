@@ -17,6 +17,7 @@ exports.register = async(ctx) => {
         userNm,
         birth,
         contact,
+        deviceToken,
     } = ctx.request.body;
 
     const schema = Joi.object().keys({
@@ -58,7 +59,8 @@ exports.register = async(ctx) => {
         userId,
         userNm,
         birth,
-        contact,        
+        contact,       
+        deviceToken, 
     });
 
     await user.save();
@@ -192,7 +194,7 @@ exports.doctorRegister = async ctx => {
 }
 
 exports.login = async(ctx) => {
-    const { userId, password } = ctx.request.body;
+    const { userId, password, deviceToken } = ctx.request.body;
 
     const schema = Joi.object().keys({
         userId : Joi.string().email().max(50).required(),
@@ -225,7 +227,6 @@ exports.login = async(ctx) => {
         };
         return;
     }
-
     if(user.useYn !== 'Y') {
         ctx.status = 403;
         ctx.body = {
@@ -233,6 +234,16 @@ exports.login = async(ctx) => {
         };
         return;
     }
+
+    //일반 유저의 deviceToken값이 바뀌면 업데이트한다 = 기기가 바뀌면
+    if(user.userTypeCd === 'NORMAL') {
+        const profile = await Profile.findByUserId(user.userId);
+        if(deviceToken && profile.deviceToken !== deviceToken) {
+            profile.updateDeviceToken(deviceToken);
+            await profile.save();
+        }
+    }
+
 
     const token = await user.generateToken();
     ctx.cookies.set('access_token', token, {
@@ -243,7 +254,7 @@ exports.login = async(ctx) => {
     ctx.status = 200;
     ctx.body = {
         userTypeCd : user.userTypeCd,
-        token
+        token,
     };
 
 };
