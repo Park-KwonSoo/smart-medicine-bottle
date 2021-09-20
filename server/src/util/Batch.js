@@ -20,20 +20,6 @@ const updateMedicineInfo = require('../lib/UpdatingMedicineInfo');
 const { sendPushMessage } = require('./FCM');
 
 
-//  //매년 1월 1일 00시 00분에 1살씩 추가
-//  exports.CheckNewYear = () => {
-//      cron.schedule('0 0 0 1 1 *', async () => {
-//          const profileList = await Profile.find();
-//          profileList.forEach(async profile => {
-//              await profile.updateUserAge();
-//              profile.save();
-//          });
-
-//      }, {
-//          timezone : 'Asia/Tokyo',
-//      });
-//  };
-
 //매월 1일 0시 0분에 약 정보 업데이트
 exports.updateMedicineData = async () => {
     cron.schedule('0 0 0 1 * *', () => {
