@@ -27,6 +27,7 @@ exports.register = async(ctx) => {
         userNm : Joi.string().required(),
         birth : Joi.string().required(),
         contact : Joi.string().required(),
+        deviceToken : Joi.string(),
     });
     
     const result = schema.validate(ctx.request.body);
@@ -200,8 +201,9 @@ exports.login = async(ctx) => {
 
     const schema = Joi.object().keys({
         userId : Joi.string().email().max(50).required(),
-        password : Joi.string().required()
-    })
+        password : Joi.string().required(),
+        deviceToken : Joi.string(),
+    });
 
     const result = schema.validate(ctx.request.body);
     if(result.error) {
@@ -333,7 +335,7 @@ exports.socialRegister = async ctx => {
 
     const user = new User({
         userId,
-        hashedPassword : null,
+        hashedPassword : '',
         authTypeCd : socialType.toUpperCase(),
         useYn : 'Y',
     });
