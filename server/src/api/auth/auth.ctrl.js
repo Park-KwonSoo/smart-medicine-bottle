@@ -335,7 +335,7 @@ exports.socialRegister = async ctx => {
 
     const user = new User({
         userId,
-        hashedPassword : '',
+        hashedPassword : 'unnecessary',
         authTypeCd : socialType.toUpperCase(),
         useYn : 'Y',
     });
