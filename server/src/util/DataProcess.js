@@ -1,6 +1,7 @@
 const BottleMedicine = require('../models/bottleMedicine');
 const TakeMedicineHist = require('../models/takeMedicineHistory');
 
+
 //message subscribe 후 message를 가공한 이후 해당 데이터를 보낼 topic과 message를 리턴하는 함수
 exports.dataPublish = async (topic, message) => {
     //client가 subscribe를 하면 메시지를 보낸 약병의 topic과 message를 가공 및 보낸 약병의 bottleId를 가져옴

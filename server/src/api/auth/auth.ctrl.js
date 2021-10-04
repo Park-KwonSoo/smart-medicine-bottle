@@ -93,6 +93,7 @@ exports.searchHospital = async ctx => {
     };
 };
 
+//의사 회원가입
 exports.doctorRegister = async ctx => {
     const { 
         userId, 
@@ -193,6 +194,7 @@ exports.doctorRegister = async ctx => {
   
 }
 
+//로컬 로그인
 exports.login = async(ctx) => {
     const { userId, password, deviceToken } = ctx.request.body;
 
@@ -211,7 +213,7 @@ exports.login = async(ctx) => {
     }
 
     const user = await User.findByUserId(userId);
-    if(!user || !user.userTypeCd) {
+    if(!user || !user.userTypeCd || user.authTypeCd !== 'NORMAL') {
         ctx.status = 401;
         ctx.body = {
             error : '존재하지 않는 회원입니다.',
@@ -250,6 +252,180 @@ exports.login = async(ctx) => {
         httpOnly : true,
         maxAge : 1000 * 60 * 60 * 24 * 30
     });
+
+    ctx.status = 200;
+    ctx.body = {
+        userTypeCd : user.userTypeCd,
+        token,
+    };
+
+};
+
+//social Register
+exports.socialRegister = async ctx => {
+    const { socialType } = ctx.params;
+    const { accessToken, deviceToken } = ctx.request.body;
+
+    const verifyingToken = 
+        socialType.toUpperCase() === 'GOOGLE' ? async () => {
+            //id_token
+            const result = jwt.decode(accessToken);
+
+            return {
+                userId : result.email,
+                userNm : result.name,
+                contact : null,
+                birth : null,
+            };
+        } 
+        : socialType.toUpperCase() === 'NAVER' ? async () => {
+            const url = 'https://openapi.naver.com/v1/nid/me';
+            const result = await axios.get(url, {
+                headers : {
+                    Authorization : `Bearer ${accessToken}`,
+                },
+            });
+
+            const { email, mobile, name, birthday, birthyear } = result.data.response;
+
+            return {
+                userId : email,
+                userNm : name,
+                contact : mobile,
+                birth : `${birthyear}-${birthday}`,
+            };
+        }
+        : socialType.toUpperCase() === 'KAKAO' ? async () => {
+            const url = 'https://kapi.kakao.com/v2/user/me';
+            const result = await axios.get(url, {
+                headers : {
+                    Authorization : `Bearer ${accessToken}`,
+                },
+            });
+
+            console.log(result);
+
+            return result;
+        } : () => null;
+    
+    
+    const verifyingInfo = await verifyingToken();
+    if(!verifyingInfo || !verifyingInfo.userId) {
+        ctx.status = 403;
+        ctx.body = { 
+            error : '잘못된 요청',
+        };
+
+        return;
+    }
+
+    const { userId, userNm, birth, contact } = verifyingInfo;
+
+    const existUser = await User.findByUserId(userId);
+    if(existUser) {
+        ctx.status = 409;
+        ctx.body = {
+            error : '이미 가입된 회원',
+        };
+
+        return;
+    }
+
+    const user = new User({
+        userId,
+        hashedPassword : null,
+        authTypeCd : socialType.toUpperCase(),
+        useYn : 'Y',
+    });
+
+    const profile = new Profile({
+        userId,
+        userNm,
+        birth,
+        contact,
+        deviceToken,
+    });
+
+    await user.save();
+    await profile.save();
+
+    ctx.status = 201;
+
+};
+
+//social Login
+exports.socialLogin = async ctx => {
+    const { socialType } = ctx.params;
+    const { accessToken, deviceToken, } = ctx.request.body;
+
+    const verifyingToken = 
+        socialType.toUpperCase() === 'GOOGLE' ? async () => {
+            //id_token : google Login
+            const result = jwt.decode(accessToken);
+
+            return result.email;
+        } 
+        : socialType.toUpperCase() === 'NAVER' ? async () => {
+            //naver Login
+            const url = 'https://openapi.naver.com/v1/nid/me';
+            const result = await axios.get(url, {
+                headers : {
+                    Authorization : `Bearer ${accessToken}`,
+                },
+            });
+
+            return result.data.response.email;
+        }
+        : socialType.toUpperCase() === 'KAKAO' ? async () => {
+            //kakao Login
+            const url = 'https://kapi.kakao.com/v2/user/me';
+            const result = await axios.get(url, {
+                headers : {
+                    Authorization : `Bearer ${accessToken}`,
+                },
+            });
+
+            console.log(result);
+
+            return result;
+        } : () => null;
+    
+    
+    const userId = await verifyingToken();
+    if(!userId) {
+        ctx.status = 403;
+        ctx.body = { 
+            error : '잘못된 요청입니다',
+        };
+
+        return;
+    }
+
+    const user = await User.findByUserId(userId);
+    if(!user || user.useYn !== 'Y') {
+        ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 회원입니다.',
+        };
+
+        return;
+    } else if (user.authTypeCd !== socialType.toUpperCase()) {
+        ctx.status = 400;
+        ctx.body = {
+            error : '잘못된 소셜 로그인입니다.',
+        };
+
+        return;
+    }
+
+    const profile = await Profile.findOne({ userId });
+    if(profile.deviceToken !== deviceToken) {
+        profile.updateDeviceToken(deviceToken);
+        await profile.save();
+    }
+
+
+    const token = await user.generateToken();
 
     ctx.status = 200;
     ctx.body = {
