@@ -62,7 +62,8 @@ exports.pushNotifyByDosage = async() => {
                     const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
                     pushNotify({
                         deviceToken,
-                        message : medicine.name + '을 복용하셔야 합니다.',
+                        title : '약 복용 시간입니다',
+                        body : medicine.name + '을 복용하셔야 합니다.',
                     });
                 }
             }
@@ -88,7 +89,8 @@ exports.pushNotifyByDosage = async() => {
                     const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
                     pushNotify({
                         deviceToken,
-                        message : medicine.name + '을 복용하셔야 합니다.',
+                        title : '약 복용 시간입니다',
+                        body : medicine.name + '을 복용하셔야 합니다.',
                     });
                 }
             }
@@ -114,7 +116,8 @@ exports.pushNotifyByDosage = async() => {
                     const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
                     pushNotify({
                         deviceToken,
-                        message : medicine.name + '을 복용하셔야 합니다.',
+                        title : '약 복용 시간입니다',
+                        body : medicine.name + '을 복용하셔야 합니다.',
                     });
                 }
             }
@@ -125,10 +128,11 @@ exports.pushNotifyByDosage = async() => {
 
 };
 
-const pushNotify = ({ deviceToken, message }) => {
+const pushNotify = ({ deviceToken, title, body }) => {
     //toDo : deviceToken을 받아서 push notification을 발송하는 함수
     sendPushMessage({
         deviceToken,
-        message,
+        title,
+        body,
     });
 };

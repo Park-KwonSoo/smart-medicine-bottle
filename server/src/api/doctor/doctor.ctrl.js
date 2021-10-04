@@ -15,6 +15,7 @@ const jwt = require('jsonwebtoken');
 
 const { uploadQrCode, viewQrCode } = require('../../util/GoogleCloudStorage');
 const QrCodeUtil = require('../../util/QrCodeUtil');
+const { sendPushMessage } = require('../../util/FCM');
 
 
 /**
@@ -341,7 +342,19 @@ exports.writeReqBottleFeedback = async ctx => {
         doctorId : userId,
         feedback,
     });
-    newFeedback.save();
+    await newFeedback.save();
+
+
+    //feedback 알람 보내기
+    const hub = await Hub.findOne({ hubId : bottle.hubId });
+    const patientProfile = await Profile.findOne({ userId : hub.userId });
+    if(patientProfile) {
+        sendPushMessage({
+            deviceToken : patientProfile.deviceToken,
+            title : '의사에게 새로운 알람이 도착했습니다.',
+            body : feedback,
+        });
+    }
 
     ctx.status = 200;
 

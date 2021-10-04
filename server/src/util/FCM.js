@@ -7,11 +7,11 @@ exports.initializeFCM = () => {
     });
 };
 
-exports.sendPushMessage = async ({ deviceToken, message }) => {
+exports.sendPushMessage = async ({ deviceToken, title, body }) => {
     const notifyMessage = {
         notification : {
-            title : '약 먹을 시간입니다',
-            body : message,
+            title,
+            body,
         },
         token : deviceToken,
     };
