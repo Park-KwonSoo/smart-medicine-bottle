@@ -35,6 +35,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         takeMedicineHist : [],
     });
 
+    //차트에 표시되는 행의 개수
     const numberOfChartItem = 7;
     const [chartOption, setChartOption] = useState<any>({
         chart : {
@@ -56,14 +57,17 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             data : [],
         }],
     });
+    const [takeMedicineHist, setTakeMedicineHist] = useState<any[]>([]);
 
     const [feedback, setFeedback] = useState<string>('');
     const [fdbType, setFdbType] = useState<string>('RECOMMEND');
 
     const [medicineInfoModal, setMedicineInfoModal] = useState<boolean>(false);
+    const [modalType, setModalType] = useState<string>('hist'); //hist , info
 
 
     const fetchData = async () => {
+        setModalType('hist');
         setFeedback('');
         setFdbType('RECOMMEND');
         setMedicineInfoModal(false);
@@ -71,6 +75,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         try {
             const result = await doctorApi.getPatientBottleDetail(token, bottleId);
             if (result.statusText === 'OK') {
+                setTakeMedicineHist(result.data.takeMedicineHist);
                 const { categories, data } = makeChart.make(result.data.takeMedicineHist, numberOfChartItem);
                 setBottleInfo({
                     ...result.data,
@@ -134,6 +139,14 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
 
     };
 
+    const onViewTakeHist = () => {
+        if(modalType === 'info')    setModalType('hist');
+    };
+
+    const onViewMedicineInfo = () => {
+        if(modalType === 'hist')    setModalType('info');
+    };
+
  
     useEffect(() => {
         if(userTypeCd !== 'DOCTOR') {
@@ -148,8 +161,12 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         <BottleInfoPresenter
             bottleInfo = {bottleInfo}
             chartOption = {chartOption}
+            takeMedicineHist = {takeMedicineHist}
 
             medicineInfoModal = {medicineInfoModal}
+            modalType = {modalType}
+            onViewTakeHist = {onViewTakeHist}
+            onViewMedicineInfo = {onViewMedicineInfo}
             setMedicineInfoModal = {setMedicineInfoModal}
 
             feedback = {feedback}
@@ -157,6 +174,8 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             fdbType = {fdbType}
             setFdbType = {setFdbType}
             onSubmitFeedback = {onSubmitFeedback}
+
+
         />
         </>
     );

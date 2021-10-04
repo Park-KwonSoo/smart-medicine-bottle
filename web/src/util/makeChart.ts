@@ -11,7 +11,7 @@ export const make = (chartData : any[], numberOfRow : number) => {
 
     chartData.forEach((data : any) => {
         const key : string = moment(data.takeDate).format('MM/DD');
-        result[key] = result[key] + 1;
+        !isNaN(result[key]) ? result[key] = result[key] + 1 : null;
     });
 
     const categories : any = [];
@@ -28,5 +28,5 @@ export const make = (chartData : any[], numberOfRow : number) => {
     return {
         categories,
         data,
-    }
+    };
 };
