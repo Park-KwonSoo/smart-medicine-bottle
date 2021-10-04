@@ -5,7 +5,7 @@ const authCtrl = require('./auth.ctrl')
 const auth = new Router()
 
 /**
- * 회원가입 (email type) : 환자 회원가입
+ * 로컬 회원가입 (email type) : 환자 회원가입
  * url : http://localhost:4000/api/auth/register
  * request parameter : userId, password, passwordCheck
  * return : null
@@ -21,7 +21,7 @@ auth.post('/register', authCtrl.register)
 auth.get('/hospital', authCtrl.searchHospital);
 
 /**
- * 회원가입 (email type) : 의사 회원가입
+ * 로컬 회원가입 (email type) : 의사 회원가입
  * url : http://localhost:4000/api/auth/register/doctor
  * request parameter : userId, password, passwordCheck, doctorInfo(File)
  * return : null
@@ -29,12 +29,28 @@ auth.get('/hospital', authCtrl.searchHospital);
  auth.post('/register/doctor', KoaBody, authCtrl.doctorRegister)
 
 /**
- * 로그인 (email type)
+ * 로컬 로그인 (email type)
  * url : http://localhost:4000/api/auth/login
  * request parameter : userId, password
- * return : userId
+ * return : token, userTypeCd
  */
 auth.post('/login', authCtrl.login)
+
+/**
+ * 소셜 회원가입(Google, Naver, Kakao)
+ * url : http://localhost:4000/api/auth/register/${socialType}
+ * request parameter : accessToken
+ * return : status
+ */
+auth.post('/register/social/:socialType', authCtrl.socialRegister);
+
+/**
+ * 소셜 로그인(Google, Naver, Kakao)
+ * url : http://localhost:4000/api/auth/login/${socialType}
+ * request parameter
+ * return : token, userTypeCd
+ */
+auth.post('/login/social/:socialType', authCtrl.socialLogin);
 
 /**
  * 로그아웃
