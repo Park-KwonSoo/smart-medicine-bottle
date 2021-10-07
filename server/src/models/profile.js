@@ -7,11 +7,16 @@ const ProfileSchema = new Schema({
     userNm : { type : String, required : true, },
     birth : { type : String, required : true, },
     contact : { type : String, required : true, },
+    useYn : { type : String, default : 'Y', },
     deviceToken : { type : String, default : null, },
 });
 
 ProfileSchema.statics.findByUserId = function(userId) {
     return this.findOne({ userId });
+};
+
+ProfileSchema.statics.setUseYn = function(useYn) {
+    this.useYn = useYn;
 };
 
 ProfileSchema.methods.updateUserContact = function(contact) {

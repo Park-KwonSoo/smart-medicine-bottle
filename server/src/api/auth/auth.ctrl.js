@@ -1,8 +1,9 @@
-/* eslint-disable no-undef */
 //회원가입, 로그인 및 로그아웃에 관한 api
 const User = require('../../models/user');
 const Profile = require('../../models/profile');
 const DoctorInfo = require('../../models/doctorInfo');
+const Hub = require('../../models/hub');
+const Bottle = require('../../models/bottle');
 const { uploadDoctorLicense } = require('../../util/GoogleCloudStorage');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
@@ -80,6 +81,7 @@ exports.searchHospital = async ctx => {
     const pageSlice = 5;
 
     const url = 'http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1';
+    // eslint-disable-next-line no-undef
     let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + process.env.SERVICE_KEY;
     queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(page);
     queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(pageSlice);
@@ -195,7 +197,12 @@ exports.doctorRegister = async ctx => {
   
 }
 
-//로컬 로그인
+/**
+ * 로컬 로그인
+ * @param {*} ctx 
+ * @returns token
+ * http methods : POST
+ */
 exports.login = async(ctx) => {
     const { userId, password, deviceToken } = ctx.request.body;
 
@@ -437,6 +444,11 @@ exports.socialLogin = async ctx => {
 
 };
 
+/**
+ * 로그아웃
+ * @param {*} ctx 
+ * httm methods : POST
+ */
 exports.logout = async(ctx) => {
     ctx.cookies.set('access_token', null, {
         httpOnly : true,
@@ -444,6 +456,67 @@ exports.logout = async(ctx) => {
     });
 
     ctx.status = 204;
+};
+
+/**
+ * 회원 탈퇴
+ * @param {*} ctx 
+ * http methods : delete
+ */
+exports.secession = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+
+    const { password } = ctx.query;
+    const isPasswordTrue = await user.checkPassword(password);
+    if(!isPasswordTrue) {
+        ctx.status = 401;
+        ctx.body = {
+            error : '비밀번호가 틀렸습니다.',
+        };
+        return;
+    }
+
+    if(user.userTypeCd === 'NORMAL') {
+        const profile = await Profile.findOne({ userId });
+
+        profile.setUseYn('N');
+        profile.save();
+
+        const hubList = await Hub.find({ userId });
+        await Promise.all(hubList.forEach(async hub => {
+            await Bottle.deleteMany({ hubId : hub.hubId });
+        }));
+
+        await Hub.deleteMany({ userId });
+
+        user.setUseYn('N');
+        user.save();
+
+    } else if (user.userTypeCd === 'DOCTOR') {
+        const doctorInfo = await DoctorInfo.findOne({ doctorId : userId });
+
+        doctorInfo.setUseYn('WS');
+        doctorInfo.save();
+
+        user.setUseYn('WS');
+        user.save();
+    }
+
+    ctx.status = 200;
+
 };
 
 exports.verifyToken = async(ctx) => {
@@ -458,6 +531,7 @@ exports.verifyToken = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             ctx.status = 400;

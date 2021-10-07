@@ -4,6 +4,7 @@ const Bottle = require('../../models/bottle');
 const Hub = require('../../models/hub');
 const Medicine = require('../../models/medicine');
 const User = require('../../models/user');
+const DoctorInfo = require('../../models/doctorInfo');
 const PatientInfo = require('../../models/patientInfo');
 const TakeMedicineHist = require('../../models/takeMedicineHistory');
 const BottleMedicine = require('../../models/bottleMedicine');
@@ -146,14 +147,19 @@ exports.getBottleInfo = async(ctx) => {
     const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
     
     if(bottleMedicine) {
+        const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
+        const doctorInfo = await DoctorInfo.findOne({ doctorId : bottleMedicine.doctorId });
+
         const takeMedicineHist = await TakeMedicineHist
             .find({ bmId : bottleMedicine._id })
-            .sort({ takeDate : 'desc' })
-            .populate('bmId');
+            .sort({ takeDate : 'desc' });
 
         ctx.status = 200;
         ctx.body = {
             bottle,
+            medicine,
+            doctorInfo,
+            dosage : bottleMedicine.dosage,
             takeMedicineHist,
         };
 
@@ -161,6 +167,9 @@ exports.getBottleInfo = async(ctx) => {
         ctx.status = 200;
         ctx.body = {
             bottle,
+            medicine : null,
+            doctorInfo : null,
+            dosage : null,
             takeMedicineHist : [],
         }
     }

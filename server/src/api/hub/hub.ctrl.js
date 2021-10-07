@@ -1,5 +1,6 @@
 //허브(Mqtt Broker)등록 및 삭제
 const Hub = require('../../models/hub');
+const Bottle = require('../../models/bottle');
 const User = require('../../models/user');
 const Mqtt = require('../../util/MqttModule');
 const DataProcess = require('../../util/DataProcess');
@@ -104,6 +105,7 @@ exports.hubDisconnect = async(ctx) => {
     const hosting = await hub.getHubHost();
     Mqtt.mqttOff(hosting);
 
+    await Bottle.deleteMany({ hubId });
     await Hub.deleteOne({ hubId });
 
     ctx.status = 204;
