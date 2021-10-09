@@ -206,12 +206,12 @@ exports.acceptDoctorRegReq = async ctx => {
             useYn : 'W',
         });
 
-        doctor.setUseYn('Y');
-        doctor.save();
+        await doctor.setUseYn('Y');
+        await doctor.save();
 
-        doctorInfo.setUseYn('Y');
-        doctorInfo.setValidateDoctorLicense(validateDoctorLicense);
-        doctorInfo.save();
+        await doctorInfo.setUseYn('Y');
+        await doctorInfo.setValidateDoctorLicense(validateDoctorLicense);
+        await doctorInfo.save();
 
         ctx.status = 200;
 
@@ -280,10 +280,10 @@ exports.acceptDoctorRegReq = async ctx => {
             useYn : 'W',
         });
 
-        doctor.setUseYn('N');
-        doctor.save();
-        doctorInfo.setUseYn('N');
-        doctorInfo.save();
+        await doctor.setUseYn('N');
+        await doctor.save();
+        await doctorInfo.setUseYn('N');
+        await doctorInfo.save();
 
         ctx.status = 200;
 

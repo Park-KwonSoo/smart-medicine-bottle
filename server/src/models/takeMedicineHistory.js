@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const TakeMedicineHistorySchema = new Schema ({
     takeDate : {
         type : Date,
-        required : true,
         default : Date.now,
     },
     bmId : { 
@@ -15,7 +14,7 @@ const TakeMedicineHistorySchema = new Schema ({
     },
     temperature : { type : Number, default : 0 },
     humidity : { type : Number, default : 0 },
-    balance : { type : Number, default : 0 },
+    dosage : { type : Number, default : 0 },
 });
 
 

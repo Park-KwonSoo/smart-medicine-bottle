@@ -4,6 +4,8 @@ const Profile = require('../../models/profile');
 const DoctorInfo = require('../../models/doctorInfo');
 const Hub = require('../../models/hub');
 const Bottle = require('../../models/bottle');
+const BottleMedicine = require('../../models/bottleMedicine');
+const PatientInfo = require('../../models/patientInfo');
 const { uploadDoctorLicense } = require('../../util/GoogleCloudStorage');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
@@ -45,6 +47,15 @@ exports.register = async(ctx) => {
         ctx.status = 409;
         ctx.body = {
             error : '이미 존재하는 회원입니다.',
+        };
+        return;
+    }
+
+    const existContact = await Profile.findOne({ contact, useYn : 'Y' });
+    if(existContact) {
+        ctx.status = 409;
+        ctx.body = {
+            error : '이미 가입된 번호입니다.',
         };
         return;
     }
@@ -190,8 +201,8 @@ exports.doctorRegister = async ctx => {
         useYn : 'W',
     });    
 
-    doctor.save();
-    doctorInfo.save();
+    await doctor.save();
+    await doctorInfo.save();
     
     ctx.status = 201;
   
@@ -283,8 +294,8 @@ exports.socialRegister = async ctx => {
             return {
                 userId : result.email,
                 userNm : result.name,
-                contact : null,
-                birth : null,
+                contact : `${result.email}_등록되지않은 번호`,
+                birth : '등록되지않음',
             };
         } 
         : socialType.toUpperCase() === 'NAVER' ? async () => {
@@ -335,6 +346,16 @@ exports.socialRegister = async ctx => {
         ctx.status = 409;
         ctx.body = {
             error : '이미 가입된 회원',
+        };
+
+        return;
+    }
+
+    const existContact = await Profile.findOne({ contact, useYn : 'Y'});
+    if(existContact) {
+        ctx.status = 409;
+        ctx.body = {
+            error : '이미 가입된 번호',
         };
 
         return;
@@ -458,6 +479,7 @@ exports.logout = async(ctx) => {
     ctx.status = 204;
 };
 
+
 /**
  * 회원 탈퇴
  * @param {*} ctx 
@@ -492,27 +514,46 @@ exports.secession = async ctx => {
     if(user.userTypeCd === 'NORMAL') {
         const profile = await Profile.findOne({ userId });
 
-        profile.setUseYn('N');
-        profile.save();
+        //프로필 삭제
+        await profile.setUseYn('N');
+        await profile.save();
 
+        //유저에 등록된 허브, 약병, 약병정보 전부 삭제
         const hubList = await Hub.find({ userId });
-        await Promise.all(hubList.forEach(async hub => {
+        await Promise.all(hubList.map(async hub => {
+            const bottleList = await Bottle.find({ hubId : hub.hubId });
+            await Promise.all(bottleList.map(async bottle => {
+                const bottleMedicine = await BottleMedicine.findOne({ bottleId : bottle.bottleId });
+                await bottleMedicine.setUseYn('N');
+                await bottleMedicine.save();
+            }));
+
             await Bottle.deleteMany({ hubId : hub.hubId });
         }));
 
         await Hub.deleteMany({ userId });
 
-        user.setUseYn('N');
-        user.save();
+
+        //환자 정보 삭제
+        const patientInfoList = await PatientInfo.find({ patientId : userId, useYn : 'Y' });
+        await Promise.all(patientInfoList.map(async patientInfo => {
+            await patientInfo.setUseYn('N');
+            await patientInfo.save();
+        }));
+
+
+        //유저 삭제
+        await user.setUseYn('N');
+        await user.save();
 
     } else if (user.userTypeCd === 'DOCTOR') {
         const doctorInfo = await DoctorInfo.findOne({ doctorId : userId });
 
-        doctorInfo.setUseYn('WS');
-        doctorInfo.save();
+        await doctorInfo.setUseYn('WS');
+        await doctorInfo.save();
 
-        user.setUseYn('WS');
-        user.save();
+        await user.setUseYn('WS');
+        await user.save();
     }
 
     ctx.status = 200;

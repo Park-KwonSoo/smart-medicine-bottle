@@ -15,12 +15,14 @@ ProfileSchema.statics.findByUserId = function(userId) {
     return this.findOne({ userId });
 };
 
-ProfileSchema.statics.setUseYn = function(useYn) {
+ProfileSchema.methods.setUseYn = function(useYn) {
     this.useYn = useYn;
 };
 
-ProfileSchema.methods.updateUserContact = function(contact) {
-    this.contact = contact;
+ProfileSchema.methods.updateProfileInfo = function({ userNm, birth, contact }) {
+    if(userNm)  { this.userNm = userNm }
+    if(birth)   { this.birth = birth }
+    if(contact) { this.contact = contact }
 };
 
 ProfileSchema.methods.updateDeviceToken = function(deviceToken) {

@@ -6,7 +6,8 @@ const PrescribeInfoSchema = new Schema({
     doctorId : { type : String, require : true, },
     patientId : { type : String, require : true, },
     medicineId : { type : Number, require : true, },
-    dosage : { type : Number, require : true, },
+    dailyDosage : { type : Number, require : true, },
+    totalDosage : { type : Number, require : true, },
     qrCodeUrl : { type : String, require : true, },
 });
 

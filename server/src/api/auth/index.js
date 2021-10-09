@@ -26,7 +26,7 @@ auth.get('/hospital', authCtrl.searchHospital);
  * request parameter : userId, password, passwordCheck, doctorInfo(File)
  * return : null
  */
- auth.post('/register/doctor', KoaBody, authCtrl.doctorRegister)
+auth.post('/register/doctor', KoaBody, authCtrl.doctorRegister)
 
 /**
  * 로컬 로그인 (email type)
@@ -58,7 +58,15 @@ auth.post('/login/social/:socialType', authCtrl.socialLogin);
  * request parameter : null
  * return : null
  */
-auth.post('/logout', authCtrl.logout)
+auth.post('/logout', authCtrl.logout);
+
+/**
+ * 회원 탈퇴
+ * url : http://localhost:4000/api/auth
+ * request parameter : password
+ * return : null
+ */
+auth.delete('/', authCtrl.secession);
 
 /**
  * 토큰이 유효한지 확인

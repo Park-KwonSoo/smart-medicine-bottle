@@ -21,7 +21,7 @@ exports.hubConnect = async (ctx) => {
         return;
     }
 
-    const { hubId, host, port } = ctx.request.body;
+    const { hubId, host } = ctx.request.body;
 
     const isExistHub = await Hub.findByHubId(hubId);
     if(isExistHub) {
@@ -31,7 +31,7 @@ exports.hubConnect = async (ctx) => {
 
     const hosting = {
         host,
-        port
+        port : "1883",
     };
 
     Mqtt.mqttOn(hosting, DataProcess.dataPublish);

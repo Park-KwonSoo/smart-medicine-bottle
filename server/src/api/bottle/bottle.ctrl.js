@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 //어플에서 약병 등록 및, 약병에 관한 정보 조회 = 여기서 mqtt통신으로 broker에 데이터를 요청한다.
 const Bottle = require('../../models/bottle');
 const Hub = require('../../models/hub');
@@ -20,6 +19,7 @@ exports.bottleConnect = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -74,6 +74,7 @@ exports.bottleDisconnect = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -115,6 +116,7 @@ exports.getBottleInfo = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -156,20 +158,20 @@ exports.getBottleInfo = async(ctx) => {
 
         ctx.status = 200;
         ctx.body = {
-            bottle,
             medicine,
             doctorInfo,
-            dosage : bottleMedicine.dosage,
+            dailyDosage : bottleMedicine.dailyDosage,
+            totalDosage : bottleMedicine.totalDosage,
             takeMedicineHist,
         };
 
     } else {
         ctx.status = 200;
         ctx.body = {
-            bottle,
             medicine : null,
             doctorInfo : null,
-            dosage : null,
+            dailyDosage : null,
+            totalDosage : null,
             takeMedicineHist : [],
         }
     }
@@ -184,6 +186,7 @@ exports.getBottleFeedback = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -222,7 +225,9 @@ exports.getBottleFeedback = async ctx => {
             .populate('bmId');
 
         ctx.status = 200;
-        ctx.body = feedbackList;
+        ctx.body = { 
+            feedbackList
+        };
     } else {
         ctx.status = 404;
         ctx.body = {
@@ -240,6 +245,7 @@ exports.setMedicine = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -248,7 +254,7 @@ exports.setMedicine = async(ctx) => {
     }
 
     const { bottleId } = ctx.params;
-    const { medicineId, dosage, doctorId } = ctx.request.body;
+    const { medicineId, doctorId, dailyDosage, totalDosage, } = ctx.request.body;
 
     const bottle = await Bottle.findByBottleId(bottleId);
     if(!bottle) {
@@ -282,7 +288,8 @@ exports.setMedicine = async(ctx) => {
     let bottleMedicine = new BottleMedicine({
         bottleId,
         medicineId,
-        dosage,
+        dailyDosage,
+        totalDosage,
     });
 
     if(doctorId !== undefined && doctorId !== null && doctorId !== '') {
@@ -295,14 +302,63 @@ exports.setMedicine = async(ctx) => {
             return;
         }
 
-        bottleMedicine.setDoctorId(doctorId);
+        await bottleMedicine.setDoctorId(doctorId);
     }
 
     await BottleMedicine.updateMany({ bottleId }, { useYn : 'N '});
     
-    bottleMedicine.save();
+    await bottleMedicine.save();
 
     ctx.status = 200;
+};
+
+//약 무게 세팅
+exports.setMedicineWeight = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+    const { bottleId } = ctx.params;
+
+    const bottle = await Bottle.findByBottleId(bottleId);
+    if(!bottle) {
+        ctx.status = 404;
+        ctx.body = {
+            error : '약병 찾을 수 없음.',
+        }
+        return;
+    }
+
+    const hub = await Hub.findByHubId(bottle.getHubId());
+    if(hub.getHub_UserId() !== userId) {
+        ctx.status = 403;
+        ctx.body = {
+            error : '해당 허브 권한 없음',
+        }
+        return;
+    }
+
+
+
+    //toDo : 약병에서 가져온 무게 데이터를 이용하여, bottleMedicine값을 갱신.
+
+
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
+    const { totalWeight, totalDosage } = bottleMedicine;
+    
+
+    ctx.status = 200;
+
 };
 
 // //비어있는 약병에 의사를 등록한다.
@@ -353,6 +409,7 @@ exports.getHubsBottleList = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -394,6 +451,7 @@ exports.getAllBottleList = async ctx => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findByUserId(userId);
     if(!user || !user.userTypeCd || user.useYn !== 'Y') {
@@ -411,7 +469,7 @@ exports.getAllBottleList = async ctx => {
 
     ctx.status = 200;
     ctx.body = {
-        bottleList
+        bottleList,
     };
 
 };

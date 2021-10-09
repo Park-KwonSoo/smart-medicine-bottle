@@ -58,7 +58,7 @@ doctor.post('/bottle', doctorCtrl.writeReqBottleFeedback);
  * url : http://localhost:4000/api/api/doctor/patient/search/:patientId
  * return : patient Info(simple)
  */
-doctor.get('/patient/search/:patientId', doctorCtrl.searchPatientById);
+doctor.get('/patient/search/:contact', doctorCtrl.searchPatientByContact);
 
 /**
  * 현재 로그인한 유저(의사)의 관리 환자를 등록함.
