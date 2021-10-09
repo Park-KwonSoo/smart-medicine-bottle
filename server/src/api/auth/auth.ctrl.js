@@ -1,8 +1,11 @@
-/* eslint-disable no-undef */
 //회원가입, 로그인 및 로그아웃에 관한 api
 const User = require('../../models/user');
 const Profile = require('../../models/profile');
 const DoctorInfo = require('../../models/doctorInfo');
+const Hub = require('../../models/hub');
+const Bottle = require('../../models/bottle');
+const BottleMedicine = require('../../models/bottleMedicine');
+const PatientInfo = require('../../models/patientInfo');
 const { uploadDoctorLicense } = require('../../util/GoogleCloudStorage');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
@@ -48,6 +51,15 @@ exports.register = async(ctx) => {
         return;
     }
 
+    const existContact = await Profile.findOne({ contact, useYn : 'Y' });
+    if(existContact) {
+        ctx.status = 409;
+        ctx.body = {
+            error : '이미 가입된 번호입니다.',
+        };
+        return;
+    }
+
     const user = new User({
         userId,
         userTypeCd : 'NORMAL',
@@ -80,6 +92,7 @@ exports.searchHospital = async ctx => {
     const pageSlice = 5;
 
     const url = 'http://apis.data.go.kr/B551182/hospInfoService1/getHospBasisList1';
+    // eslint-disable-next-line no-undef
     let queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + process.env.SERVICE_KEY;
     queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(page);
     queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(pageSlice);
@@ -188,14 +201,19 @@ exports.doctorRegister = async ctx => {
         useYn : 'W',
     });    
 
-    doctor.save();
-    doctorInfo.save();
+    await doctor.save();
+    await doctorInfo.save();
     
     ctx.status = 201;
   
 }
 
-//로컬 로그인
+/**
+ * 로컬 로그인
+ * @param {*} ctx 
+ * @returns token
+ * http methods : POST
+ */
 exports.login = async(ctx) => {
     const { userId, password, deviceToken } = ctx.request.body;
 
@@ -276,8 +294,8 @@ exports.socialRegister = async ctx => {
             return {
                 userId : result.email,
                 userNm : result.name,
-                contact : null,
-                birth : null,
+                contact : `${result.email}_등록되지않은 번호`,
+                birth : '등록되지않음',
             };
         } 
         : socialType.toUpperCase() === 'NAVER' ? async () => {
@@ -328,6 +346,16 @@ exports.socialRegister = async ctx => {
         ctx.status = 409;
         ctx.body = {
             error : '이미 가입된 회원',
+        };
+
+        return;
+    }
+
+    const existContact = await Profile.findOne({ contact, useYn : 'Y'});
+    if(existContact) {
+        ctx.status = 409;
+        ctx.body = {
+            error : '이미 가입된 번호',
         };
 
         return;
@@ -437,6 +465,11 @@ exports.socialLogin = async ctx => {
 
 };
 
+/**
+ * 로그아웃
+ * @param {*} ctx 
+ * httm methods : POST
+ */
 exports.logout = async(ctx) => {
     ctx.cookies.set('access_token', null, {
         httpOnly : true,
@@ -444,6 +477,87 @@ exports.logout = async(ctx) => {
     });
 
     ctx.status = 204;
+};
+
+
+/**
+ * 회원 탈퇴
+ * @param {*} ctx 
+ * http methods : delete
+ */
+exports.secession = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+
+    const { password } = ctx.query;
+    const isPasswordTrue = await user.checkPassword(password);
+    if(!isPasswordTrue) {
+        ctx.status = 401;
+        ctx.body = {
+            error : '비밀번호가 틀렸습니다.',
+        };
+        return;
+    }
+
+    if(user.userTypeCd === 'NORMAL') {
+        const profile = await Profile.findOne({ userId });
+
+        //프로필 삭제
+        await profile.setUseYn('N');
+        await profile.save();
+
+        //유저에 등록된 허브, 약병, 약병정보 전부 삭제
+        const hubList = await Hub.find({ userId });
+        await Promise.all(hubList.map(async hub => {
+            const bottleList = await Bottle.find({ hubId : hub.hubId });
+            await Promise.all(bottleList.map(async bottle => {
+                const bottleMedicine = await BottleMedicine.findOne({ bottleId : bottle.bottleId });
+                await bottleMedicine.setUseYn('N');
+                await bottleMedicine.save();
+            }));
+
+            await Bottle.deleteMany({ hubId : hub.hubId });
+        }));
+
+        await Hub.deleteMany({ userId });
+
+
+        //환자 정보 삭제
+        const patientInfoList = await PatientInfo.find({ patientId : userId, useYn : 'Y' });
+        await Promise.all(patientInfoList.map(async patientInfo => {
+            await patientInfo.setUseYn('N');
+            await patientInfo.save();
+        }));
+
+
+        //유저 삭제
+        await user.setUseYn('N');
+        await user.save();
+
+    } else if (user.userTypeCd === 'DOCTOR') {
+        const doctorInfo = await DoctorInfo.findOne({ doctorId : userId });
+
+        await doctorInfo.setUseYn('WS');
+        await doctorInfo.save();
+
+        await user.setUseYn('WS');
+        await user.save();
+    }
+
+    ctx.status = 200;
+
 };
 
 exports.verifyToken = async(ctx) => {
@@ -458,6 +572,7 @@ exports.verifyToken = async(ctx) => {
         return;
     }
 
+    // eslint-disable-next-line no-undef
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) {
             ctx.status = 400;

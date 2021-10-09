@@ -16,17 +16,26 @@ const BottleMedicineSchema = new Schema({
     doctorId : {
         type : String,
         ref : 'User',
-        required : true,
         lowercase : true,
     },
-    dosage : {
+    dailyDosage : {
         type : Number,
-        required : true,
+        default : 1,
+    },
+    totalDosage : {
+        type : Number,
+        default : 1,
+    },
+    eachWeight : {
+        type : Number,
+        default : 0,
+    },
+    totalWeight : {
+        type : Number,
         default : 0,
     },
     regDtm : { 
         type : Date,
-        required : true,
         default : Date.now,
     },
     useYn : {
@@ -38,6 +47,14 @@ const BottleMedicineSchema = new Schema({
 
 BottleMedicineSchema.methods.setDoctorId = function(doctorId) {
     this.doctorId = doctorId;
+};
+
+BottleMedicineSchema.methods.setEachWeight = function(eachWeight) {
+    this.eachWeight = eachWeight;
+};
+
+BottleMedicineSchema.methods.setTotalWeight = function(totalWeight) {
+    this.totalWeight = totalWeight;
 };
 
 BottleMedicineSchema.methods.setUseYn = function(useYn) {

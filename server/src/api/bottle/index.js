@@ -44,6 +44,14 @@ bottle.get('/feedback/:bottleId', bottleCtrl.getBottleFeedback);
 bottle.patch('/:bottleId', bottleCtrl.setMedicine);
 
 /**
+ * 약병에 등록된 약의 무게 갱신
+ * request parameter : bottleid
+ * url : http://localhost:4000/api/bottle/weight/:bottleId
+ * return : null
+ */
+bottle.patch('/weight/:bottleId', bottleCtrl.setMedicineWeight);
+
+/**
  * 비어있는 약병에 전담의 등록
  * request parameter : bottleId, doctorId
  * url : http://localhost:4000/api/bottle/doctor/:bottleId

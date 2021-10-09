@@ -57,7 +57,7 @@ exports.uploadQrCode = async ({ directory, qrCodeFileName }) => {
 };
 
 //생성된 QR코드의 signedUrl을 가져옴
-exports.viewQrCode = async ({ qrCodeFileName }) => {
+exports.getQrCodeUrl = async ({ qrCodeFileName }) => {
     const fileName = qrCodeFileName;
     const file = storage.bucket('prescribe-medicine-qrcode').file(fileName);
     const option = {

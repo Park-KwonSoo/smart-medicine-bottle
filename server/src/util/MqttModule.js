@@ -9,23 +9,23 @@ exports.mqttOn = async (hosting, foo) => {
     })
 
     if(filterIndex === -1) {
-        const client = mqtt.connect(hosting)
-        clientList.push(client)
+        const client = mqtt.connect(hosting);
+        clientList.push(client);
 
         client.on('connect', () => {
             console.log('Hub connected: ', client.connected)
-        }) 
+        });
 
         client.on('message', async (topic, message) => {
-            const result = await foo(topic, message.toString())
+            const result = await foo(topic, message.toString());
             console.log('\x1b[1;32msubscribe : topic', topic, 'message : ', message.toString(), '\x1b[0m')
-            this.mqttPublishMessage(client, result)
-        })
+            this.mqttPublishMessage(client, result);
+        });
         
-        return client
+        return client;
     } 
 
-    return clientList[filterIndex]
+    return clientList[filterIndex];
 }
 
 exports.mqttSubscribe = (client, topic) => {
@@ -49,10 +49,10 @@ exports.mqttOff = (hosting) => {
         return (client.options.clientId === hosting.clientId
             && client.options.host === hosting.host
             && client.options.port === hosting.port)
-    })
+    });
 
     if(filterIndex !== -1) {
-        clientList[filterIndex].end()
-        clientList.splice(filterIndex, 1)
+        clientList[filterIndex].end();
+        clientList.splice(filterIndex, 1);
     }
 }

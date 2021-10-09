@@ -38,10 +38,66 @@ exports.getMyDetail = async ctx => {
 /**
  * 내 정보를 업데이트한다.
  * @param {*} ctx 
- * http methods : post
+ * http methods : patch
  */
-exports.updateMyInfo = async ctx => {
+exports.updateMyDetail = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || user.useYn !== 'Y' || user.userTypeCd !== 'NORMAL') {
+        ctx.status = 403;
+        return;
+    }
     
+    const profile = await Profile.findByUserId(userId);
+    if(!profile || profile.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+    const { userNm, birth, contact, password, passwordCheck, } = ctx.request.body;
+
+    const existContact = await Profile.findOne({ contact, useYn : 'Y' });
+    if(existContact) {
+        ctx.status = 409;
+        ctx.body = { 
+            error : '이미 가입된 번호',
+        };
+
+        return;
+    }
+
+    //passwordCheck가 있고 로컬 회원이라면 비밀번호 변경함
+    if(passwordCheck && user.authTypeCd === 'NORMAL') {
+        //passwordCheck와 password가 같아야함
+        if(passwordCheck !== password) {
+            ctx.status = 401;
+            ctx.body = {
+                error : '비밀번호가 일치하지 않습니다.',
+            };
+            return;
+        }
+
+        await user.setPassword(password);
+        await user.save();
+    }
+
+    await profile.updateProfileInfo({
+        userNm,
+        birth,
+        contact,
+    });
+
+    await profile.save();
+
+    ctx.status = 200;
+
 };
 
 /**
@@ -76,7 +132,7 @@ exports.getMyDoctorList = async ctx => {
             useYn : 'Y',
         });
 
-        return doctorInfo.info;
+        return doctorInfo ? doctorInfo.info : null;
     }));
 
     ctx.status = 200;
@@ -156,9 +212,9 @@ exports.acceptDoctorRegister = async ctx => {
         return;
     }
 
-    patientInfo.updateInfo('환자 등록 요청 수락');
-    patientInfo.setUseYn('Y');
-    patientInfo.save();
+    await patientInfo.updateInfo('환자 등록 요청 수락');
+    await patientInfo.setUseYn('Y');
+    await patientInfo.save();
 
     ctx.status = 200;
 

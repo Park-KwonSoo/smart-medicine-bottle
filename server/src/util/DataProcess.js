@@ -16,66 +16,52 @@ exports.dataPublish = async (topic, message) => {
 };
 
 //Hub topic : bottle/bottleId
-//Hub로부터 받은 message : 개폐여부/온도/습도/초음파센서
+//Hub로부터 받은 message : 개폐여부/온도/습도/무게센서
 const factoring = async (topic, message) => {
     const bottleId = parseInt(topic.split('/')[1]);
     const data = message.split('/');
-    let [isOpen, temperature, humidity, balance] = data;
+    const [isOpen, humidity, totalWeight, temperature] = data;
 
-    if(isOpen === '1')
-        balance = await balanceFactoring(balance);
-    else    balance = '-1';
-    
     return {
         bottleId,
         isOpen,
-        openDate : new Date(),
-        temperature,
+        temperature,    
         humidity,
-        balance
+        totalWeight,
     };
-
-}
-
-const balanceFactoring = (balance) => {
-    const max = 10; //Digital Lead Sensor Maximum Value
-    const slicingBalance = max / 5;
-
-    if(parseInt(balance) < slicingBalance || parseInt(balance) > max * 2)
-        return '80';
-    else if(parseInt(balance) < slicingBalance * 2)
-        return '60';
-    else if(parseInt(balance) < slicingBalance * 3)
-        return '40';
-    else if(parseInt(balance) < slicingBalance * 4)
-        return '20';
-    else return '0';
 
 }
 
 //bottleId가 포함된 data를 받아서 해당 약병의 data를 업데이트한다.
 const bottleInfoUpdate = async(data) => {
-    let { bottleId, isOpen, openDate, temperature, humidity, balance } = data;
+    let { bottleId, isOpen, temperature, humidity, totalWeight } = data;
 
     bottleId = parseInt(bottleId);
     isOpen = parseInt(isOpen);
     temperature = parseFloat(temperature);
     humidity = parseFloat(humidity);
-    balance = parseInt(balance);
+    totalWeight = parseFloat(totalWeight);
 
     const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
 
     if(bottleMedicine) {
+        const lastTotalWeight = parseFloat(bottleMedicine.totalWeight);
+
         if(isOpen) {
+            const { eachWeight } = bottleMedicine;
+            const dosage = Math.round((lastTotalWeight - totalWeight) / parseFloat(eachWeight));
+
             const takeMedicineHist  = new TakeMedicineHist({
-                takeDate : openDate,
                 bmId : bottleMedicine._id,
                 temperature,
                 humidity,
-                balance,
+                dosage,
             });
             await takeMedicineHist.save();
         }
+
+        await bottleMedicine.setTotalWeight(totalWeight);
+        await bottleMedicine.save();
     }
 }
 
@@ -86,9 +72,9 @@ const transPublishingTopicAndMessage = async(bottleId) => {
     const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
     const takeMedicineHistList = await TakeMedicineHist.find({ 
         bmId : bottleMedicine._id 
-    }).sort({ takeDate : 'asc' });
+    }).sort({ takeDate : 'asc' }).limit(1);
 
-    const message = 'res/' + await transDate(takeMedicineHistList[0].takeDate) + '/' + bottleMedicine.dosage;
+    const message = 'res/' + await transDate(takeMedicineHistList[0].takeDate) + '/' + takeMedicineHistList[0].dosage;
    
     return {
         topic,
