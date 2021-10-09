@@ -39,9 +39,9 @@ interface DoctorMenuProps {
 
     newPatientRegisterModal : boolean;
     setNewPatientRegisterModal : any;
-    newPatientSearchId: string;
-    onSetNewPatientSearchId : React.ChangeEventHandler<HTMLInputElement>;
-    onSearchNewPatientByEmail : () => void;
+    newPatientSearchContact: string;
+    onSetNewPatientSearchContact : React.ChangeEventHandler<HTMLInputElement>;
+    onSearchNewPatientByContact : () => void;
     onRegisterNewPatient : () => void;
     onCloseModal : () => void;
 
@@ -62,8 +62,10 @@ interface DoctorMenuProps {
     prescribeMedicine : any;
     setPrescribeMedicine : (arg0 : any) => void;
 
-    dosage : string;
-    onSetDosage : React.ChangeEventHandler<HTMLInputElement>;
+    dailyDosage : string;
+    onSetDailyDosage : React.ChangeEventHandler<HTMLInputElement>;
+    totalDay : string;
+    onSetTotalDay : React.ChangeEventHandler<HTMLInputElement>;
 
     qrcodeUrl : string | null;
 
@@ -82,12 +84,12 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                     <styled.NewPatientRegisterTitle>새 환자 등록</styled.NewPatientRegisterTitle>
                     <styled.NewPatientSearchWrapper>
                         <styled.NewPatientSearchInput 
-                            placeholder = '환자 이메일을 입력하세요.'
-                            value = {props.newPatientSearchId}
-                            onChange = {props.onSetNewPatientSearchId}
+                            placeholder = '환자의 연락처를 입력하세요.'
+                            value = {props.newPatientSearchContact}
+                            onChange = {props.onSetNewPatientSearchContact}
                         />
                         <styled.NewPatientSearchButton
-                            onClick = {props.onSearchNewPatientByEmail}
+                            onClick = {props.onSearchNewPatientByContact}
                         >
                             <styled.NewPatientSearchButtonImg src = {lensImg}/>
                         </styled.NewPatientSearchButton>
@@ -97,10 +99,18 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                             props.newPatientSearchResult ?
                             <styled.NewPatientSearchResult>
                                 <styled.NewPatientSearchResultInfoWrapper>
-                                    <styled.NewPatientSearchResultInfo>이름 : </styled.NewPatientSearchResultInfo>
-                                    <styled.NewPatientSearchResultInfoText>
-                                        {props.newPatientSearchResult.patientNm}
-                                    </styled.NewPatientSearchResultInfoText>
+                                    <styled.NewPatientSearchResultInfo>
+                                        이름 : 
+                                        <styled.NewPatientSearchResultInfoText>
+                                            {props.newPatientSearchResult.userNm}
+                                        </styled.NewPatientSearchResultInfoText>
+                                    </styled.NewPatientSearchResultInfo>    
+                                    <styled.NewPatientSearchResultInfo>
+                                        생년월일 : 
+                                        <styled.NewPatientSearchResultInfoText>
+                                            {props.newPatientSearchResult.birth}
+                                        </styled.NewPatientSearchResultInfoText>
+                                    </styled.NewPatientSearchResultInfo>
                                 </styled.NewPatientSearchResultInfoWrapper>
                             </styled.NewPatientSearchResult> :
                             '🤔검색 결과가 없습니다.'
@@ -225,12 +235,21 @@ const DoctorMenuPresenter = (props : DoctorMenuProps) => {
                         :
                         props.prescribeModalStep === 2 ?
                         <styled.MedicineDosageSetWrapper>
-                                <styled.MedicineDosageInfo>
+                            <styled.MedicineDosageInfo>
                                 *하루 복용량을 입력하세요.
                             </styled.MedicineDosageInfo>
                             <styled.MedicineDosageInput
-                                value = {props.dosage}
-                                onChange = {props.onSetDosage}
+                                value = {props.dailyDosage}
+                                onChange = {props.onSetDailyDosage}
+                                min = {1}
+                                max = {3}
+                            />
+                            <styled.MedicineDosageInfo>
+                                *총 며칠 분량인지 입력하세요.
+                            </styled.MedicineDosageInfo>
+                            <styled.MedicineDosageInput
+                                value = {props.totalDay}
+                                onChange = {props.onSetTotalDay}
                             />
                         </styled.MedicineDosageSetWrapper>
                         :

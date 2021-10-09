@@ -48,7 +48,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [editPatientInfo, setEditPatientInfo] = useState<string>(''); 
 
     const [newPatientRegisterModal, setNewPatientRegisterModal] = useState<boolean>(false);
-    const [newPatientSearchId, setNewPatientSearchId] = useState<string>('');
+    const [newPatientSearchContact, setNewPatientSearchContact] = useState<string>('');
     const [newPatientSearchResult, setNewPatientSearchResult] = useState<any | null>(null);
 
     const [prescribeModal, setPrescribeModal] = useState<boolean>(false);
@@ -56,7 +56,8 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [searchMedicineKeyword, setSearchMedicineKeyword] = useState<string>('');
     const [medicineList, setMedicineList] = useState<any>([]);
     const [prescribeMedicine, setPrescribeMedicine] = useState<any>(null);
-    const [dosage, setDosage] = useState<string>('1');
+    const [dailyDosage, setDailyDosage] = useState<string>('1');
+    const [totalDay, setTotalDay] = useState<string>('1');
 
     const [qrcodeUrl, setQrcodeUrl] = useState<string | null>(null);
 
@@ -99,7 +100,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             await doctorApi.getPatientDetail(token, patientId).then(res => {
                 setPatientDetail(res.data);
 
-                const birth = res.data.profile.birth.split('/');
+                const birth = res.data.profile.birth.split('-');
                 setInfo({
                     infoType : 'PATIENT',
                     userNm : res.data.profile.userNm,
@@ -164,15 +165,15 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     };
 
 
-    const onSetNewPatientSearchId = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setNewPatientSearchId(e.target.value);
+    const onSetNewPatientSearchContact = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setNewPatientSearchContact(e.target.value);
     };
 
-    const onSearchNewPatientByEmail = async () => {
+    const onSearchNewPatientByContact = async () => {
         try {
             setLoading(true);
-            await doctorApi.searchPatientById(token, newPatientSearchId).then(res => {
-                setNewPatientSearchResult(res.data);
+            await doctorApi.searchPatientByContact(token, newPatientSearchContact).then(res => {
+                setNewPatientSearchResult(res.data.patientInfo);
                 setLoading(false);
             }).catch(err => {
                 console.log(err);
@@ -188,11 +189,11 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const onRegisterNewPatient = () => {
         if(newPatientSearchResult) {
-            const { patientId, patientNm } = newPatientSearchResult;
+            const { userId, userNm } = newPatientSearchResult;
             const onRegisterReq = async () => {
                 try {
                     const result = await doctorApi.registerPatient(token, {
-                        patientId,
+                        patientId : userId,
                     });
                     if(result.statusText === 'OK') {
                         Alert.onSuccess('환자에게 담당의 등록 요청을 전송했습니다.', () => null);
@@ -204,7 +205,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                 }
             };
 
-            Alert.onCheck(`${patientNm} 환자에게 담당의 등록 요청을 전송하시겠습니까?`, onRegisterReq, () => null);
+            Alert.onCheck(`${userNm} 환자에게 담당의 등록 요청을 전송하시겠습니까?`, onRegisterReq, () => null);
         } else {
             Alert.onError('환자를 먼저 검색해주세요.', () => null);
         }
@@ -212,7 +213,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const onCloseModal = async () => {
         setNewPatientRegisterModal(false);
-        setNewPatientSearchId('');
+        setNewPatientSearchContact('');
         setNewPatientSearchResult(null);
         setEditModal(false);
         setEditPatientInfo('');
@@ -221,7 +222,8 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         setSearchMedicineKeyword('');
         setMedicineList([]);
         setPrescribeMedicine(null);
-        setDosage('1');
+        setDailyDosage('1');
+        setTotalDay('1');
     };
 
     const onGoBottleDetail = (bottleId : number) => {
@@ -247,8 +249,12 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
         }
     };
 
-    const onSetDosage = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setDosage(e.target.value);
+    const onSetDailyDosage = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setDailyDosage(e.target.value);
+    };
+
+    const onSetTotalDay = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setTotalDay(e.target.value);
     };
 
     const onSetNextStepPrescribe = () => {
@@ -267,12 +273,14 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                 const res = await doctorApi.prescribeMedicine(token, {
                     patientId : patientDetail.profile.userId,
                     medicineId : prescribeMedicine.medicineId,
-                    dosage,
+                    dailyDosage,
+                    totalDosage : String(parseInt(totalDay) * parseInt(dailyDosage)),
                 });
 
                 if(res.statusText === 'OK') {
                     setQrcodeUrl(res.data.qrCode);
                     setLoading(false);
+                    Alert.onSuccess('처방 정보가 생성 되었습니다.', () => onSetNextStepPrescribe());
                 }
             } catch(e : any) {
                 setLoading(false);
@@ -280,9 +288,8 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             }
         };
 
-        Alert.onCheck(`${prescribeMedicine.name}(일 복용량:${dosage})\n을 처방하시겠습니까?`, async () => {
+        Alert.onCheck(`${prescribeMedicine.name}(일 복용량:${dailyDosage})\n을 ${totalDay}일동안 처방하시겠습니까?`, async () => {
             await onPrescribeMedicine();
-            Alert.onSuccess('처방 정보가 생성 되었습니다.', () => onSetNextStepPrescribe());
         }, () => null);
     };
 
@@ -342,9 +349,9 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
             newPatientRegisterModal = {newPatientRegisterModal}
             setNewPatientRegisterModal = {setNewPatientRegisterModal}
-            newPatientSearchId = {newPatientSearchId}
-            onSetNewPatientSearchId = {onSetNewPatientSearchId}
-            onSearchNewPatientByEmail = {onSearchNewPatientByEmail}
+            newPatientSearchContact = {newPatientSearchContact}
+            onSetNewPatientSearchContact = {onSetNewPatientSearchContact}
+            onSearchNewPatientByContact = {onSearchNewPatientByContact}
             onRegisterNewPatient = {onRegisterNewPatient}
             onCloseModal = {onCloseModal}
 
@@ -358,8 +365,10 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             medicineList = {medicineList}
             searchMedicine = {searchMedicine}
             prescribeMedicine = {prescribeMedicine}
-            dosage = {dosage}
-            onSetDosage = {onSetDosage}
+            dailyDosage = {dailyDosage}
+            onSetDailyDosage = {onSetDailyDosage}
+            totalDay = {totalDay}
+            onSetTotalDay = {onSetTotalDay}
             qrcodeUrl = {qrcodeUrl}
             setPrescribeMedicine = {setPrescribeMedicine}
             onPrescribeSubmit = {onPrescribeSubmit}

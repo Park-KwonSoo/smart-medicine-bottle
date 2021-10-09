@@ -89,14 +89,18 @@ export const NewPatientSearchResult = styled.div `
 
 export const NewPatientSearchResultInfoWrapper = styled.div `
     display : flex;
+    flex-direction : column;
 `;
 
 export const NewPatientSearchResultInfo = styled.div `
+    display : flex;
+    flex-direction : row;
+
     font-size : 13px;
     font-weight : 600;
     color : #a0a0a0;
 
-    margin : 0 5px 0 0;
+    margin : 0 5px 0 5px;
 `;
 
 export const NewPatientSearchResultInfoText = styled.div `
@@ -104,6 +108,8 @@ export const NewPatientSearchResultInfoText = styled.div `
     color : #343434;
     font-weight : 600;
     letter-spacing : 1px;
+
+    margin : 0 0 0 5px;
 `;
 
 export const NewPatientRegisterButtonWrapper = styled.div `
@@ -413,7 +419,7 @@ export const MedicineDosageInfo = styled.div `
     color : #a0a0a0;
 
     width : 100%;
-    margin : 0 0 20px 0;
+    margin : 10px 0 10px 0;
 
     border : none;
     background-color : transparent;
@@ -423,9 +429,8 @@ export const MedicineDosageInfo = styled.div `
 
 export const MedicineDosageInput = styled.input.attrs({
     type : 'number',
-    min : '1',
-    max : '3',
 }) `
+    margin : 0 0 10px 0;
     width : 40%;
 
     padding : 10px 20px;
