@@ -41,17 +41,18 @@ exports.uploadQrCode = async ({ directory, qrCodeFileName }) => {
     const destination = qrCodeFileName;
     try {
         //파일을 GCS에 업로드
-        const result = await storage.bucket('prescribe-medicine-qrcode').upload(directory + qrCodeFileName, {
+        const result = await storage.bucket('prescribe-medicine-qrcode').upload(directory + '/' + qrCodeFileName, {
             destination
         });
 
         //업로드 후 파일 삭제
-        fs.rm(directory + qrCodeFileName, () => {});
+        fs.rm(directory + '/' + qrCodeFileName, () => {});
     
         const qrCodeUrl = GoogleStorageUrl + `${result[0].bucket.id}/${result[0].name}`;
     
         return qrCodeUrl;
     } catch(e) {
+        console.log(e);
         return null;
     }
 };
