@@ -4,15 +4,24 @@ const TakeMedicineHist = require('../models/takeMedicineHistory');
 
 //message subscribe 후 message를 가공한 이후 해당 데이터를 보낼 topic과 message를 리턴하는 함수
 exports.dataPublish = async (topic, message) => {
-    //client가 subscribe를 하면 메시지를 보낸 약병의 topic과 message를 가공 및 보낸 약병의 bottleId를 가져옴
-    const data = await factoring(topic, message);
-    //가공된 데이터를 bottleId의 약병에 업데이트
-    await bottleInfoUpdate(data);
-    //가공된 데이터를 메시지로 만들어 topic과 message 리턴
-    const result = await transPublishingTopicAndMessage(data.bottleId);
+    if(message.includes('weight')) {
+        console.log('무게 갱신중');
+        //무게 갱신
+        const result = await updateBottleMedicineWeight(topic, message);
 
-    return result;
+        return result;
 
+    } else {
+         //client가 subscribe를 하면 메시지를 보낸 약병의 topic과 message를 가공 및 보낸 약병의 bottleId를 가져옴
+        const data = await factoring(topic, message);
+        //가공된 데이터를 bottleId의 약병에 업데이트
+        await bottleInfoUpdate(data);
+        //가공된 데이터를 메시지로 만들어 topic과 message 리턴
+        const result = await transPublishingTopicAndMessage(data.bottleId);
+
+        return result;
+
+    }
 };
 
 //Hub topic : bottle/bottleId
@@ -72,7 +81,7 @@ const transPublishingTopicAndMessage = async(bottleId) => {
     const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
     const takeMedicineHistList = await TakeMedicineHist.find({ 
         bmId : bottleMedicine._id 
-    }).sort({ takeDate : 'asc' }).limit(1);
+    }).sort({ takeDate : 'desc' }).limit(1);
 
     const message = 'res/' + await transDate(takeMedicineHistList[0].takeDate) + '/' + takeMedicineHistList[0].dosage;
    
@@ -86,4 +95,23 @@ const transPublishingTopicAndMessage = async(bottleId) => {
 const transDate = (date) => {
     return (date.getMonth() + 1 < 10 ? '0' + String(date.getMonth() + 1) : String(date.getMonth() + 1))
     + (date.getDate() < 10 ? '0' + String(date.getDate()) : String(date.getDate()));
-}
+};
+
+
+//무게센서를 이용하여 데이터값을 갱신하는 함수
+const updateBottleMedicineWeight = async (topic, message) => {
+    const bottleId = parseInt(topic.split('/')[1]);
+    //message = weight/무게
+    const totalWeight = parseFloat(message.split('/')[1]);
+
+    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
+    const totalDosage = parseInt(bottleMedicine.totalDosage);
+    //받은 값으로 총 무게를 설정한 이후, 총 무게 / 총 복용량으로 개별 무게를 설정한다.
+    await bottleMedicine.setTotalWeight(totalWeight);
+    await bottleMedicine.setEachWeight(totalWeight / totalDosage);
+
+    await bottleMedicine.save();
+
+    return null;
+
+};
