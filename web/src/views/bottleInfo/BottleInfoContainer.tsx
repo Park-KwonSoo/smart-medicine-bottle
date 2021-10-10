@@ -52,7 +52,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             categories : [],
         },
         series : [{
-            name : '약 복용 횟수',
+            name : '약 복용 회분',
             color : '#337DFF',
             data : [],
         }],
@@ -75,7 +75,12 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         try {
             const result = await doctorApi.getPatientBottleDetail(token, bottleId);
             if (result.statusText === 'OK') {
-                setTakeMedicineHist(result.data.takeMedicineHist);
+                setTakeMedicineHist(result.data.takeMedicineHist.map((takeMedicine : any) => {
+                    return ({
+                        ...takeMedicine,
+                        takeDate : moment(takeMedicine.takeDate).format('YYYY년 MM월 DD일 hh시 mm분'),
+                    });
+                }));
                 const { categories, data } = makeChart.make(result.data.takeMedicineHist, numberOfChartItem);
                 setBottleInfo({
                     ...result.data,

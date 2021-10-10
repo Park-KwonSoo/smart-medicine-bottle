@@ -1,17 +1,17 @@
 import moment from 'moment';
 
-export const make = (chartData : any[], numberOfRow : number) => {
+export const make = (takeMedicineHist : any[], numberOfRow : number) => {
     const now = new Date();
     const result : any = {};
-    new Array(numberOfRow).fill(null).forEach((item : any, index : number) => {
+    new Array(numberOfRow).fill(null).forEach(() => {
         const key = moment(now).format('MM/DD');
         result[key] = 0;
         now.setDate(now.getDate() - 1);
-    })
+    });
 
-    chartData.forEach((data : any) => {
+    takeMedicineHist.forEach((data : any) => {
         const key : string = moment(data.takeDate).format('MM/DD');
-        !isNaN(result[key]) ? result[key] = result[key] + 1 : null;
+        !isNaN(result[key]) ? result[key] = result[key] + data.dosage : null;
     });
 
     const categories : any = [];

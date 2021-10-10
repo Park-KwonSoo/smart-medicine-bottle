@@ -72,16 +72,16 @@ const BottleInfoPresenter = (props : BottleInfoProps) => {
                                         </styled.HistDtmWrapper>
                                         <styled.HistInfoWrapper>
                                             <styled.HistInfoEachWrapper>
+                                                복용량
+                                                <styled.HistInfoEach>{hist.dosage}회분</styled.HistInfoEach>
+                                            </styled.HistInfoEachWrapper>
+                                            <styled.HistInfoEachWrapper>
                                                 약병 내 온도
                                                 <styled.HistInfoEach>{hist.temperature}℃</styled.HistInfoEach>
                                             </styled.HistInfoEachWrapper>
                                             <styled.HistInfoEachWrapper>
                                                 약병 내 습도
                                                 <styled.HistInfoEach>{hist.humidity}%</styled.HistInfoEach>
-                                            </styled.HistInfoEachWrapper>
-                                            <styled.HistInfoEachWrapper>
-                                                약병 내 잔량
-                                                <styled.HistInfoEach>{hist.balance}%</styled.HistInfoEach>
                                             </styled.HistInfoEachWrapper>
                                         </styled.HistInfoWrapper>
                                     </styled.HistWrapper>
