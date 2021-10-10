@@ -7,6 +7,7 @@ const hub = require('./hub');
 const medicine = require('./medicine');
 const doctor = require('./doctor');
 const manage = require('./manage');
+const test = require('./test');
 
 const api = new Router();
 
@@ -17,5 +18,6 @@ api.use('/hub', hub.routes());
 api.use('/medicine', medicine.routes());
 api.use('/doctor', doctor.routes());
 api.use('/manage', manage.routes());
+api.use('/test', test.routes());
 
 module.exports = api;
