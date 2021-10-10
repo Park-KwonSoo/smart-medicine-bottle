@@ -306,7 +306,6 @@ exports.setMedicine = async(ctx) => {
     }
 
     await BottleMedicine.updateMany({ bottleId }, { useYn : 'N '});
-    
     await bottleMedicine.save();
 
     ctx.status = 200;
@@ -349,13 +348,16 @@ exports.setMedicineWeight = async ctx => {
     }
 
 
-
     //toDo : 약병에서 가져온 무게 데이터를 이용하여, bottleMedicine값을 갱신.
+    const client = await Mqtt.mqttOn(await hub.getHubHost());
+    const topic = 'bottle/' + bottleId + '/stb';
+    const message = 'weight';
+    await Mqtt.mqttPublishMessage(client, { topic, message });
 
 
-    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
-    const { totalWeight, totalDosage } = bottleMedicine;
-    
+    // const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
+    // const { totalWeight, totalDosage } = bottleMedicine;
+    // if(totalDosage) bottleMedicine.setEachWeight(totalWeight / totalDosage);
 
     ctx.status = 200;
 

@@ -1,5 +1,5 @@
-const mqtt = require('mqtt')
-const clientList = []
+const mqtt = require('mqtt');
+const clientList = [];
 
 exports.mqttOn = async (hosting, foo) => {
     const filterIndex = clientList.findIndex(client => {
@@ -19,7 +19,7 @@ exports.mqttOn = async (hosting, foo) => {
         client.on('message', async (topic, message) => {
             const result = await foo(topic, message.toString());
             console.log('\x1b[1;32msubscribe : topic', topic, 'message : ', message.toString(), '\x1b[0m')
-            this.mqttPublishMessage(client, result);
+            if(result)  this.mqttPublishMessage(client, result);
         });
         
         return client;
@@ -29,7 +29,9 @@ exports.mqttOn = async (hosting, foo) => {
 }
 
 exports.mqttSubscribe = (client, topic) => {
-    client.subscribe(topic)
+    client.subscribe(topic, () => {
+        console.log('suscribe', topic);
+    });
 }
 
 exports.mqttPublishMessage = (client, { topic, message }) => {
