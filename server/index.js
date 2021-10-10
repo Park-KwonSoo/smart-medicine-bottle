@@ -8,7 +8,7 @@ const Mongoose = require('mongoose');
 const api = require('./src/api');
 const MqttServer = require('./src/util/MqttServer');
 const BatchSystem = require('./src/util/Batch');
-const FCM = require('./src/util/FCM');
+// const FCM = require('./src/util/FCM');
 
 require('dotenv').config();
 // eslint-disable-next-line no-undef
@@ -38,7 +38,7 @@ app.use(router.routes()).use(router.allowedMethods());
 app.listen(SERVER_PORT, () => {
     console.log('\x1b[1;36mPORT : ', SERVER_PORT, 'is connected\x1b[0m');
     MqttServer.on();
-    FCM.initializeFCM();
+    // FCM.initializeFCM();
     BatchSystem.removeQrCode();
     BatchSystem.pushNotifyByDosage();
 });
