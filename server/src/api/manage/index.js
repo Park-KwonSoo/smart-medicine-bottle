@@ -17,7 +17,7 @@ manage.get('/doctor', manageCtrl.getDoctorRegReqList);
  * url : http://localhost:4000/api/manage/doctor/sec
  * return : doctor request List
  */
- manage.get('/doctor/sec', manageCtrl.getDoctorSecReqList);
+ manage.get('/doctor/secession', manageCtrl.getDoctorSecReqList);
 
 /**
  * 의사 회원가입 요청을 한 특정 회원의 상세정보 확인
