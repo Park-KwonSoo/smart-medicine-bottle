@@ -1,5 +1,6 @@
 const User = require('../../models/user');
 const DoctorInfo = require('../../models/doctorInfo');
+const PatientInfo = require('../../models/patientInfo');
 const jwt = require('jsonwebtoken');
 const { viewDoctorLicense } = require('../../util/GoogleCloudStorage');
 
@@ -240,7 +241,7 @@ exports.acceptDoctorRegReq = async ctx => {
             return;
         }
 
-
+        
         const doctorInfo = await DoctorInfo.findOne({
             doctorId,
             useYn : 'W',
@@ -314,17 +315,10 @@ exports.acceptDoctorRegReq = async ctx => {
             return;
         }
 
-
-        const doctorInfo = await DoctorInfo.findOne({
-            doctorId,
-            useYn : 'W',
-        });
+        await DoctorInfo.updateOne({ doctorId, useYn : 'W' }, { useYn : 'N' });
 
         await doctor.setUseYn('N');
         await doctor.save();
-
-        await doctorInfo.setUseYn('N');
-        await doctorInfo.save();
 
         ctx.status = 200;
 
@@ -388,16 +382,11 @@ exports.acceptDoctorRegReq = async ctx => {
         }
 
 
-        const doctorInfo = await DoctorInfo.findOne({
-            doctorId,
-            useYn : 'WS',
-        });
+        await DoctorInfo.updateOne({ doctorId, useYn : 'WS' }, { useYn : 'N' });
+        await PatientInfo.updateMany({ doctorId : userId, useYn : 'WS' }, { useYn : 'N' });
 
         await doctor.setUseYn('N');
         await doctor.save();
-
-        await doctorInfo.setUseYn('N');
-        await doctorInfo.save();
 
         ctx.status = 200;
 
