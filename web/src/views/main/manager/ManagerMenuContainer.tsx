@@ -17,7 +17,9 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
 
     const token = useRecoilValue(recoilUtil.token);
 
-    const [doctorRegReqList, setDoctorRegReqList] = useState<any>([]);
+    const [doctorList, setDoctorList] = useState<any>([]);
+
+    const [viewType, setViewType] = useState<string>('reg');
     
     const [doctorDetail, setDoctorDetail] = useState<any>({});
     const [modalUp, setModalUp] = useState<boolean>(false);
@@ -31,20 +33,28 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
         setValidate('W');
 
         try {
-            await managerApi.getDoctorRegReqList(token)
-                .then((res : any) => {
-                    if(res.statusText === 'OK') {
-                        setDoctorRegReqList(res.data.doctorRegReqList);
-                    }
-                }).catch(err => {
-                    Alert.onError(err.response.data.error, () => null);
-                });
+            const res = viewType === 'reg' ? await managerApi.getDoctorRegReqList(token) : await managerApi.getDoctorSecReqList(token);
+            if(res.statusText === 'OK') {
+                setDoctorList(res.data.doctorList);
+            } else {
+                Alert.onError(res.data.error, () => null);
+            }
         } catch(e : any) {
             Alert.onError(e.response.data.error, () => null);
         }
     };
 
+    //가입요청 보기
+    const onViewRegList = () => {
+        setViewType('reg');
+    };
 
+    //탈퇴요청 보기
+    const onViewSecList = () => {
+        setViewType('sec');
+    };
+
+    //가입요청 상세보기
     const onViewDetailReq = async (doctorId : string) => {
         setValidate('W');
 
@@ -72,7 +82,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
     };
 
     //회원 가입 수락
-    const onAcceptRequest = () => {
+    const onAcceptRegReq = () => {
         if(validate === 'W') {
             Alert.onError('먼저 의사의 자격번호가 유효한지 검증해주세요.', () => null);
             return;
@@ -118,6 +128,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
         Alert.onCheck('회원 가입 요청을 취소하시겠습니까?', onReject, () => null);
     };
 
+    //회원 자격번호 유효 검증 api
     const onValidate = async () => {
         try {
             await managerApi.validateDoctorLicense(token, {
@@ -140,6 +151,24 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
         }
     };
 
+    const onAcceptSecReq = (doctorId : string) => {
+        const onAccept = async () => {
+            try {
+                const res = await managerApi.acceptDoctorSecReq(token, {
+                    doctorId,
+                });
+                if(res.statusText === 'OK') {
+                    Alert.onSuccess('탈퇴를 승인했습니다.', fetchData);
+                }
+            } catch (e : any) {
+                Alert.onError(e.response.data.error, () => null);
+            }
+        };
+
+        Alert.onCheck('회원 탈퇴를 승인하시겠습니까?\n이 작업은 되돌릴 수 없습니다.', onAccept, () => null);
+    };
+    
+
     
     useEffect(() => {
         setValidate('W');
@@ -148,11 +177,15 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [viewType]);
 
     return (
         <ManagerMenuPresenter
-            doctorRegReqList = {doctorRegReqList}
+            viewType = {viewType}
+            onViewRegList = {onViewRegList}
+            onViewSecList = {onViewSecList}
+
+            doctorList = {doctorList}
 
             doctorDetail = {doctorDetail}
             modalUp = {modalUp}
@@ -166,7 +199,8 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
             validateDoctorLicense = {validateDoctorLicense}
             onSetValidateDoctorLicense = {onSetValidateDoctorLicense}
 
-            onAcceptRequest = {onAcceptRequest}
+            onAcceptRegReq = {onAcceptRegReq}
+            onAcceptSecReq = {onAcceptSecReq}
             onRejectRequest = {onRejectRequest}
         />
     );

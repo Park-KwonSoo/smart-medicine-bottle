@@ -251,8 +251,45 @@ export const ContentWrapper = styled.div `
 
 `;
 
+export const ContentButtonWrapper = styled.div `
+    width : 100%;
+    height : 10%;
+    border : none;
+
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : flex-end;
+
+    gap : 10%;
+
+    background-color : transparent;
+`;
+
+export const ContentButton = styled.button<{isSelect : boolean}> `
+    background-color : ${props => props.isSelect ? '#337DFF' : 'transparent'};
+    color : ${props => props.isSelect ? '#fff' : '#337DFF'};
+    border : 1px solid #337DFF;
+    border-radius : 4px;
+
+    padding : 4px 10px;
+
+    cursor : pointer;
+
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
+    transition : .25s all;
+
+    &:hover {
+        opacity : .5;
+    }
+`;
+
 export const ContentTitle = styled.div `
     width : 100%;
+    height : 20%;
     border : none;
     border-bottom : 1px solid #ddd;
 
@@ -261,7 +298,6 @@ export const ContentTitle = styled.div `
     justify-content : center;
     align-items : center;
 
-    padding : 4% 0;
     font-size : 22px;
     font-weight : 600;
     letter-spacing : 1px;
@@ -281,15 +317,16 @@ export const ContentExplain = styled.div `
 export const ContentBody = styled.div `
     overflow : scroll;
 
-    height : 79%;
+    min-height : 60%;
+    max-height : 60%;
 
     border : none;
-
-    padding : 0 0 0 3px;
 
     display : flex;
     flex-direction : column;
     align-items : center;
+
+    padding : 0 0 0 3px;
 
     &::-webkit-scrollbar {
         width : 3px;
@@ -304,6 +341,7 @@ export const ContentBody = styled.div `
 
 export const ContentInfoWrapper = styled.div `
     width : 100%;
+    height : 10%;
     border : none;
     border-bottom : 1px solid #a0a0a0;
 
@@ -313,7 +351,6 @@ export const ContentInfoWrapper = styled.div `
     justify-content : center;
     align-items : center;
 
-    padding : 12px 0px;
 `;
 
 export const ContentInfo = styled.div<{isLast : boolean}> `
@@ -351,13 +388,15 @@ export const EachContentWrapper = styled.button `
 
     padding : 10px 0px;
 
-    cursor : pointer;
+    :not(:disabled) {
+        cursor : pointer;
 
-    transition : .1s all;
+        transition : .1s all;
 
-    &:hover {
-        background-color : #337DFF;
-        color : #fff;
+        &:hover {
+            background-color : #337DFF;
+            color : #fff;
+        }
     }
 
 `;
@@ -380,9 +419,32 @@ export const EachContentNm = styled.div<{isLast : boolean}> `
 
 `;
 
+export const AcceptButton = styled.button `
+    background-color : transparent;
+    color : #337DFF;
+    border : 1px solid #337DFF;
+    border-radius : 3px;
+    padding : 2px 10px;
+
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
+    cursor : pointer;
+
+    transition : .25s all;
+
+    &:hover {
+        background-color : #337DFF;
+        color : #fff;
+    }
+`;
+
 export const NothingWrapper = styled.div `
     height : 100%;
     width : 100%;
+
+    border : none;
 
     display : flex;
     justify-content : center;

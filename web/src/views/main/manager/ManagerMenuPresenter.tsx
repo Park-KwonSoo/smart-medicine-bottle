@@ -5,7 +5,11 @@ import  * as styled from './ManagerMenuStyled';
 
 
 interface ManagerMenuProps {
-    doctorRegReqList : any[];
+    viewType : string;
+    onViewRegList : () => void;
+    onViewSecList : () => void;
+
+    doctorList : any[];
 
     doctorDetail : any;
     modalUp : boolean;
@@ -19,7 +23,8 @@ interface ManagerMenuProps {
     validateDoctorLicense : string;
     onSetValidateDoctorLicense : React.ChangeEventHandler<HTMLInputElement>;
 
-    onAcceptRequest : () => void;
+    onAcceptRegReq : () => void;
+    onAcceptSecReq : (arg0 : string) => void;
     onRejectRequest : () => void;
 
 }
@@ -98,7 +103,7 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                     </styled.ModalBodyWrapper>
                     <styled.ModalButtonWrapper>
                         <styled.ModalButton
-                            onClick = {props.onAcceptRequest}
+                            onClick = {props.onAcceptRegReq}
                             isAccept = {true}
                         >
                             수락
@@ -114,37 +119,71 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                 </Modal> : null
             }
             <styled.ContentWrapper>
+                <styled.ContentButtonWrapper>
+                    <styled.ContentButton
+                        isSelect = {props.viewType === 'reg'}
+                        onClick = {props.onViewRegList}
+                    >
+                        가입 대기
+                    </styled.ContentButton>
+                    <styled.ContentButton
+                        isSelect = {props.viewType === 'sec'}
+                        onClick = {props.onViewSecList}
+                    >
+                        탈퇴 요청
+                    </styled.ContentButton>
+                </styled.ContentButtonWrapper>
                 <styled.ContentTitle>
-                    가입 대기 중 의사 회원
-                    <styled.ContentExplain>
-                        *클릭하면 상세정보를 확인할 수 있습니다.
-                    </styled.ContentExplain>
+                    {
+                        props.viewType === 'sec' ?
+                        <>
+                        탈퇴 대기 중 의사 회원
+                        <styled.ContentExplain>
+                            *승인을 누르면 탈퇴를 승인합니다.
+                        </styled.ContentExplain>
+                        </> :
+                        <>
+                        가입 대기 중 의사 회원
+                        <styled.ContentExplain>
+                            *클릭하면 상세정보를 확인할 수 있습니다.
+                        </styled.ContentExplain>
+                        </>
+                    }
                 </styled.ContentTitle>
-                <styled.ContentBody>
-                    <styled.ContentInfoWrapper>
-                        <styled.ContentInfo
-                            isLast = {false}
-                        >
-                            분야
-                        </styled.ContentInfo>
-                        <styled.ContentInfo
-                            isLast = {false}
-                        >
-                            이름
-                        </styled.ContentInfo>
-                        <styled.ContentInfo
+                <styled.ContentInfoWrapper>
+                    <styled.ContentInfo
+                        isLast = {false}
+                    >
+                        분야
+                    </styled.ContentInfo>
+                    <styled.ContentInfo
+                        isLast = {false}
+                    >
+                        이름
+                    </styled.ContentInfo>
+                    <styled.ContentInfo
+                        isLast = {props.viewType !== 'sec'}
+                    >
+                        이메일
+                    </styled.ContentInfo>
+                    {
+                        props.viewType === 'sec' ?
+                        <styled.ContentInfo 
                             isLast = {true}
                         >
-                            이메일
-                        </styled.ContentInfo>
-                    </styled.ContentInfoWrapper>
+                            탈퇴 수락
+                        </styled.ContentInfo> : null
+                    }
+                </styled.ContentInfoWrapper>
+                <styled.ContentBody>
                     {
-                        props.doctorRegReqList.length ?
-                        props.doctorRegReqList.map((doctor : any) => {
+                        props.doctorList.length ?
+                        props.doctorList.map((doctor : any) => {
                             return (
                                 <styled.EachContentWrapper
                                     key = {doctor.doctorId}
                                     onClick = {() => props.onViewDetailReq(doctor.doctorId)}
+                                    disabled = {props.viewType === 'sec'}
                                 >
                                     <styled.EachContentNm
                                         isLast = {false}
@@ -157,10 +196,22 @@ const ManagerMenuPresenter = (props : ManagerMenuProps) => {
                                         {doctor.info.doctorNm}
                                     </styled.EachContentNm>
                                     <styled.EachContentNm
-                                        isLast = {true}
+                                        isLast = {props.viewType !== 'sec'}
                                     >
                                         {doctor.doctorId}
                                     </styled.EachContentNm>
+                                    {
+                                        props.viewType === 'sec' ?
+                                        <styled.EachContentNm
+                                            isLast = {true}
+                                        >
+                                            <styled.AcceptButton
+                                                onClick = {() => props.onAcceptSecReq(doctor.doctorId)}
+                                            >
+                                                승인
+                                            </styled.AcceptButton>
+                                        </styled.EachContentNm> : null
+                                    }
                                 </styled.EachContentWrapper>
                             )
                         }) :
