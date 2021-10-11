@@ -12,7 +12,7 @@ exports.generateQrCode_prescribe = async ({ medicine, dailyDosage, totalDosage, 
     try {
         await QrCode.toFile(
             directory + '/' + qrCodeFileName,
-            `${medicine.name}/${medicine.medicineId}/${dailyDosage}/${totalDosage}/${patientId}/${doctorId}`,
+            `${medicine.medicineId}/${dailyDosage}/${totalDosage}/${doctorId}/${patientId}/${medicine.name}`,
             {
                 color : {
                     dark : '#337DFF',
