@@ -512,45 +512,28 @@ exports.secession = async ctx => {
     }
 
     if(user.userTypeCd === 'NORMAL') {
-        const profile = await Profile.findOne({ userId });
-
         //프로필 삭제
-        await profile.setUseYn('N');
-        await profile.save();
+        await Profile.updateOne({ userId }, { useYn : 'N' });
 
         //유저에 등록된 허브, 약병, 약병정보 전부 삭제
         const hubList = await Hub.find({ userId });
         await Promise.all(hubList.map(async hub => {
-            const bottleList = await Bottle.find({ hubId : hub.hubId });
-            await Promise.all(bottleList.map(async bottle => {
-                const bottleMedicine = await BottleMedicine.findOne({ bottleId : bottle.bottleId });
-                await bottleMedicine.setUseYn('N');
-                await bottleMedicine.save();
-            }));
-
             await Bottle.deleteMany({ hubId : hub.hubId });
         }));
 
         await Hub.deleteMany({ userId });
 
-
         //환자 정보 삭제
-        const patientInfoList = await PatientInfo.find({ patientId : userId, useYn : 'Y' });
-        await Promise.all(patientInfoList.map(async patientInfo => {
-            await patientInfo.setUseYn('N');
-            await patientInfo.save();
-        }));
-
+        await PatientInfo.updateMany({ patientId : userId, useYn : 'Y'}, { useYn : 'N' });
 
         //유저 삭제
         await user.setUseYn('N');
         await user.save();
 
     } else if (user.userTypeCd === 'DOCTOR') {
-        const doctorInfo = await DoctorInfo.findOne({ doctorId : userId });
-
-        await doctorInfo.setUseYn('WS');
-        await doctorInfo.save();
+        //의사 정보 및 환자 정보 삭제
+        await DoctorInfo.updateOne({ doctorId : userId }, { useYn : 'WS' });
+        await PatientInfo.updateMany({ doctorId : userId }, { useYn : 'WS' });
 
         await user.setUseYn('WS');
         await user.save();
