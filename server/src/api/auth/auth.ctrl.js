@@ -197,7 +197,7 @@ exports.doctorRegister = async ctx => {
         doctorId : userId,
         info,
         useYn : 'W',
-    });    
+    });
 
     await doctorInfo.save();
     await doctor.save();

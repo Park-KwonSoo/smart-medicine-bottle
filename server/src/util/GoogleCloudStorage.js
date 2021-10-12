@@ -32,10 +32,10 @@ exports.viewDoctorLicense = async ({ doctorInfo }) => {
             expires : Date.now() + 1000 * 60 * 15,
             action : 'read',
         };
-
+    
         const [signedUrl] = file ? await file.getSignedUrl(option) : [null];
-
-        return signedUrl;
+    
+        return signedUrl;   
     } catch(e) {
         console.log(e);
         return null;
@@ -73,9 +73,9 @@ exports.getQrCodeUrl = async ({ qrCodeFileName }) => {
             expires : Date.now() + 1000 * 60 * 15,
             action : 'read',
         };
-    
+
         const [signedUrl] = file ? await file.getSignedUrl(option) : [null];
-    
+
         return signedUrl;
     } catch(e) {
         console.log(e);
