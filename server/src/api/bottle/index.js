@@ -52,6 +52,14 @@ bottle.patch('/:bottleId', bottleCtrl.setMedicine);
 bottle.patch('/weight/:bottleId', bottleCtrl.setMedicineWeight);
 
 /**
+ * 약병 이름 변경
+ * request parameter : bottleid, bottleNm
+ * url : http://localhost:4000/api/bottle/name/:bottleId
+ * return : null
+ */
+ bottle.patch('/name/:bottleId', bottleCtrl.setBottleName);
+
+/**
  * 비어있는 약병에 전담의 등록
  * request parameter : bottleId, doctorId
  * url : http://localhost:4000/api/bottle/doctor/:bottleId

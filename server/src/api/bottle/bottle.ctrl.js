@@ -27,7 +27,7 @@ exports.bottleConnect = async(ctx) => {
         return;
     }
 
-    const { bottleId, hubId } = ctx.request.body;
+    const { bottleId, hubId, bottleNm } = ctx.request.body;
 
     const isExistBottle = await Bottle.findByBottleId(bottleId);
     if(isExistBottle) {
@@ -54,7 +54,8 @@ exports.bottleConnect = async(ctx) => {
 
     const newBottle = new Bottle({
         bottleId,
-        hubId
+        hubId,
+        bottleNm,
     });
 
     const client = await Mqtt.mqttOn(hosting);
@@ -358,6 +359,50 @@ exports.setMedicineWeight = async ctx => {
     // const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
     // const { totalWeight, totalDosage } = bottleMedicine;
     // if(totalDosage) bottleMedicine.setEachWeight(totalWeight / totalDosage);
+
+    ctx.status = 200;
+
+};
+
+//약병 이름 변경
+exports.setBottleName = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || !user.userTypeCd || user.useYn !== 'Y') {
+        ctx.status = 403;
+        return;
+    }
+
+    const { bottleId } = ctx.params;
+    const { bottleNm } = ctx.request.body;
+
+    const bottle = await Bottle.findByBottleId(bottleId);
+    if(!bottle) {
+        ctx.status = 404;
+        ctx.body = {
+            error : '약병 찾을 수 없음.',
+        }
+        return;
+    }
+
+    const hub = await Hub.findByHubId(bottle.getHubId());
+    if(hub.getHub_UserId() !== userId) {
+        ctx.status = 403;
+        ctx.body = {
+            error : '해당 허브 권한 없음',
+        }
+        return;
+    }
+
+    await bottle.setBottleNm(bottleNm);
+    await bottle.save();
 
     ctx.status = 200;
 

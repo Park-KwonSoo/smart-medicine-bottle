@@ -4,7 +4,6 @@ const Profile = require('../../models/profile');
 const DoctorInfo = require('../../models/doctorInfo');
 const Hub = require('../../models/hub');
 const Bottle = require('../../models/bottle');
-const BottleMedicine = require('../../models/bottleMedicine');
 const PatientInfo = require('../../models/patientInfo');
 const { uploadDoctorLicense } = require('../../util/GoogleCloudStorage');
 const Joi = require('joi');
