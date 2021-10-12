@@ -6,6 +6,7 @@ const HubSchema = new Schema ({
     hubId : { type : Number, required : true, unique : true },
     hosting : { type : Object, default : null },
     userId : { type : String, default : null, ref : 'User', lowercase : true, },
+    hubNm : { type : String, required : true, maxlength : 10, },
 });
 
 HubSchema.statics.findByHubId = function(hubId) {

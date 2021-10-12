@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const BottleSchema = new Schema ({
     bottleId : { type : Number, required : true, unique : true },
     hubId : { type : Number, required : true, ref : 'Hub', },
+    bottleNm : { type : String, required : true, maxlength : 10, },
 });
 
 BottleSchema.statics.findByBottleId = function(bottleId) {
@@ -22,6 +23,10 @@ BottleSchema.methods.getBottleId = function() {
 BottleSchema.methods.getHubId = function() {
     return this.hubId;
 };
+
+BottleSchema.methods.setBottleNm = function(bottleNm) {
+    this.bottleNm = bottleNm;
+}
 
 
 module.exports = mongoose.model('Bottle', BottleSchema);
