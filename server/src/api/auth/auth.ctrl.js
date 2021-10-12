@@ -198,10 +198,10 @@ exports.doctorRegister = async ctx => {
         doctorId : userId,
         info,
         useYn : 'W',
-    });    
+    });
 
-    await doctor.save();
     await doctorInfo.save();
+    await doctor.save();
     
     ctx.status = 201;
   

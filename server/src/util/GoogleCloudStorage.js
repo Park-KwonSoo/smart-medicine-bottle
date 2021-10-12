@@ -17,23 +17,29 @@ exports.uploadDoctorLicense = async ({ userId, fileName, filePath }) => {
     
         return doctorLicenseUrl;
     } catch(e) {
+        console.log(e);
         return null;
     }
 };
 
 //의사 정보를 인자로 받아 해당 Doctor License의 Signed URL을 반환
 exports.viewDoctorLicense = async ({ doctorInfo }) => {
-    const fileName = doctorInfo.info.doctorLicense.split('/').pop();
-    const file = storage.bucket('doctor-info').file(fileName);
-    const option = {
-        version : 'v4',
-        expires : Date.now() + 1000 * 60 * 15,
-        action : 'read',
-    };
-
-    const [signedUrl] = file ? await file.getSignedUrl(option) : [null];
-
-    return signedUrl;
+    try {
+        const fileName = doctorInfo.info.doctorLicense.split('/').pop();
+        const file = storage.bucket('doctor-info').file(fileName);
+        const option = {
+            version : 'v4',
+            expires : Date.now() + 1000 * 60 * 15,
+            action : 'read',
+        };
+    
+        const [signedUrl] = file ? await file.getSignedUrl(option) : [null];
+    
+        return signedUrl;   
+    } catch(e) {
+        console.log(e);
+        return null;
+    }
 };
 
 //의사 ID, 약 ID, 복용량을 인자로 받아, QR Code를 생성
@@ -59,15 +65,20 @@ exports.uploadQrCode = async ({ directory, qrCodeFileName }) => {
 
 //생성된 QR코드의 signedUrl을 가져옴
 exports.getQrCodeUrl = async ({ qrCodeFileName }) => {
-    const fileName = qrCodeFileName;
-    const file = storage.bucket('prescribe-medicine-qrcode').file(fileName);
-    const option = {
-        version : 'v4',
-        expires : Date.now() + 1000 * 60 * 15,
-        action : 'read',
-    };
+    try {
+        const fileName = qrCodeFileName;
+        const file = storage.bucket('prescribe-medicine-qrcode').file(fileName);
+        const option = {
+            version : 'v4',
+            expires : Date.now() + 1000 * 60 * 15,
+            action : 'read',
+        };
 
-    const [signedUrl] = file ? await file.getSignedUrl(option) : [null];
+        const [signedUrl] = file ? await file.getSignedUrl(option) : [null];
 
-    return signedUrl;
+        return signedUrl;
+    } catch(e) {
+        console.log(e);
+        return null;
+    }
 };
