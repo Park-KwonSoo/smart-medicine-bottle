@@ -42,6 +42,7 @@ exports.getDoctorRegReqList = async ctx => {
             error : '알 수 없는 에러가 발생했습니다.',
         };
         console.log(e);
+        return;
     }
 };
 
@@ -82,6 +83,7 @@ exports.getDoctorRegReqList = async ctx => {
             error : '알 수 없는 에러가 발생했습니다.',
         };
         console.log(e);
+        return;
     }
 };
 
@@ -171,6 +173,8 @@ exports.getDoctorRegReqDetail = async ctx => {
         ctx.body = {
             error : '알 수 없는 에러가 발생했습니다.',
         };
+        console.log(e);
+        return;
     }
 };
 
@@ -262,6 +266,7 @@ exports.acceptDoctorRegReq = async ctx => {
             error : '알 수 없는 에러가 발생했습니다.',
         };
         console.log(e);
+        return;
     }
 };
 
@@ -328,6 +333,7 @@ exports.acceptDoctorRegReq = async ctx => {
             error : '알 수 없는 에러가 발생했습니다.',
         };
         console.log(e);
+        return;
     }
 };
 
@@ -396,6 +402,7 @@ exports.acceptDoctorRegReq = async ctx => {
             error : '알 수 없는 에러가 발생했습니다.',
         };
         console.log(e);
+        return;
     }
 };
 

@@ -122,7 +122,6 @@ exports.doctorRegister = async ctx => {
 
     const { doctorInfoFile } = ctx.request.files;
 
-
     const schema = Joi.object().keys({
         userId : Joi.string().email().max(50).required(),
         password : Joi.string().required(),
@@ -200,8 +199,8 @@ exports.doctorRegister = async ctx => {
         useYn : 'W',
     });    
 
-    await doctor.save();
     await doctorInfo.save();
+    await doctor.save();
     
     ctx.status = 201;
   
@@ -374,9 +373,9 @@ exports.socialRegister = async ctx => {
         contact,
         deviceToken,
     });
-
-    await user.save();
+    
     await profile.save();
+    await user.save();
 
     ctx.status = 201;
 
