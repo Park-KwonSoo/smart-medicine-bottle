@@ -5,7 +5,6 @@ const TakeMedicineHist = require('../models/takeMedicineHistory');
 //message subscribe 후 message를 가공한 이후 해당 데이터를 보낼 topic과 message를 리턴하는 함수
 exports.dataPublish = async (topic, message) => {
     if(message.includes('weight')) {
-        console.log('무게 갱신중');
         //무게 갱신
         const result = await updateBottleMedicineWeight(topic, message);
 
@@ -29,7 +28,7 @@ exports.dataPublish = async (topic, message) => {
 const factoring = async (topic, message) => {
     const bottleId = parseInt(topic.split('/')[1]);
     const data = message.split('/');
-    const [isOpen, humidity, totalWeight, temperature] = data;
+    const [isOpen, temperature, totalWeight, humidity] = data;
 
     return {
         bottleId,
@@ -45,32 +44,33 @@ const factoring = async (topic, message) => {
 const bottleInfoUpdate = async(data) => {
     let { bottleId, isOpen, temperature, humidity, totalWeight } = data;
 
-    bottleId = parseInt(bottleId);
-    isOpen = parseInt(isOpen);
-    temperature = parseFloat(temperature);
-    humidity = parseFloat(humidity);
-    totalWeight = parseFloat(totalWeight);
+    if(!parseInt(isOpen)) {
+        bottleId = parseInt(bottleId);
+        temperature = parseFloat(temperature);
+        humidity = parseFloat(humidity);
+        totalWeight = parseFloat(totalWeight);
+    
+        const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
 
-    const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
-
-    if(bottleMedicine) {
-        const lastTotalWeight = parseFloat(bottleMedicine.totalWeight);
-
-        if(isOpen) {
+        if(bottleMedicine) {
+            const lastTotalWeight = parseFloat(bottleMedicine.totalWeight);
             const { eachWeight } = bottleMedicine;
+
             const dosage = Math.round((lastTotalWeight - totalWeight) / parseFloat(eachWeight));
 
-            const takeMedicineHist  = new TakeMedicineHist({
-                bmId : bottleMedicine._id,
-                temperature,
-                humidity,
-                dosage,
-            });
-            await takeMedicineHist.save();
+            if(dosage > 0) {
+                const takeMedicineHist  = new TakeMedicineHist({
+                    bmId : bottleMedicine._id,
+                    temperature,
+                    humidity,
+                    dosage,
+                });
+                await takeMedicineHist.save();
+            }
+            
+            await bottleMedicine.setTotalWeight(totalWeight);
+            await bottleMedicine.save();
         }
-
-        await bottleMedicine.setTotalWeight(totalWeight);
-        await bottleMedicine.save();
     }
 }
 
@@ -83,7 +83,9 @@ const transPublishingTopicAndMessage = async(bottleId) => {
         bmId : bottleMedicine._id 
     }).sort({ takeDate : 'desc' }).limit(1);
 
-    const message = 'res/' + await transDate(takeMedicineHistList[0].takeDate) + '/' + takeMedicineHistList[0].dosage;
+    const message = takeMedicineHistList && takeMedicineHistList[0] ?
+        'res/' + await transDate(takeMedicineHistList[0].takeDate) + '/' + takeMedicineHistList[0].dosage :
+        'res/' + await transDate(new Date()) + '/' + 0;
    
     return {
         topic,
