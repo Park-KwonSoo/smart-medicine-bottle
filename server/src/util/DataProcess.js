@@ -47,9 +47,9 @@ const bottleInfoUpdate = async(data) => {
 
     bottleId = parseInt(bottleId);
     isOpen = parseInt(isOpen);
-    temperature = parseFloat(temperature);
-    humidity = parseFloat(humidity);
-    totalWeight = parseFloat(totalWeight);
+    temperature = parseFloat(temperature).toFixed(1);
+    humidity = parseFloat(humidity).toFixed(1);
+    totalWeight = parseFloat(totalWeight).toFixed(2);
 
     const bottleMedicine = await BottleMedicine.findOne({ bottleId, useYn : 'Y' });
 
