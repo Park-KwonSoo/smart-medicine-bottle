@@ -132,7 +132,12 @@ exports.getMyDoctorList = async ctx => {
             useYn : 'Y',
         });
 
-        return doctorInfo ? doctorInfo.info : null;
+        if (doctorInfo) {
+            return ({
+                ...doctorInfo.info,
+                doctorId : doctorInfo.doctorId,
+            })
+        }
     }));
 
     ctx.status = 200;
