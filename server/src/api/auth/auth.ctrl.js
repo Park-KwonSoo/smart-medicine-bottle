@@ -29,7 +29,7 @@ exports.register = async(ctx) => {
         userNm : Joi.string().required(),
         birth : Joi.string().required(),
         contact : Joi.string().required(),
-        deviceToken : Joi.string(),
+        deviceToken : Joi.string().allow(null),
     });
     
     const result = schema.validate(ctx.request.body);
@@ -218,7 +218,7 @@ exports.login = async(ctx) => {
     const schema = Joi.object().keys({
         userId : Joi.string().email().max(50).required(),
         password : Joi.string().required(),
-        deviceToken : Joi.string(),
+        deviceToken : Joi.string().allow(null),
     });
 
     const result = schema.validate(ctx.request.body);
