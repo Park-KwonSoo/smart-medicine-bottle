@@ -1,12 +1,50 @@
 import React from 'react';
+import { RouteComponentProps } from 'react-router';
+
+import * as Alert from '../../util/alertMessage';
 import * as styled from './FooterStyled';
+
 
 const ApiLicense = '/static/img/apiLicense.png';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface FooterProps extends RouteComponentProps {}
 
-const Footer = () => {
+
+const Footer = (props : FooterProps) => {
+
+
+    const onGoTerm = () => {
+        Alert.onWarning('준비중입니다.', () => null);
+    };
+
+    const onGoPrivateLicense = () => {
+        Alert.onWarning('준비중입니다.', () => null);
+    };
+
+    const onGoServiceCenter = () => {
+        Alert.onWarning('준비중입니다.', () => null);
+    };
+
     return (
         <styled.Container>
+            <styled.TermsWrapper>
+                <styled.EachTerms
+                    onClick = {onGoTerm}
+                >
+                    이용약관
+                </styled.EachTerms>
+                <styled.EachTerms
+                    onClick = {onGoPrivateLicense}
+                >
+                    개인정보처리방침
+                </styled.EachTerms>
+                <styled.EachTerms
+                    onClick = {onGoServiceCenter}
+                >
+                    고객센터
+                </styled.EachTerms>
+            </styled.TermsWrapper>
             <styled.InfoWrapper>
                 <styled.LicenseWrapper>
                     <styled.LicenseExplain>저작권</styled.LicenseExplain>

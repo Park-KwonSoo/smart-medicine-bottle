@@ -181,7 +181,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             setFdbType = {setFdbType}
             onSubmitFeedback = {onSubmitFeedback}
         />
-        <Footer/>
+        <Footer {...props}/>
         </>
     );
 };

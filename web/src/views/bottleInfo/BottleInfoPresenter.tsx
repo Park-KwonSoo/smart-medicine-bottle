@@ -156,7 +156,7 @@ const BottleInfoPresenter = (props : BottleInfoProps) => {
                 />
                 <styled.NewFeedbackButtonWrapper>
                     <styled.NewFeedbackTypeButtonWrapper>
-                       <styled.NewFeedbackTypeButtonEachWrapper>
+                    <styled.NewFeedbackTypeButtonEachWrapper>
                             <styled.NewFeedbackTypeButton 
                                 valueType = 'RECOMMEND'
                                 selected = {props.fdbType === 'RECOMMEND'}

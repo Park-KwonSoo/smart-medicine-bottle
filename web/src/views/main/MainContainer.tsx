@@ -33,7 +33,7 @@ const MainContainer = (props : MainProps) => {
             userTypeCd === 'MANAGER' ?
             <ManagerMenuContainer {...props}/> : null
         }
-        <Footer/>
+        <Footer {...props}/>
         </>
     );
 };

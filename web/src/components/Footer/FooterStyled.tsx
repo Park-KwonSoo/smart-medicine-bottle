@@ -13,6 +13,44 @@ export const Container = styled.div `
     flex-direction : column;
 `;
 
+export const TermsWrapper = styled.div `
+    width : 100%:
+
+    display : flex;
+    flex-direction : row;
+
+    padding : 0 0 20px 0;
+    margin : 0 0 10px 0;
+
+    background-color : transparent;
+    border : none;
+
+    border-bottom : 1px solid #ddd;
+`;
+
+export const EachTerms = styled.button `
+    color : #000;
+    background-color : transparent;
+
+    margin : 0 10px 0 0;
+    padding : 0 0 5px 0;
+
+    cursor : pointer;
+
+    font-size : 13px;
+
+    font-weight : 400;
+    border : none;
+    border-bottom : 1px solid;
+
+    transition : .25s all;
+
+    &:hover {
+        color : #337DFF;
+        opacity : .5;
+    }
+`;
+
 export const InfoWrapper = styled.div `
     display : flex;
     flex-direction : row;
