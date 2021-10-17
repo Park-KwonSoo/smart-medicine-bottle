@@ -10,7 +10,6 @@ import * as styled from './HeaderStyled';
 import { authApi } from '../../api';
 
 const headerImg = '/static/img/pharmacy.png';
-const backButtonWhite = '/static/img/backButtonWhite.png';
 const backButtonBlue = '/static/img/backButtonBlue.png';
 const logout = '/static/img/logout.png';
 

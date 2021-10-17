@@ -9,6 +9,7 @@ import * as Alert from '../../util/alertMessage';
 import moment from 'moment';
 
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import BottleInfoPresenter from './BottleInfoPresenter';
 
 import { doctorApi } from '../../api';
@@ -179,9 +180,8 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             fdbType = {fdbType}
             setFdbType = {setFdbType}
             onSubmitFeedback = {onSubmitFeedback}
-
-
         />
+        <Footer/>
         </>
     );
 };

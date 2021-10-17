@@ -6,6 +6,7 @@ import * as recoilUtil from '../../util/recoilUtil';
 
 
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import DoctorMenuContainer from './doctor';
 import ManagerMenuContainer from './manager';
 
@@ -32,6 +33,7 @@ const MainContainer = (props : MainProps) => {
             userTypeCd === 'MANAGER' ?
             <ManagerMenuContainer {...props}/> : null
         }
+        <Footer/>
         </>
     );
 };
