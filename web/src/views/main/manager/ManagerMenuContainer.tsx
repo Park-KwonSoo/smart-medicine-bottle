@@ -40,7 +40,8 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                 Alert.onError(res.data.error, () => null);
             }
         } catch(e : any) {
-            Alert.onError(e.response.data.error, () => null);
+            console.log(e);
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
         }
     };
 
@@ -67,7 +68,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                     }
                 })
         } catch(e : any) {
-            Alert.onError(e.response.data.error, () => setModalUp(false));
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => setModalUp(false));
         }
     };
 
@@ -102,7 +103,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                     }
                 });
             } catch(e : any) {
-                Alert.onError(e.response.data.error, () => setModalUp(false));
+                Alert.onError('알 수 없는 에러가 발생했습니다.', () => setModalUp(false));
             }
         };
 
@@ -121,7 +122,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                     }
                 });
             } catch(e : any) {
-                Alert.onError(e.response.data.error, () => setModalUp(false));
+                Alert.onError('알 수 없는 에러가 발생했습니다.', () => setModalUp(false));
             }
         };
 
@@ -138,13 +139,14 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                     setValidate(res.data.result ? 'Y' : 'N');
                 }
             }).catch(err => {
-                Alert.onError(err.response.data.error, () => {
+                console.log(err);
+                Alert.onError('알 수 없는 에러가 발생했습니다.', () => {
                     setModalUp(false);
                     setValidate('W');
                 });
             })
         } catch(e : any) {
-            Alert.onError(e.response.data, () => {
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => {
                 setModalUp(false);
                 setValidate('W');
             });
@@ -161,7 +163,7 @@ const ManagerMenuContainer = (props : ManagerMenuProps) => {
                     Alert.onSuccess('탈퇴를 승인했습니다.', fetchData);
                 }
             } catch (e : any) {
-                Alert.onError(e.response.data.error, () => null);
+                Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
             }
         };
 

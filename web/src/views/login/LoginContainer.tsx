@@ -66,7 +66,7 @@ const LoginContainer = (props : LoginProps) => {
                 Alert.onError('권한이 없는 유저입니다.', () => props.history.push('/'));
             }
         } catch(e : any) {
-            Alert.onError(e.response.data.error, () => null);
+             Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
         }
 
     };

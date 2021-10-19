@@ -84,7 +84,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                 }).catch(error => console.log(error));
             }
             setLoading(false);
-        } catch(e) {
+        } catch(e : any) {
             console.log(e);
             setLoading(false);
         }
@@ -152,7 +152,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     }
     
                 } catch(e : any) {
-                    Alert.onError(e.response.data.error, () => null);
+                    Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
                 }
             };
 
@@ -183,7 +183,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             });
         } catch(e : any) {
             setLoading(false);
-            Alert.onError(e.response.data.error, () => null);
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
         }
     };
 
@@ -201,7 +201,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                         Alert.onError('환자에게 담당의 등록 요청을 실패했습니다.', () => null);
                     }
                 } catch(e : any) {
-                    Alert.onError(e.response.data.error, () => null);
+                    Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
                 }
             };
 
@@ -245,7 +245,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             }
             setLoading(false);
         } catch(e : any) {
-            Alert.onError(e.response.data.error, () => null);
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
         }
     };
 
@@ -284,7 +284,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                 }
             } catch(e : any) {
                 setLoading(false);
-                Alert.onError(e.response.data.error, () => null);
+                Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
             }
         };
 
