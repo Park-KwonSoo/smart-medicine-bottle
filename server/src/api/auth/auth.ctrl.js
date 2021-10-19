@@ -319,12 +319,19 @@ exports.socialRegister = async ctx => {
             const result = await axios.get(url, {
                 headers : {
                     Authorization : `Bearer ${accessToken}`,
+                    'Content-type' : 'application/x-www-form-urlencoded;charset=utf-8',
                 },
             });
 
-            console.log(result);
+            const { email, profile } = result.data.kakao_account;
 
-            return result;
+            return {
+                userId : email,
+                userNm : profile.nickname,
+                contact : `${email}_등록되지않은 번호`,
+                birth : '등록되지않음',
+            };
+
         } : () => null;
     
     
@@ -411,12 +418,11 @@ exports.socialLogin = async ctx => {
             const result = await axios.get(url, {
                 headers : {
                     Authorization : `Bearer ${accessToken}`,
+                    'Content-type' : 'application/x-www-form-urlencoded;charset=utf-8',
                 },
             });
 
-            console.log(result);
-
-            return result;
+            return result.data.kakao_account.email;
         } : () => null;
     
     
