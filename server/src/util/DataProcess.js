@@ -59,11 +59,14 @@ const bottleInfoUpdate = async(data) => {
             const dosage = Math.round((lastTotalWeight - totalWeight) / parseFloat(eachWeight));
 
             if(dosage > 0) {
+                const balance = Math.round(totalWeight / parseFloat(eachWeight));
+
                 const takeMedicineHist  = new TakeMedicineHist({
                     bmId : bottleMedicine._id,
                     temperature,
                     humidity,
                     dosage,
+                    balance,
                 });
                 await takeMedicineHist.save();
             }
