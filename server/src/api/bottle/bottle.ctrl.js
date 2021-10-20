@@ -103,6 +103,7 @@ exports.bottleDisconnect = async(ctx) => {
     const topic = 'bottle/' + bottleId + '/bts';
     Mqtt.mqttUnsubscribe(client, topic);
 
+    await BottleMedicine.updateMany({ bottleId }, { useYn : 'N' });
     await Bottle.deleteOne({ bottleId });
 
     ctx.status = 204;

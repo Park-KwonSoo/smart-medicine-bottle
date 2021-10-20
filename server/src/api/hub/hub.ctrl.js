@@ -5,6 +5,7 @@ const User = require('../../models/user');
 const Mqtt = require('../../util/MqttModule');
 const DataProcess = require('../../util/DataProcess');
 const jwt = require('jsonwebtoken');
+const BottleMedicine = require('../../models/bottleMedicine');
 
 //허브 연결
 exports.hubConnect = async (ctx) => {
@@ -80,6 +81,11 @@ exports.hubDisconnect = async(ctx) => {
 
     const hosting = await hub.getHubHost();
     Mqtt.mqttOff(hosting);
+
+    const bottleList = await Bottle.find({ hubId });
+    await Promise.all(bottleList.map(async bottle => {
+        await BottleMedicine.updateMany({ bottleId : bottle.bottleId }, { useYn : 'N' });
+    }));
 
     await Bottle.deleteMany({ hubId });
     await Hub.deleteOne({ hubId });

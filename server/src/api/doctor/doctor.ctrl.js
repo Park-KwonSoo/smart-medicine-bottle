@@ -358,6 +358,7 @@ exports.writeReqBottleFeedback = async ctx => {
 
     ctx.status = 200;
 
+
 };
 
 /**
@@ -450,6 +451,15 @@ exports.registerNewPatient = async ctx => {
 
     await patientInfo.updateInfo('환자 등록 요청');
     await patientInfo.save();
+
+    const profile = await Profile.findByUserId(patientId);
+    const { deviceToken } = profile;
+
+    sendPushMessage({
+        deviceToken,
+        title : '새로운 의사 등록 요청이 왔습니다.',
+        body : '어플리케이션을 실행해 확인하세요.',
+    });
 
     ctx.status = 200;
 

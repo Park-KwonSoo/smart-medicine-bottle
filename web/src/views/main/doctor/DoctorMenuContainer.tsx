@@ -197,6 +197,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     });
                     if(result.statusText === 'OK') {
                         Alert.onSuccess('환자에게 담당의 등록 요청을 전송했습니다.', () => null);
+                        setNewPatientRegisterModal(false);
                     } else {
                         Alert.onError('환자에게 담당의 등록 요청을 실패했습니다.', () => null);
                     }
