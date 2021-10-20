@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
+require('moment-timezone');
 
 const Schema = mongoose.Schema;
 
 const PatientInfoSchema = new Schema({
-    patientId : { type : String, required : true, ref : 'User', },
-    doctorId : { type : String, required : true, ref : 'User', },
+    patientId : { type : String, required : true, ref : 'User', lowercase : true, },
+    doctorId : { type : String, required : true, ref : 'User', lowercase : true, },
     info : { type : String, required : true, },
     useYn : { type : String, required : true, default : 'W', },
 });
@@ -35,9 +36,9 @@ PatientInfoSchema.methods.setUseYn = function(useYn) {
 };
 
 PatientInfoSchema.methods.updateInfo = function(info) {
-    const date = moment(new Date()).format('YYYY-MM-DD hh:mm');
+    const date = moment.tz('Asia/Seoul').format('YYYY-MM-DD HH:mm');
     if(this.info.length)
-        this.info = this.info.concat('\n\n', `${date} ➡ ${info}`);
+        this.info = this.info.concat('\n\n', `${date} -> ${info}`);
     else
         this.info = `${date} ➡ ${info}`;
 };

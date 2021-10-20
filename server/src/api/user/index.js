@@ -11,9 +11,18 @@ const user = new Router();
  */
 user.get('/', userCtrl.getMyDetail);
 
+
+/**
+ * 현재 유저 정보 수정
+ * request parameter : token
+ * url : http://localhost:4000/api/user
+ * return : Object User
+ */
+user.patch('/', userCtrl.updateMyDetail);
+
 /**
  * 현재 로그인한 유저에 등록된 의사 목록 가져옴
- * request parameter : token
+ * request parameter : userNm, birth, contact, password, passwordCheck
  * url : http://localhost:4000/api/user/doctor
  * return : Doctor List
  */

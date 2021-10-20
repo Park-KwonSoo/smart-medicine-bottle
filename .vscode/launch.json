@@ -5,10 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter_application_1",
-            "cwd": "frontend\\flutter_application_1",
-            "request": "launch",
-            "type": "dart"
-        }
+            "name": "Attach",
+            "port": 9229,
+            "request": "attach",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "request": "attach",
+            "type": "pwa-chrome",
+            "webRoot": "${workspaceFolder}"
+        },
     ]
 }

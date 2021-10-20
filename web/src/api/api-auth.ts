@@ -1,8 +1,17 @@
 import { client } from "./client";
 
 export default {
-    register : (Data : any) => {
+    register : (Data : FormData) => {
         return client.post('/auth/register', Data);
+    },
+
+    searchHospital : (hospitalNm : string, page : number) => {
+        return client.get('/auth/hospital', {
+            params : {
+                hospitalNm,
+                page,
+            },
+        });
     },
 
     registerDoctor : (Data : any) => {

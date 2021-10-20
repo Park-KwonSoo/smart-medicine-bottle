@@ -9,6 +9,7 @@ import * as Alert from '../../util/alertMessage';
 import moment from 'moment';
 
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import BottleInfoPresenter from './BottleInfoPresenter';
 
 import { doctorApi } from '../../api';
@@ -35,6 +36,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         takeMedicineHist : [],
     });
 
+    //차트에 표시되는 행의 개수
     const numberOfChartItem = 7;
     const [chartOption, setChartOption] = useState<any>({
         chart : {
@@ -51,19 +53,22 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             categories : [],
         },
         series : [{
-            name : '약 복용 횟수',
+            name : '약 복용 회분',
             color : '#337DFF',
             data : [],
         }],
     });
+    const [takeMedicineHist, setTakeMedicineHist] = useState<any[]>([]);
 
     const [feedback, setFeedback] = useState<string>('');
     const [fdbType, setFdbType] = useState<string>('RECOMMEND');
 
     const [medicineInfoModal, setMedicineInfoModal] = useState<boolean>(false);
+    const [modalType, setModalType] = useState<string>('hist'); //hist , info
 
 
     const fetchData = async () => {
+        setModalType('hist');
         setFeedback('');
         setFdbType('RECOMMEND');
         setMedicineInfoModal(false);
@@ -71,6 +76,12 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         try {
             const result = await doctorApi.getPatientBottleDetail(token, bottleId);
             if (result.statusText === 'OK') {
+                setTakeMedicineHist(result.data.takeMedicineHist.map((takeMedicine : any) => {
+                    return ({
+                        ...takeMedicine,
+                        takeDate : moment(takeMedicine.takeDate).format('YYYY년 MM월 DD일 hh시 mm분'),
+                    });
+                }));
                 const { categories, data } = makeChart.make(result.data.takeMedicineHist, numberOfChartItem);
                 setBottleInfo({
                     ...result.data,
@@ -97,9 +108,8 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
                 Alert.onError('접근 권한이 없습니다.', () => props.history.push('/'));
             }
         } catch(e : any) {
-            Alert.onError(e.response.data.error, () => props.history.push('/'));
-
             console.log(e);
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => props.history.push('/'));
         }
     };
 
@@ -123,7 +133,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
                         Alert.onError('피드백 등록에 실패했습니다.', () => null);
                     }
                 } catch(e : any) {
-                    Alert.onError(e.response.data.error, () => fetchData());
+                    Alert.onError('알 수 없는 에러가 발생했습니다.', () => fetchData());
                 }
            } else {
                Alert.onError('피드백 내용을 입력하세요.', () => null);
@@ -132,6 +142,14 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         
         Alert.onCheck('피드백을 등록하시겠습니까?', register, () => null);
 
+    };
+
+    const onViewTakeHist = () => {
+        if(modalType === 'info')    setModalType('hist');
+    };
+
+    const onViewMedicineInfo = () => {
+        if(modalType === 'hist')    setModalType('info');
     };
 
  
@@ -148,8 +166,12 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
         <BottleInfoPresenter
             bottleInfo = {bottleInfo}
             chartOption = {chartOption}
+            takeMedicineHist = {takeMedicineHist}
 
             medicineInfoModal = {medicineInfoModal}
+            modalType = {modalType}
+            onViewTakeHist = {onViewTakeHist}
+            onViewMedicineInfo = {onViewMedicineInfo}
             setMedicineInfoModal = {setMedicineInfoModal}
 
             feedback = {feedback}
@@ -158,6 +180,7 @@ const BottleInfoContainer = (props : BottleInfoProps) => {
             setFdbType = {setFdbType}
             onSubmitFeedback = {onSubmitFeedback}
         />
+        <Footer {...props}/>
         </>
     );
 };

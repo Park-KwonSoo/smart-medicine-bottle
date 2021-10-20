@@ -17,11 +17,16 @@
   "author": "박권수",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^5.14.2",
     "@koa/cors": "^3.1.0",
     "firebase-admin": "^9.11.1",
+    "google-auth-library": "^7.10.0",
+    "koa-body": "^4.2.0",
     "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "mqtt": "^4.2.6",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "qrcode": "^1.4.4"
   },
   "devDependencies": {
     "eslint": "^7.32.0"

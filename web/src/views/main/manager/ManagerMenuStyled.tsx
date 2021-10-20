@@ -1,27 +1,5 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
-
-const ModalOn = keyframes `
-    0% {
-        background-color : rgba(52, 52, 52, .0);
-    }
-    20% {
-        background-color : rgba(52, 52, 52, .2);
-    }
-    40% {
-        background-color : rgba(52, 52, 52, .4);
-    }
-    60% {
-        background-color : rgba(52, 52, 52, .5);
-    }
-    80% {
-        background-color : rgba(52, 52, 52, .6);
-    }
-    100% {
-        background-color : rgba(52, 52, 52, .7);
-    }
-
-`;
 
 export const Container = styled.div `
     width : 100%;
@@ -32,92 +10,6 @@ export const Container = styled.div `
     align-items : center;
 `;
 
-
-export const ModalContainer = styled.div `
-    height : 100%;
-    width : 100%;
-    z-index : 99;
-    position : absolute;
-
-    display : flex;
-    flex-direction : column;
-
-    animation : ${ModalOn} .5s;
-
-    background-color : rgba(52, 52, 52, .7);
-`;
-
-export const ModalClsButtonWrapper = styled.div `
-    flex : 1;    
-
-    display : flex;
-
-    justify-content : flex-end;
-    align-items : center;
-    padding : 0 20px;
-
-    border : none;
-    background-color : transprent;    
-`;
-
-export const ModalClsButton = styled.button `
-    border : none;
-    background-color : transparent;
-
-    cursor : pointer;
-
-    color : #fff;
-
-    display : flex;
-    flex-direction : row;
-
-    justify-content : center;
-    align-items : center;
-
-    transition : .25s all;
-    &:hover {
-        opacity : .5;
-    }
-`;
-
-export const ModalClsButtonImg = styled.img `
-    height : 20px;
-    width : 20px;
-
-    margin : 0 10px 0 0;
-`;
-
-export const ModalClsButtonText = styled.div `
-    font-size : 18px;
-    font-weight : 700;
-`;
-
-export const ModalContentWrapper = styled.div `
-    flex : 8;
-
-    display : flex;
-    flex-direction : column;
-
-    justify-content : center;
-    align-items : center;
-
-    border : none;
-`;
-
-export const ModalContent = styled.div `
-    width : 700px;
-    height : 500px;
-
-    background-color : #fff;
-    border : 1.2px solid #337DFF;
-    border-radius : 5px;
-    
-    display : flex;
-    flex-direction : column;
-
-    // justify-content : center;
-    align-items : center;
-`;
 
 export const ModalTitleWrapper = styled.div `
     flex : 1;
@@ -183,25 +75,96 @@ export const ModalInfoExplain = styled.div `
 
     letter-spacing : 1px;
 
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : center;
+
     border : none;
     border-bottom : 1px solid #337DFF;
 
     color : #337DFF;
-    padding : 2px 5px;
+    padding : 2px 1px;
 `;
 
 export const ModalInfo = styled.div `
-    margin : 5px 0 20px 0;
-    font-size : 20px;
-    font-weight : 700;
+    margin : 5px 0 10px 0;
+    font-size : 13px;
+    font-weight : 600;
+
+    letter-spacing : 1px;
 
     display : flex;
     flex-direction : row;
     align-items : center;
 `;
 
+export const ModalInfoNotice = styled.div `
+    font-size : 11px;
+    color : #bbb;
+
+    font-weight : 400;
+
+    letter-spacing : 0px;
+
+    margin : 5px 0 0px 0;
+`;
+
+export const DoctorLicenseViewWrapper = styled.div `
+    display : flex;
+    flex-direction : row;
+
+    justify-content : center;
+    align-items : center;
+    
+    border : none;
+    background-color : transparent;
+`;
+    
+export const DoctorLicenseViewButton = styled.button `
+    margin : 5px 0 0 7px;
+
+    border : 1px solid #343434;
+    border-radius : 3px;
+    background-color : #EAF2FF;
+    padding : 2px 5px;
+
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : center;
+    
+    cursor : pointer;
+    transition : .25s all;
+
+    &:hover {
+        border : 1px solid #337DFF;
+        background-color : #337DFF;
+        color : #fff;
+    }
+
+    font-size : 11px;
+`;
+
+export const DoctorLicenseViewInput = styled.input `
+    padding : 2px 1px;
+
+    font-size : 11px;
+    letter-spacing : 1px;
+    color : #343434;
+
+    border : none;
+    border-bottom : 1px solid #343434;
+
+    &::placeholder {
+        color : #ccc;
+    }
+`;
+
 export const ValidateButton = styled.button<{validate : string}> `
-    margin : 0 0 0 15px;
+    font-size : 11px;
+
+    margin : 0 0 0 5px;
     padding : 2px 5px;
     
     border-radius : 3px;
@@ -288,8 +251,45 @@ export const ContentWrapper = styled.div `
 
 `;
 
+export const ContentButtonWrapper = styled.div `
+    width : 100%;
+    height : 10%;
+    border : none;
+
+    display : flex;
+    flex-direction : row;
+    justify-content : center;
+    align-items : flex-end;
+
+    gap : 10%;
+
+    background-color : transparent;
+`;
+
+export const ContentButton = styled.button<{isSelect : boolean}> `
+    background-color : ${props => props.isSelect ? '#337DFF' : 'transparent'};
+    color : ${props => props.isSelect ? '#fff' : '#337DFF'};
+    border : 1px solid #337DFF;
+    border-radius : 4px;
+
+    padding : 4px 10px;
+
+    cursor : pointer;
+
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
+    transition : .25s all;
+
+    &:hover {
+        opacity : .5;
+    }
+`;
+
 export const ContentTitle = styled.div `
     width : 100%;
+    height : 20%;
     border : none;
     border-bottom : 1px solid #ddd;
 
@@ -298,7 +298,6 @@ export const ContentTitle = styled.div `
     justify-content : center;
     align-items : center;
 
-    padding : 4% 0;
     font-size : 22px;
     font-weight : 600;
     letter-spacing : 1px;
@@ -318,15 +317,16 @@ export const ContentExplain = styled.div `
 export const ContentBody = styled.div `
     overflow : scroll;
 
-    height : 79%;
+    min-height : 60%;
+    max-height : 60%;
 
     border : none;
-
-    padding : 0 0 0 3px;
 
     display : flex;
     flex-direction : column;
     align-items : center;
+
+    padding : 0 0 0 3px;
 
     &::-webkit-scrollbar {
         width : 3px;
@@ -341,6 +341,7 @@ export const ContentBody = styled.div `
 
 export const ContentInfoWrapper = styled.div `
     width : 100%;
+    height : 10%;
     border : none;
     border-bottom : 1px solid #a0a0a0;
 
@@ -350,7 +351,6 @@ export const ContentInfoWrapper = styled.div `
     justify-content : center;
     align-items : center;
 
-    padding : 12px 0px;
 `;
 
 export const ContentInfo = styled.div<{isLast : boolean}> `
@@ -388,13 +388,15 @@ export const EachContentWrapper = styled.button `
 
     padding : 10px 0px;
 
-    cursor : pointer;
+    :not(:disabled) {
+        cursor : pointer;
 
-    transition : .1s all;
+        transition : .1s all;
 
-    &:hover {
-        background-color : #337DFF;
-        color : #fff;
+        &:hover {
+            background-color : #337DFF;
+            color : #fff;
+        }
     }
 
 `;
@@ -417,9 +419,32 @@ export const EachContentNm = styled.div<{isLast : boolean}> `
 
 `;
 
+export const AcceptButton = styled.button `
+    background-color : transparent;
+    color : #337DFF;
+    border : 1px solid #337DFF;
+    border-radius : 3px;
+    padding : 2px 10px;
+
+    display : flex;
+    justify-content : center;
+    align-items : center;
+
+    cursor : pointer;
+
+    transition : .25s all;
+
+    &:hover {
+        background-color : #337DFF;
+        color : #fff;
+    }
+`;
+
 export const NothingWrapper = styled.div `
     height : 100%;
     width : 100%;
+
+    border : none;
 
     display : flex;
     justify-content : center;

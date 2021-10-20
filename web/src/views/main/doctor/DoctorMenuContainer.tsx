@@ -11,13 +11,13 @@ import * as Alert from '../../../util/alertMessage';
 import { doctorApi, medicineApi } from '../../../api';
 
 
-//toDo : Generate QR Code By Medicine Id
 
 type DoctorMenuProps = RouteComponentProps
 
 const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const token = useRecoilValue(recoilUtil.token);
+    const userId = useRecoilValue(recoilUtil.userId);
     const [loading, setLoading] = useRecoilState(recoilUtil.loading);
 
     const [doctorInfo, setDoctorInfo] = useState<any>({
@@ -33,7 +33,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [info, setInfo] = useState<any>({
         infoType : 'DOCTOR',
         userNm : '',
-        userAge : 0,
+        birth : '',
         contact : '',
         doctorType : '',
         patientInfo : '',
@@ -48,13 +48,18 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     const [editPatientInfo, setEditPatientInfo] = useState<string>(''); 
 
     const [newPatientRegisterModal, setNewPatientRegisterModal] = useState<boolean>(false);
-    const [newPatientSearchId, setNewPatientSearchId] = useState<string>('');
+    const [newPatientSearchContact, setNewPatientSearchContact] = useState<string>('');
     const [newPatientSearchResult, setNewPatientSearchResult] = useState<any | null>(null);
 
     const [prescribeModal, setPrescribeModal] = useState<boolean>(false);
+    const [prescribeModalStep, setPrescribeModalStep] = useState<number>(1);
     const [searchMedicineKeyword, setSearchMedicineKeyword] = useState<string>('');
     const [medicineList, setMedicineList] = useState<any>([]);
     const [prescribeMedicine, setPrescribeMedicine] = useState<any>(null);
+    const [dailyDosage, setDailyDosage] = useState<string>('1');
+    const [totalDay, setTotalDay] = useState<string>('1');
+
+    const [qrcodeUrl, setQrcodeUrl] = useState<string | null>(null);
 
 
     const fetchData = async() => {
@@ -69,7 +74,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     userNm : doctorInfo.doctorNm,
                     doctorType : doctorInfo.doctorType,
                     contact : doctorInfo.contact,
-                    userAge : null,
+                    birth : null,
                     patientInfo : '',
                 });
 
@@ -79,7 +84,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                 }).catch(error => console.log(error));
             }
             setLoading(false);
-        } catch(e) {
+        } catch(e : any) {
             console.log(e);
             setLoading(false);
         }
@@ -94,10 +99,12 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             setLoading(true);
             await doctorApi.getPatientDetail(token, patientId).then(res => {
                 setPatientDetail(res.data);
+
+                const birth = res.data.profile.birth.split('-');
                 setInfo({
                     infoType : 'PATIENT',
                     userNm : res.data.profile.userNm,
-                    userAge : res.data.profile.userAge,
+                    birth : `${birth[0]}년 ${birth[1]}월 ${birth[2]}일`,
                     contact : res.data.profile.contact,
                     doctorType : null,
                     patientInfo : res.data.info,
@@ -118,7 +125,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             userNm : doctorInfo.doctorNm,
             doctorType : doctorInfo.doctorType,
             contact : doctorInfo.contact,
-            userAge : null,
+            birth : null,
             patientInfo : '',
         });
         setFilteringPatientList([]);
@@ -145,7 +152,7 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
                     }
     
                 } catch(e : any) {
-                    Alert.onError(e.response.data.error, () => null);
+                    Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
                 }
             };
 
@@ -158,15 +165,15 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
     };
 
 
-    const onSetNewPatientSearchId = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setNewPatientSearchId(e.target.value);
+    const onSetNewPatientSearchContact = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setNewPatientSearchContact(e.target.value);
     };
 
-    const onSearchNewPatientByEmail = async () => {
+    const onSearchNewPatientByContact = async () => {
         try {
             setLoading(true);
-            await doctorApi.searchPatientById(token, newPatientSearchId).then(res => {
-                setNewPatientSearchResult(res.data);
+            await doctorApi.searchPatientByContact(token, newPatientSearchContact).then(res => {
+                setNewPatientSearchResult(res.data.patientInfo);
                 setLoading(false);
             }).catch(err => {
                 console.log(err);
@@ -176,29 +183,30 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             });
         } catch(e : any) {
             setLoading(false);
-            Alert.onError(e.response.data.error, () => null);
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
         }
     };
 
     const onRegisterNewPatient = () => {
         if(newPatientSearchResult) {
-            const { patientId, patientNm } = newPatientSearchResult;
+            const { userId, userNm } = newPatientSearchResult;
             const onRegisterReq = async () => {
                 try {
                     const result = await doctorApi.registerPatient(token, {
-                        patientId,
+                        patientId : userId,
                     });
                     if(result.statusText === 'OK') {
                         Alert.onSuccess('환자에게 담당의 등록 요청을 전송했습니다.', () => null);
+                        setNewPatientRegisterModal(false);
                     } else {
                         Alert.onError('환자에게 담당의 등록 요청을 실패했습니다.', () => null);
                     }
                 } catch(e : any) {
-                    Alert.onError(e.response.data.error, () => null);
+                    Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
                 }
             };
 
-            Alert.onCheck(`${patientNm} 환자에게 담당의 등록 요청을 전송하시겠습니까?`, onRegisterReq, () => null);
+            Alert.onCheck(`${userNm} 환자에게 담당의 등록 요청을 전송하시겠습니까?`, onRegisterReq, () => null);
         } else {
             Alert.onError('환자를 먼저 검색해주세요.', () => null);
         }
@@ -206,14 +214,17 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
     const onCloseModal = async () => {
         setNewPatientRegisterModal(false);
-        setNewPatientSearchId('');
+        setNewPatientSearchContact('');
         setNewPatientSearchResult(null);
         setEditModal(false);
         setEditPatientInfo('');
         setPrescribeModal(false);
+        setPrescribeModalStep(1);
         setSearchMedicineKeyword('');
         setMedicineList([]);
         setPrescribeMedicine(null);
+        setDailyDosage('1');
+        setTotalDay('1');
     };
 
     const onGoBottleDetail = (bottleId : number) => {
@@ -231,18 +242,68 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
             setLoading(true);
             const res = await medicineApi.searchMedicine(token, searchMedicineKeyword);
             if(res.statusText === 'OK') {
-                console.log(res.data.medicineList)
                 setMedicineList(res.data.medicineList);
             }
             setLoading(false);
         } catch(e : any) {
-            Alert.onError(e.response.data.error, () => null);
+            Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
         }
     };
 
+    const onSetDailyDosage = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setDailyDosage(e.target.value);
+    };
+
+    const onSetTotalDay = (e : React.ChangeEvent<HTMLInputElement>) => {
+        setTotalDay(e.target.value);
+    };
+
+    const onSetNextStepPrescribe = () => {
+        if(prescribeMedicine)   setPrescribeModalStep(prescribeModalStep + 1);
+        else    Alert.onWarning('먼저 처방할 약을 선택해야 합니다.', () => null);
+    };
+
+    const onSetPrevStepPrescribe = () => {
+        if(prescribeModalStep > 1)  setPrescribeModalStep(prescribeModalStep - 1);
+    };
+
     const onPrescribeSubmit = async() => {
-        //toDo : 처방해서, QR코드 생성
-        Alert.onWarning('작업 중입니다.', () => null);
+        const onPrescribeMedicine = async () => {
+            setLoading(true);
+            try {
+                const res = await doctorApi.prescribeMedicine(token, {
+                    patientId : patientDetail.profile.userId,
+                    medicineId : prescribeMedicine.medicineId,
+                    dailyDosage,
+                    totalDosage : String(parseInt(totalDay) * parseInt(dailyDosage)),
+                });
+
+                if(res.statusText === 'OK') {
+                    setQrcodeUrl(res.data.qrCode);
+                    setLoading(false);
+                    Alert.onSuccess('처방 정보가 생성 되었습니다.', () => onSetNextStepPrescribe());
+                }
+            } catch(e : any) {
+                setLoading(false);
+                Alert.onError('알 수 없는 에러가 발생했습니다.', () => null);
+            }
+        };
+
+        Alert.onCheck(`${prescribeMedicine.name}(일 복용량:${dailyDosage})\n을 ${totalDay}일동안 처방하시겠습니까?`, async () => {
+            await onPrescribeMedicine();
+        }, () => null);
+    };
+
+    const onPrintQrcode = async(divId : string) => {
+        const printContent : any = document.getElementById(divId);
+        const windowOpen : any = window.open('', '_blank');
+
+        //toDo : 현재 인증되지 않은 사용자(=http)이기 때문에, GCS에서 signed url을 불러와도 만료되어, 이미지가 정상 표시 안됨 : 해결 필요
+        windowOpen.document.writeln(printContent.innerHTML);
+        windowOpen.document.close();
+        windowOpen.focus();
+        windowOpen.print();
+        windowOpen.close();
     };
 
     const onPrescribeCancel = () => {
@@ -289,21 +350,30 @@ const DoctorMenuContainer = (props : DoctorMenuProps) => {
 
             newPatientRegisterModal = {newPatientRegisterModal}
             setNewPatientRegisterModal = {setNewPatientRegisterModal}
-            newPatientSearchId = {newPatientSearchId}
-            onSetNewPatientSearchId = {onSetNewPatientSearchId}
-            onSearchNewPatientByEmail = {onSearchNewPatientByEmail}
+            newPatientSearchContact = {newPatientSearchContact}
+            onSetNewPatientSearchContact = {onSetNewPatientSearchContact}
+            onSearchNewPatientByContact = {onSearchNewPatientByContact}
             onRegisterNewPatient = {onRegisterNewPatient}
             onCloseModal = {onCloseModal}
 
             prescribeModal = {prescribeModal}
+            prescribeModalStep = {prescribeModalStep}
+            onSetNextStepPrescribe = {onSetNextStepPrescribe}
+            onSetPrevStepPrescribe = {onSetPrevStepPrescribe}
             setPrescribeModal = {setPrescribeModal}
             searchMedicineKeyword = {searchMedicineKeyword}
             onSetSearchMedicineKeyword = {onSetSearchMedicineKeyword}
             medicineList = {medicineList}
             searchMedicine = {searchMedicine}
             prescribeMedicine = {prescribeMedicine}
+            dailyDosage = {dailyDosage}
+            onSetDailyDosage = {onSetDailyDosage}
+            totalDay = {totalDay}
+            onSetTotalDay = {onSetTotalDay}
+            qrcodeUrl = {qrcodeUrl}
             setPrescribeMedicine = {setPrescribeMedicine}
             onPrescribeSubmit = {onPrescribeSubmit}
+            onPrintQrcode = {onPrintQrcode}
             onPrescribeCancel = {onPrescribeCancel}
 
             newPatientSearchResult = {newPatientSearchResult}

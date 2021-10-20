@@ -1,27 +1,4 @@
-import styled, { keyframes } from 'styled-components';
-
-
-const ModalOn = keyframes `
-    0% {
-        background-color : rgba(52, 52, 52, .0);
-    }
-    20% {
-        background-color : rgba(52, 52, 52, .2);
-    }
-    40% {
-        background-color : rgba(52, 52, 52, .4);
-    }
-    60% {
-        background-color : rgba(52, 52, 52, .5);
-    }
-    80% {
-        background-color : rgba(52, 52, 52, .6);
-    }
-    100% {
-        background-color : rgba(52, 52, 52, .7);
-    }
-
-`;
+import styled from 'styled-components';
 
 
 export const Container = styled.div `
@@ -32,91 +9,106 @@ export const Container = styled.div `
     justify-content : center;
 `;
 
-export const ModalContainer = styled.div `
-    height : 100%;
-    width : 100%;
-    z-index : 99;
-    position : absolute;
-
-    display : flex;
-    flex-direction : column;
-
-    animation : ${ModalOn} .5s;
-
-    background-color : rgba(52, 52, 52, .7);
-
-`;
-
-export const ModalClsButtonWrapper = styled.div `
-    flex : 1;    
-
-    display : flex;
-
-    justify-content : flex-end;
-    align-items : center;
-    padding : 0 20px;
-
+export const ModalTypeButtonWrapper = styled.div `
     border : none;
-    background-color : transprent;    
-`;
-
-export const ModalClsButton = styled.button `
-    border : none;
-    background-color : transparent;
-
-    cursor : pointer;
-
-    color : #fff;
-
     display : flex;
     flex-direction : row;
 
+    width : 100%;
+
     justify-content : center;
     align-items : center;
 
+    background-color : transparent;
+    
+    gap : 5%;
+
+    padding : 3% 0 0 0;
+`;
+
+export const ModalTypeButton = styled.button<{isSelect : boolean}> `
+    border : 1px solid #337DFF;
+    border-radius : 3px;
+    color : ${props => props.isSelect ? '#fff' : '#337DFF'};
+    background-color : ${props => props.isSelect ? '#337DFF' : '#fff'};
+
+    padding : 1% 3%;
+
+    cursor : pointer;
+
+    font-size : 16px;
+    font-weight : ${props => props.isSelect ? '600' : '500'};
+
     transition : .25s all;
+
     &:hover {
         opacity : .5;
     }
+
 `;
 
-export const ModalClsButtonImg = styled.img `
-    height : 20px;
-    width : 20px;
+export const HistWrapper = styled.div `
+    display : flex;
+    flex-direction : column;
 
-    margin : 0 10px 0 0;
+    height : 65px;
+    width : 100%;
+
+    border : none;
+    border-bottom : 1px solid #ddd;
 `;
 
-export const ModalClsButtonText = styled.div `
-    font-size : 18px;
-    font-weight : 700;
-`;
+export const HistDtmWrapper = styled.div `
+    flex : 2;
+    padding : 0 3%;
 
-export const ModalContentWrapper = styled.div `
-    flex : 8;
+    border : none;
 
     display : flex;
     flex-direction : column;
 
     justify-content : center;
-    align-items : center;
 
-    border : none;
 `;
 
-export const ModalContent = styled.div `
-    width : 700px;
-    height : 500px;
+export const HistDtm = styled.div `
+    font-size : 16px;
+    color : #000;
+`;
 
-    background-color : #fff;
-    border : 1.2px solid #337DFF;
-    border-radius : 5px;
-    
+export const HistInfoWrapper = styled.div `
+    flex : 1;
+    padding : 0 3%;
+
+    border : none;
+
     display : flex;
-    flex-direction : column;
+    flex-direction : row;
+    align-items : flex-start;
+    
+`;
 
-    // justify-content : center;
+export const HistInfoEachWrapper = styled.div `
+    flex : 1;
+    border : none;
+
+    display : flex;
+    flex-direction : row;
     align-items : center;
+
+    gap : 5%;
+
+    font-size : 14px;
+    font-weight : 500;
+
+    color : #a0a0a0;
+`;
+
+export const HistInfoEach = styled.div `
+    font-size : 15px;
+    font-weight : 600;
+
+    color : #337DFF;
 `;
 
 export const MedicineNameWrapper = styled.div `
@@ -168,6 +160,7 @@ export const MedicineInfoWrapper = styled.div `
 export const MedicineEachInfoWrapper = styled.div `
     display : flex;
     flex-direction : column;
+
 
     width : 80%;
     padding : 20px 10%;

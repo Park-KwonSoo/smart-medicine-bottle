@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { RouteComponentProps } from 'react-router-dom';
 
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import * as recoilUtil from '../../util/recoilUtil';
 
 import validator from 'validator';
@@ -11,7 +11,6 @@ import Header from '../../components/Header';
 import RegisterPresenter from "./RegisterPresenter";
 
 import { authApi } from '../../api';
-import { resourceLimits } from "worker_threads";
 
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -20,13 +19,13 @@ interface RegisterProps extends RouteComponentProps {}
 const RegisterContainer = (props : RegisterProps) => {
 
     const token = useRecoilValue(recoilUtil.token);
+    const [loading, setLoading] = useRecoilState(recoilUtil.loading);
 
     const [registerForm, setRegisterForm] = useState<any>({
         userId : '',
         password : '',
         passwordCheck : '',
         info : {
-            doctorLicense : '',
             hospitalNm : '',
             hospitalAddr : '',
             contact : '',
@@ -34,10 +33,18 @@ const RegisterContainer = (props : RegisterProps) => {
             doctorNm : '',
         },
     });
+    const [doctorInfoFile, setDoctorInfoFile] = useState<FileList | null>(null);
+    const doctorInfoFile_Select = useRef(null);
 
     const [page, setPage] = useState<number>(1);
     const [error, setError] = useState<string | null>(null);
 
+    const [searchHospital, setSearchHospital] = useState<boolean>(false);
+    const [hospitalNm, setHospitalNm] = useState<string>('');
+    const [hospitalSearchPage, setHospitalSearchPage] = useState<number>(1);
+    const [hospitalSearchPageList, setHospitalSearchPageList] = useState<number[]>([1]);
+    const [hospitalList, setHospitalList] = useState<any[]>([]);
+    const [selectHospital, setSelectHospital] = useState<any>(null);
 
 
     const fetchData = async() => {
@@ -46,7 +53,7 @@ const RegisterContainer = (props : RegisterProps) => {
             if (result.statusText === 'OK') {
                 props.history.push('/');
             }
-        } 
+        }
     };
 
     const onCancleRegister = () => {
@@ -61,7 +68,6 @@ const RegisterContainer = (props : RegisterProps) => {
         }
     };
 
-
     const validateRegisterForm = () => {
         if(page === 1) {
             if (!validator.isEmail(registerForm.userId)) {
@@ -74,9 +80,8 @@ const RegisterContainer = (props : RegisterProps) => {
                 setError('비밀번호가 일치하지 않습니다.')
             } else setError(null);
         } else if(page === 2) {
-            if(!registerForm.info.doctorLicense.length &&
-                 !validator.isAlphanumeric(registerForm.info.doctorLicense)) {
-                setError('의사 자격 번호를 입력해야 합니다.');
+            if(!doctorInfoFile) {
+                setError('의사 자격 인증 파일을 첨부해야 합니다.');
             } else if(registerForm.info.doctorNm.length < 2) {
                 setError('의사 이름을 올바르게 입력해야 합니다.');
             } else if(!registerForm.info.contact) {
@@ -116,33 +121,11 @@ const RegisterContainer = (props : RegisterProps) => {
     };
 
     const onSetDoctorLicense = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setRegisterForm({
-            ...registerForm,
-            info : {
-                ...registerForm.info,
-                doctorLicense : e.target.value,
-            },
-        });
+        setDoctorInfoFile(e.target.files);
     };
 
     const onSetHospitalNm = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setRegisterForm({
-            ...registerForm,
-            info : {
-                ...registerForm.info,
-                hospitalNm : e.target.value,
-            },
-        });
-    };
-
-    const onSetHospitalAddr = (e : React.ChangeEvent<HTMLInputElement>) => {
-        setRegisterForm({
-            ...registerForm,
-            info : {
-                ...registerForm.info,
-                hospitalAddr : e.target.value,
-            },
-        });
+        setHospitalNm(e.target.value);
     };
 
     const onSetContact = (e : React.ChangeEvent<HTMLInputElement>) => {
@@ -175,6 +158,56 @@ const RegisterContainer = (props : RegisterProps) => {
         });
     };
 
+    const onSearchHospital = async () => {
+        try {
+            setLoading(true);
+            setSearchHospital(true);
+            const result = await authApi.searchHospital(hospitalNm, hospitalSearchPage);
+            if(result.statusText === 'OK') {
+                setLoading(false);
+                setHospitalSearchPageList(new Array(result.data.totalPage).fill(null).map((item : null, index : number) => index + 1));
+                setHospitalList(result.data.hospitalList.length ? result.data.hospitalList : [result.data.hospitalList]);
+            }
+        } catch(e : any) {
+            setLoading(false);
+            Alert.onError('알 수 없는 에러로 검색에 실패했습니다.', () => null);
+        }
+    };
+
+    const onSetSearchPrevPage = () => {
+        //set Prev Page
+        const pageSlice = 5;
+        if(hospitalSearchPage > pageSlice) {
+            setHospitalSearchPage(Math.floor((hospitalSearchPage - 1) / pageSlice) * pageSlice);
+        }
+    };
+
+    const onSetSearchNextPage = () => {
+        //set Next Page
+        const pageSlice = 5;
+        if(hospitalSearchPage <= Math.floor((hospitalSearchPageList.length - 1) / pageSlice) * pageSlice) {
+            setHospitalSearchPage(Math.ceil(hospitalSearchPage / pageSlice) * pageSlice + 1);
+        }
+    };
+
+    const onConfirmSelectHospital = () => {
+        setSearchHospital(false);
+        setHospitalSearchPage(1);
+        setHospitalSearchPageList([1]);
+        setHospitalList([]);
+    };
+    
+    const onCancelSelectHospital = () => {
+        Alert.onCheck('병원 등록이 취소됩니다. 계속하시겠습니까?', () => {
+            setSearchHospital(false);
+            setHospitalNm('');
+            setHospitalSearchPage(1);
+            setHospitalSearchPageList([1]);
+            setHospitalList([]);
+            setSelectHospital(null);
+        }, () => null);
+    };
+
     const onSubmitButton = () => {
         if(error) {
             Alert.onError(error, () => null);
@@ -186,26 +219,80 @@ const RegisterContainer = (props : RegisterProps) => {
         } else if(page === 2) {
             setPage(3);
         } else if(page === 3) {
+
+            const Data = new FormData();
+            Data.append('userId', registerForm.userId);
+            Data.append('password', registerForm.password);
+            Data.append('passwordCheck', registerForm.passwordCheck);
+
+            Data.append('hospitalNm', registerForm.info.hospitalNm);
+            Data.append('hospitalAddr', registerForm.info.hospitalAddr);
+            Data.append('contact', registerForm.info.contact);
+            Data.append('doctorNm', registerForm.info.doctorNm);
+            Data.append('doctorType', registerForm.info.doctorType);
+
+            Data.append('doctorInfoFile', doctorInfoFile ? doctorInfoFile[0] : '');
+
+
             const onRegisterDoctor = async () => {
+                //로딩 진행
+                setLoading(true);
+
                 try {
-                    const result = await authApi.registerDoctor(registerForm);
+                    const result = await authApi.registerDoctor(Data);
                     if(result.data === 'Created') {
+                        setLoading(false);
                         Alert.onSuccess('회원가입 성공, 관리자의 승인을 대기하세요.', () => props.history.push('/login'));
                     }
-                } catch(e) {
+                } catch(e : any) {
+                    setLoading(false);
                     Alert.onError(e.response.data.error, () => null);
                 }
             };
 
-            Alert.onCheck('입력하신 정보로 회원가입을 진행하시겠습니까?', onRegisterDoctor, () => null);
+            if(selectHospital) {
+                Alert.onCheck('입력하신 정보로 회원가입을 진행하시겠습니까?', onRegisterDoctor, () => null);
+            } else {
+                Alert.onError('검색 버튼을 눌러 병원을 선택해주세요.', () => null);
+            }
+
         }
 
     };
 
+
+
     useEffect(() => {
         validateRegisterForm();
-    }, [registerForm, page]);
+    }, [registerForm, doctorInfoFile, page]);
 
+    useEffect(() => {
+        if(selectHospital) {
+            setHospitalNm(selectHospital.yadmNm);
+            setRegisterForm({
+                ...registerForm,
+                info : {
+                    ...registerForm.info,
+                    hospitalNm : selectHospital.yadmNm,
+                    hospitalAddr : selectHospital.addr,
+                },
+            });
+        } else {
+            setHospitalNm('');
+            setRegisterForm({
+                ...registerForm,
+                info : {
+                    ...registerForm.info,
+                    hospitalNm : '',
+                    hospitalAddr : '',
+                },
+            });
+        }
+    }, [selectHospital]);
+
+    useEffect(() => {
+        if(searchHospital) onSearchHospital();
+    }, [hospitalSearchPage]);
 
     useEffect(() => {
         fetchData();
@@ -218,6 +305,8 @@ const RegisterContainer = (props : RegisterProps) => {
         <Header {...props}/>
         <RegisterPresenter
             registerForm = {registerForm}
+            doctorInfoFile = {doctorInfoFile}
+            doctorInfoFile_Select = {doctorInfoFile_Select}
             page = {page}
             error = {error}
 
@@ -228,12 +317,28 @@ const RegisterContainer = (props : RegisterProps) => {
             onSetPassword = {onSetPassword}
             onSetPasswordCheck = {onSetPasswordCheck}
             onSetDoctorLicense = {onSetDoctorLicense}
+            hospitalNm = {hospitalNm}
             onSetHospitalNm = {onSetHospitalNm}
-            onSetHospitalAddr = {onSetHospitalAddr}
             onSetContact = {onSetContact}
             onSetDoctorType = {onSetDoctorType}
             onSetDoctorNm = {onSetDoctorNm}
             onSubmitButton = {onSubmitButton}
+
+            searchHospital = {searchHospital}
+            setSearchHospital = {setSearchHospital}
+            onSearchHospital = {onSearchHospital}
+            hospitalSearchPage = {hospitalSearchPage}
+            setHospitalSearchPage = {setHospitalSearchPage}
+            hospitalSearchPageList = {hospitalSearchPageList}
+            onSetSearchPrevPage = {onSetSearchPrevPage}
+            onSetSearchNextPage = {onSetSearchNextPage}
+
+            onConfirmSelectHospital = {onConfirmSelectHospital}
+            onCancelSelectHospital = {onCancelSelectHospital}
+
+            hospitalList = {hospitalList}
+            selectHospital = {selectHospital}
+            setSelectHospital = {setSelectHospital}
         />
         </>
     )

@@ -9,7 +9,13 @@ const Feedback = require('../../models/feedback');
 const Hub = require('../../models/hub');
 const PatientInfo = require('../../models/patientInfo');
 const DoctorInfo = require('../../models/doctorInfo');
+const PrescribeInfo = require('../../models/prescribeInfo');
+
 const jwt = require('jsonwebtoken');
+
+const { uploadQrCode, getQrCodeUrl } = require('../../util/GoogleCloudStorage');
+const QrCodeUtil = require('../../util/QrCodeUtil');
+const { sendPushMessage } = require('../../util/FCM');
 
 
 /**
@@ -150,7 +156,8 @@ exports.getPatientDetail = async ctx => {
             bottleId : bottle.bottleId,
             useYn : 'Y',
         });
-        reqUserBmList.push(bm);
+
+        if(bm) reqUserBmList.push(bm);
     }));
 
     const bottleList = await Promise.all(reqUserBmList.map(async bottleMedicine => {
@@ -280,7 +287,7 @@ exports.writeReqPatientReport = async ctx => {
     }
 
     await patientInfo.updateInfo(info);
-    patientInfo.save();
+    await patientInfo.save();
 
     ctx.status = 200;
     
@@ -335,13 +342,31 @@ exports.writeReqBottleFeedback = async ctx => {
         doctorId : userId,
         feedback,
     });
-    newFeedback.save();
+    await newFeedback.save();
+
+
+    //feedback 알람 보내기
+    const hub = await Hub.findOne({ hubId : bottle.hubId });
+    const patientProfile = await Profile.findOne({ userId : hub.userId });
+    if(patientProfile) {
+        sendPushMessage({
+            deviceToken : patientProfile.deviceToken,
+            title : '의사에게 새로운 알람이 도착했습니다.',
+            body : feedback,
+        });
+    }
 
     ctx.status = 200;
 
+
 };
 
-exports.searchPatientById = async ctx => {
+/**
+ * 이메일로 환자를 검색한다.
+ * @param {*} ctx 
+ * @returns 
+ */
+exports.searchPatientByContact = async ctx => {
     const token = ctx.req.headers.authorization;
     if (!token || !token.length) {
         ctx.status = 401;
@@ -359,22 +384,19 @@ exports.searchPatientById = async ctx => {
         return;
     }
 
-    const { patientId } = ctx.params;
-    const patient = await User.findByUserId(patientId);
-    if(!patient || patient.useYn !== 'Y') {
-        ctx.status = 404;
-        ctx.body = {
-            error : '존재하지 않는 회원',
-        };
-        return;
-    }
+    const { contact } = ctx.params;
+    const patientProfile = await Profile.findOne({ contact, useYn : 'Y' });
 
-    const patientProfile = await Profile.findOne({ userId : patientId });
+    const patientInfo = {
+        userId : patientProfile.userId,
+        userNm : patientProfile.userNm,
+        birth : patientProfile.birth,
+        contact: patientProfile.contact,
+    };
 
     ctx.status = 200;
     ctx.body = {
-        patientNm : patientProfile.userNm,
-        patientId,
+        patientInfo,
     };
 };
 
@@ -427,8 +449,17 @@ exports.registerNewPatient = async ctx => {
         useYn : 'W',
     });
 
-    patientInfo.updateInfo('환자 등록 요청');
-    patientInfo.save();
+    await patientInfo.updateInfo('환자 등록 요청');
+    await patientInfo.save();
+
+    const profile = await Profile.findByUserId(patientId);
+    const { deviceToken } = profile;
+
+    sendPushMessage({
+        deviceToken,
+        title : '새로운 의사 등록 요청이 왔습니다.',
+        body : '어플리케이션을 실행해 확인하세요.',
+    });
 
     ctx.status = 200;
 
@@ -477,8 +508,113 @@ exports.removeReqPatient = async ctx => {
     }
 
     await patientInfo.setUseYn('N')
-    patientInfo.save();
+    await patientInfo.save();
 
     ctx.status = 200;
+
+};
+
+/**
+ * 특정 환자에게 특정 약을 처방한다
+ * @param {*} ctx 
+ * http methods : post
+ */
+exports.prescribeMedicine = async ctx => {
+    const token = ctx.req.headers.authorization;
+    if(!token || !token.length) {
+        ctx.status = 401;
+        return;
+    }
+
+    // eslint-disable-next-line no-undef
+    const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findByUserId(userId);
+    if(!user || user.userTypeCd !== 'DOCTOR') {
+        ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 유저',
+        };
+        return;
+    }
+
+
+    const {
+        patientId,
+        medicineId,
+        dailyDosage,
+        totalDosage,
+    } = ctx.request.body;
+
+
+    const patientInfo = await PatientInfo.findOne({
+        patientId,
+        doctorId : userId,
+        useYn : 'Y',
+    })
+    if(!patientInfo) {
+        ctx.status = 403;
+        ctx.body = {
+            error : '권한 없는 환자',
+        };
+        return;
+    }
+
+    const medicine = await Medicine.findOne({ medicineId });
+    if(!medicine) {
+        ctx.status = 404;
+        ctx.body = {
+            error : '존재하지 않는 약',
+        };
+        return;
+    }
+
+    
+    const qrCodeResult = await QrCodeUtil.generateQrCode_prescribe({
+        medicine,
+        dailyDosage,
+        totalDosage,
+        patientId,
+        doctorId : userId,
+    });
+    if(!qrCodeResult) {
+        ctx.status = 400;
+        ctx.body = {
+            error : 'QR 코드 생성 에러',
+        };
+        return;
+    }
+
+    const qrCodeUrl = await uploadQrCode(qrCodeResult);
+    if(!qrCodeUrl) {
+        ctx.status = 400;
+        ctx.body = {
+            error : 'QR 코드 생성 후 서버 업로드 에러',
+        };
+        return;
+    }
+
+    const prescribeInfo = new PrescribeInfo({
+        doctorId : userId,
+        patientId,
+        dailyDosage,
+        totalDosage,
+        medicineId,
+        qrCodeUrl,
+    });
+    await prescribeInfo.save();
+
+    //특이사항에 처방기록 저장
+    await patientInfo.updateInfo(`${medicine.name}, 하루 ${dailyDosage}회분 처방, 총 ${totalDosage}회분 처방`);
+    await patientInfo.save();
+    
+    
+    const { qrCodeFileName } = qrCodeResult;
+    const qrCode = await getQrCodeUrl({ qrCodeFileName });
+
+    ctx.status = 200;
+    ctx.body = {
+        qrCode,
+    };
+
 
 };

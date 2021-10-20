@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import Error from '../components/error';
 import Loading from '../components/Loading';
+import Footer from '../components/Footer';
 import { LoginContainer } from "./login";
 import { RegisterContainer } from './register';
 import { MainContainer } from "./main";

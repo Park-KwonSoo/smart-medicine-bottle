@@ -1,27 +1,4 @@
-import styled, { keyframes } from 'styled-components';
-
-
-const ModalOn = keyframes `
-    0% {
-        background-color : rgba(52, 52, 52, .0);
-    }
-    20% {
-        background-color : rgba(52, 52, 52, .2);
-    }
-    40% {
-        background-color : rgba(52, 52, 52, .4);
-    }
-    60% {
-        background-color : rgba(52, 52, 52, .5);
-    }
-    80% {
-        background-color : rgba(52, 52, 52, .6);
-    }
-    100% {
-        background-color : rgba(52, 52, 52, .7);
-    }
-
-`;
+import styled from 'styled-components';
 
 
 export const Container = styled.div `
@@ -30,93 +7,6 @@ export const Container = styled.div `
     display : flex;
     flex-direction : column;
     justify-content : center;
-`;
-
-export const ModalContainer = styled.div `
-    height : 100%;
-    width : 100%;
-    z-index : 99;
-    position : absolute;
-
-    display : flex;
-    flex-direction : column;
-
-    animation : ${ModalOn} .5s;
-
-    background-color : rgba(52, 52, 52, .7);
-
-`;
-
-export const ModalClsButtonWrapper = styled.div `
-    flex : 1;    
-
-    display : flex;
-
-    justify-content : flex-end;
-    align-items : center;
-    padding : 0 20px;
-
-    border : none;
-    background-color : transprent;    
-`;
-
-export const ModalClsButton = styled.button `
-    border : none;
-    background-color : transparent;
-
-    cursor : pointer;
-
-    color : #fff;
-
-    display : flex;
-    flex-direction : row;
-
-    justify-content : center;
-    align-items : center;
-
-    transition : .25s all;
-    &:hover {
-        opacity : .5;
-    }
-`;
-
-export const ModalClsButtonImg = styled.img `
-    height : 20px;
-    width : 20px;
-
-    margin : 0 10px 0 0;
-`;
-
-export const ModalClsButtonText = styled.div `
-    font-size : 18px;
-    font-weight : 700;
-`;
-
-export const ModalContentWrapper = styled.div `
-    flex : 8;
-
-    display : flex;
-    flex-direction : column;
-
-    justify-content : center;
-    align-items : center;
-
-    border : none;
-`;
-
-export const ModalContent = styled.div `
-    width : 600px;
-    height : 400px;
-
-    background-color : #fff;
-    border : 1.2px solid #337DFF;
-    border-radius : 5px;
-    
-    display : flex;
-    flex-direction : column;
-
-    justify-content : center;
-    align-items : center;
 `;
 
 export const NewPatientRegisterTitle = styled.div `
@@ -199,14 +89,18 @@ export const NewPatientSearchResult = styled.div `
 
 export const NewPatientSearchResultInfoWrapper = styled.div `
     display : flex;
+    flex-direction : column;
 `;
 
 export const NewPatientSearchResultInfo = styled.div `
+    display : flex;
+    flex-direction : row;
+
     font-size : 13px;
     font-weight : 600;
     color : #a0a0a0;
 
-    margin : 0 5px 0 0;
+    margin : 0 5px 0 5px;
 `;
 
 export const NewPatientSearchResultInfoText = styled.div `
@@ -214,6 +108,8 @@ export const NewPatientSearchResultInfoText = styled.div `
     color : #343434;
     font-weight : 600;
     letter-spacing : 1px;
+
+    margin : 0 0 0 5px;
 `;
 
 export const NewPatientRegisterButtonWrapper = styled.div `
@@ -436,6 +332,7 @@ export const MedicineSearchButtonImg = styled.img `
     height : 15px;
     width : 15px;
     
+    transition : .25s all;
 `;
 
 export const MedicineSearchResultWrapper = styled.div `
@@ -497,6 +394,91 @@ export const MedicineSearchResultEachInfo = styled.div `
 export const MedicineSelectButtonImg = styled.img `
     height : 15px;
     width : 15px;
+`;
+
+export const MedicineDosageSetWrapper = styled.div `
+    width : 80%;
+    
+    display : flex;
+    flex-direction : column;
+
+    justify-content : center;
+    align-items : center;
+
+    border : none;
+
+    margin : 20px 0;
+
+    height : 200px;
+`;
+
+export const MedicineDosageInfo = styled.div `
+    font-size : 15px;
+    font-weight : 500;
+
+    color : #a0a0a0;
+
+    width : 100%;
+    margin : 10px 0 10px 0;
+
+    border : none;
+    background-color : transparent;
+
+    text-align : center;
+`;
+
+export const MedicineDosageInput = styled.input.attrs({
+    type : 'number',
+}) `
+    margin : 0 0 10px 0;
+    width : 40%;
+
+    padding : 10px 20px;
+    color : #337DFF;
+    font-size : 20px;
+
+    font-weight : 700;
+
+    border : none;
+    border-bottom : 1px solid #337DFF;
+
+    display : flex;
+    flex-direction : row;
+
+    text-align : center;
+
+    transition : .25s all;
+`;
+
+export const MedicineQRCodeWrapper = styled.div `
+    width : 80%;
+    height : 200px;
+
+    display : flex;
+    flex-direction : column;
+
+    justify-content : center;
+    align-items : center;
+
+    margin : 20px 0;
+
+    border : none;
+`;
+
+export const MedicineQRCodeInfo = styled.div `
+    font-size : 15px;
+    font-weight : 500;
+
+    color : #a0a0a0;
+
+    text-align : center;
+`;
+
+export const MedicineQRCode = styled.img `
+    margin : 10px 0 0 0;
+
+    height : 170px;
+    width : 170px;
 `;
 
 export const MedicinePrescribeButtonWrapper = styled.div `

@@ -44,8 +44,8 @@ export default {
             },
         });
     },
-    searchPatientById : (token : RecoilState<any>, patientId : string) => {
-        return client.get(`/doctor/patient/search/${patientId}`, {
+    searchPatientByContact : (token : RecoilState<any>, contact : string) => {
+        return client.get(`/doctor/patient/search/${contact}`, {
             headers : {
                 Authorization : token,
             },
@@ -60,6 +60,13 @@ export default {
     },
     removePatient : (token : RecoilState<any>, PatientId : string) => {
         return client.delete(`/doctor/patient/${PatientId}`, {
+            headers : {
+                Authorization : token,
+            },
+        });
+    },
+    prescribeMedicine : (token : RecoilState<any>, Data : any) => {
+        return client.post('/doctor/prescribe', Data, {
             headers : {
                 Authorization : token,
             },
