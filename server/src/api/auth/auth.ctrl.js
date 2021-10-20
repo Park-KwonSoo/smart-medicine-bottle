@@ -309,7 +309,7 @@ exports.socialRegister = async ctx => {
             return {
                 userId : email,
                 userNm : name,
-                contact : mobile,
+                contact : mobile ? mobile.split('-').join('') : `${email}_등록되지않은 번호`,
                 birth : `${birthyear}-${birthday}`,
             };
         }
