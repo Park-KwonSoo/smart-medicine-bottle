@@ -44,7 +44,7 @@ exports.removeQrCode = () => {
 
 //dosage에 따라, Push Notification을 발송한다.
 //아침 8시, 점심 12시, 저녁 6시에 한번씩 발송
-exports.pushNotifyByDosage = async() => {
+exports.sendPushMessageByDosage = async() => {
 
     //매일 아침 8시 : 복용량 상관 없이 보냄
     cron.schedule('0 0 8 * * *', async () => {
@@ -60,7 +60,7 @@ exports.pushNotifyByDosage = async() => {
 
                 if(deviceToken) {
                     const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
-                    pushNotify({
+                    sendPushMessage({
                         deviceToken,
                         title : '약 복용 시간입니다',
                         body : medicine.name + '을 복용하셔야 합니다.',
@@ -87,7 +87,7 @@ exports.pushNotifyByDosage = async() => {
 
                 if(deviceToken) {
                     const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
-                    pushNotify({
+                    sendPushMessage({
                         deviceToken,
                         title : '약 복용 시간입니다',
                         body : medicine.name + '을 복용하셔야 합니다.',
@@ -114,7 +114,7 @@ exports.pushNotifyByDosage = async() => {
 
                 if(deviceToken) {
                     const medicine = await Medicine.findOne({ medicineId : bottleMedicine.medicineId });
-                    pushNotify({
+                    sendPushMessage({
                         deviceToken,
                         title : '약 복용 시간입니다',
                         body : medicine.name + '을 복용하셔야 합니다.',
@@ -126,13 +126,4 @@ exports.pushNotifyByDosage = async() => {
         timezone : 'Asia/Tokyo',
     });
 
-};
-
-const pushNotify = ({ deviceToken, title, body }) => {
-    //toDo : deviceToken을 받아서 push notification을 발송하는 함수
-    sendPushMessage({
-        deviceToken,
-        title,
-        body,
-    });
 };

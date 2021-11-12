@@ -59,6 +59,15 @@ exports.register = async(ctx) => {
         return;
     }
 
+    //deviceToken은 중복되지 않게함
+    if(deviceToken) {
+        await Profile.updateMany({
+            deviceToken
+        }, {
+            deviceToken : null,
+        })
+    }
+
     const user = new User({
         userId,
         userTypeCd : 'NORMAL',
@@ -259,6 +268,12 @@ exports.login = async(ctx) => {
     if(user.userTypeCd === 'NORMAL') {
         const profile = await Profile.findByUserId(user.userId);
         if(deviceToken && profile.deviceToken !== deviceToken) {
+            await Profile.updateMany({
+                deviceToken
+            }, {
+                deviceToken : null,
+            });
+
             profile.updateDeviceToken(deviceToken);
             await profile.save();
         }
@@ -373,6 +388,14 @@ exports.socialRegister = async ctx => {
         useYn : 'Y',
     });
 
+    if(deviceToken) {
+        await Profile.updateMany({
+            deviceToken
+        }, {
+            deviceToken : null,
+        });
+    }
+
     const profile = new Profile({
         userId,
         userNm,
@@ -450,6 +473,15 @@ exports.socialLogin = async ctx => {
         };
 
         return;
+    }
+
+    //디바이스 토큰은 중복되지 않게함.
+    if(deviceToken) {
+        await Profile.updateMany({
+            deviceToken
+        }, {
+            deviceToken : null,
+        })
     }
 
     const profile = await Profile.findOne({ userId });
