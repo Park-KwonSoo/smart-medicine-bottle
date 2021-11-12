@@ -103,7 +103,7 @@
 1. [Application 보러가기](http://khuhub.khu.ac.kr/2021-1-capstone-design1/RIT_Project1/commits/frontend)
 2. [Server, DB 보러가기](http://khuhub.khu.ac.kr/2021-1-capstone-design1/RIT_Project1/commits/server)
 3. [HW 보러가기](http://khuhub.khu.ac.kr/2021-1-capstone-design1/RIT_Project1/commits/Hardware)
-4. 작품 시연 영상
+4. [작품 시연 영상](https://youtu.be/TAVe_jBfYEo)
 
 [https://youtu.be/TAVe_jBfYEo](https://youtu.be/TAVe_jBfYEo)
 
