@@ -40,5 +40,5 @@ app.listen(SERVER_PORT, () => {
     MqttServer.on();
     // FCM.initializeFCM();
     BatchSystem.removeQrCode();
-    BatchSystem.pushNotifyByDosage();
+    BatchSystem.sendPushMessageByDosage();
 });

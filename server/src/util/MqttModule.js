@@ -30,7 +30,6 @@ exports.mqttOn = async (hosting, foo) => {
 
 exports.mqttSubscribe = (client, topic) => {
     client.subscribe(topic, () => {
-        console.log('suscribe', topic);
     });
 }
 
